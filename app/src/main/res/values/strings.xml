@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">ole-android</string>
+    <string name="app_name">OTmovies</string>
+    <string name="textView_EmailHeadHint">INFORME SUA CONTA DE\n E-MAIL</string>
+    <string name="textButton_pre_login">AVANÇAR</string>
 </resources>

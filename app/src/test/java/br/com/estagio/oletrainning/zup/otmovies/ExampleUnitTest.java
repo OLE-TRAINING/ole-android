@@ -1,4 +1,4 @@
-package br.com.estagio.projeto.oletrainning.ole_android;
+package br.com.estagio.oletrainning.zup.otmovies;
 
 import org.junit.Test;
 

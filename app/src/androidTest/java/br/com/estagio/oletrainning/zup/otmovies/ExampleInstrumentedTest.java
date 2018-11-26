@@ -1,4 +1,4 @@
-package br.com.estagio.projeto.oletrainning.ole_android;
+package br.com.estagio.oletrainning.zup.otmovies;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("br.com.estagio.projeto.oletrainning.ole_android", appContext.getPackageName());
+        assertEquals("br.com.estagio.oletrainning.zup.otmovies", appContext.getPackageName());
     }
 }
