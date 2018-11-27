@@ -8,4 +8,5 @@
     <color name="colorBorderEmailInput">#cfd0d1</color>
     <color name="colorBottonEmailPreLogin">#129793</color>
     <color name="colorTextBottonEmailPreLogin">#ffffff</color>
+    <color name="colorTextError">#db4437</color>
 </resources>

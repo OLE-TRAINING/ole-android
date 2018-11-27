@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">OTmovies</string>
     <string name="textView_EmailHeadHint">INFORME SUA CONTA DE\n E-MAIL</string>
-    <string name="textButton_pre_login">AVANÇAR</string>
+    <string name="textButton_next">AVANÇAR</string>
+    <string name="emailHint">E-mail</string>
+    <string name="textHeaderRegister">CRIE SUA NOVA \nCONTA</string>
+    <string name="userEmailEntered">useremail@empresa.com</string>
+    <string name="senha">Senha</string>
+    <string name="nome_de_usuario">Nome de usuário</string>
+    <string name="nome_completo">Nome Completo</string>
 </resources>
