@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/Layout_Register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBackground"
+        android:clipToPadding="false"
+        android:padding="@dimen/paddingLayout"
+        tools:context=".RegisterNewUserActivity">
+
+        <TextView
+            android:id="@+id/textView_headerRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginStandard"
+            android:layout_marginTop="@dimen/marginStandard"
+            android:layout_marginEnd="@dimen/marginStandard"
+            android:fontFamily="@font/dosisbold"
+            android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
+            android:text="@string/textHeaderRegister"
+            android:textAlignment="center"
+            android:textColor="@color/colorEmailHeadHint"
+            android:textSize="@dimen/textSizeHeader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_emailEntered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginStandard"
+            android:layout_marginTop="@dimen/marginStandard"
+            android:layout_marginEnd="@dimen/marginStandard"
+            android:fontFamily="@font/robotoregular"
+            android:text="@string/userEmailEntered"
+            android:textAlignment="center"
+            android:textColor="@color/colorEmailHeadHint"
+            android:textSize="@dimen/textSizeDefault"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_headerRegister" />
+
+        <EditText
+            android:id="@+id/editText_enterName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTopEditTextNameRegister"
+            android:background="@drawable/border_email_input"
+            android:fontFamily="@font/robotoregular"
+            android:hint="@string/nome_completo"
+            android:inputType="textPersonName"
+            android:padding="@dimen/paddingEditText"
+            android:textSize="@dimen/textSizeDefault"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered" />
+
+        <EditText
+            android:id="@+id/editText_enterUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/lineSpacing"
+            android:background="@drawable/border_email_input"
+            android:fontFamily="@font/robotoregular"
+            android:hint="@string/nome_de_usuario"
+            android:inputType="text"
+            android:padding="@dimen/paddingEditText"
+            android:textSize="@dimen/textSizeDefault"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterName" />
+
+        <EditText
+            android:id="@+id/editText_enterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/lineSpacing"
+            android:layout_marginBottom="@dimen/lineSpacing"
+            android:background="@drawable/border_email_input"
+            android:fontFamily="@font/robotoregular"
+            android:hint="@string/senha"
+            android:inputType="textPassword"
+            android:padding="@dimen/paddingEditText"
+            android:textSize="@dimen/textSizeDefault"
+            app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterUserName"
+            app:layout_constraintVertical_bias="@dimen/biasVerticalFinalForm" />
+
+        <Button
+            android:id="@+id/button_nextRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/botton_next_pre_login"
+            android:fontFamily="@font/dosisbold"
+            android:text="@string/textButton_next"
+            android:textColor="@color/colorTextBottonEmailPreLogin"
+            android:textSize="@dimen/textSizeDefault"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

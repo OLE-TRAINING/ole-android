@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="marginTopEditTextNameRegister">100dp</dimen>
+    <dimen name="marginStandard">8dp</dimen>
+    <dimen name="paddingLayout">30dp</dimen>
+    <dimen name="paddingEditText">15dp</dimen>
+    <dimen name="textSizeDefault">16sp</dimen>
+    <dimen name="defaultHeaderLetterSpacing">.15</dimen>
+    <dimen name="textSizeHeader">22sp</dimen>
+    <dimen name="bigMargin">16dp</dimen>
+    <dimen name="lineSpacing">36dp</dimen>
+    <dimen name="formFinalSpacing">160dp</dimen>
+    <dimen name="biasVerticalFinalForm">0.0</dimen>
+</resources>
