@@ -9,4 +9,6 @@
     <color name="colorBottonEmailPreLogin">#129793</color>
     <color name="colorTextBottonEmailPreLogin">#ffffff</color>
     <color name="colorTextError">#db4437</color>
+    <color name="colorBorderEmailInputError">#fe3824</color>
+    <color name="colorTransparent">#00ffffff</color>
 </resources>
