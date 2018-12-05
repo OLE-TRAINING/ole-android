@@ -16,7 +16,7 @@
         android:background="@color/colorBackground"
         android:clipToPadding="false"
         android:padding="@dimen/paddingLayout"
-        tools:context=".RegisterNewUserActivity">
+        tools:context=".RegisterNewUserActivity.RegisterNewUserActivity">
 
         <ImageView
             android:id="@+id/imageView_backArrow"

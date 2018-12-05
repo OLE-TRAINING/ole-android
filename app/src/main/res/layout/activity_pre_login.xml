@@ -3,6 +3,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView_Layout_PreLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -10,13 +11,13 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/Layout_PreLogin"
+        android:id="@+id/layout_PreLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBackground"
         android:clipToPadding="false"
         android:padding="@dimen/paddingLayout"
-        tools:context=".PreLoginActivity"
+        tools:context=".PreLoginActivity.PreLoginActivity"
         tools:outlineProvider="background">
 
         <TextView
