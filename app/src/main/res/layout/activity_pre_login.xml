@@ -3,6 +3,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView_Layout_PreLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -10,18 +11,20 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/Layout_PreLogin"
+        android:id="@+id/layout_PreLogin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorBackground"
         android:clipToPadding="false"
         android:padding="@dimen/paddingLayout"
-        tools:context=".PreLoginActivity">
+        tools:context=".PreLoginActivity.PreLoginActivity"
+        tools:outlineProvider="background">
 
         <TextView
             android:id="@+id/textView_headerPreLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTopHeaderPreLogin"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="@string/textView_EmailHeadHint"
@@ -32,22 +35,44 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <EditText
             android:id="@+id/editText_enterEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
             android:background="@drawable/border_email_input"
             android:fontFamily="@font/robotoregular"
             android:hint="@string/emailHint"
             android:inputType="textEmailAddress"
             android:padding="@dimen/paddingEditText"
-            android:textSize="@dimen/textSizeDefault"
+            android:textSize="@dimen/textSizeSmall"
             app:layout_constraintBottom_toTopOf="@id/button_nextPreLogin"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView_headerPreLogin" />
+
+        <TextView
+            android:id="@+id/textView_EmailErrorPreLogin"
+            android:layout_width="314dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:fontFamily="@font/robotoregular"
+            android:text="@string/error_email_pre_login"
+            android:textColor="@color/colorTextError"
+            android:textSize="@dimen/textSizeTiny"
+            app:layout_constraintStart_toStartOf="@+id/editText_enterEmail"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterEmail" />
+
+        <ImageView
+            android:id="@+id/imageView_EmailErrorPreLogin"
+            android:layout_width="@dimen/sizeAlertError"
+            android:layout_height="@dimen/sizeAlertError"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:layout_marginEnd="@dimen/marginDefault"
+            app:layout_constraintEnd_toEndOf="@+id/editText_enterEmail"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterEmail"
+            app:srcCompat="@drawable/ic_warning_black_24dp" />
 
         <Button
             android:id="@+id/button_nextPreLogin"
@@ -61,7 +86,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>
+
+
+

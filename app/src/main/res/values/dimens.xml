@@ -5,10 +5,21 @@
     <dimen name="paddingLayout">30dp</dimen>
     <dimen name="paddingEditText">15dp</dimen>
     <dimen name="textSizeDefault">16sp</dimen>
+    <dimen name="textSizeSmall">14sp</dimen>
+    <dimen name="textSizeTiny">10sp</dimen>
     <dimen name="defaultHeaderLetterSpacing">.15</dimen>
     <dimen name="textSizeHeader">22sp</dimen>
     <dimen name="bigMargin">16dp</dimen>
     <dimen name="lineSpacing">36dp</dimen>
     <dimen name="formFinalSpacing">160dp</dimen>
     <dimen name="biasVerticalFinalForm">0.0</dimen>
+    <dimen name="marginDefault">8dp</dimen>
+    <dimen name="marginTopHeaderPreLogin">36dp</dimen>
+    <dimen name="sizeAlertError">15dp</dimen>
+    <dimen name="sizeBackArrow">35dp</dimen>
+    <dimen name="marginTopHeaderRegister">44dp</dimen>
+    <dimen name="constraintHorizontal_biasHeaderRegister">0.502</dimen>
+    <dimen name="constraintHorizontal_biasEnterName">0.633</dimen>
+    <dimen name="marginTopEnterName">56dp</dimen>
+
 </resources>

@@ -16,14 +16,22 @@
         android:background="@color/colorBackground"
         android:clipToPadding="false"
         android:padding="@dimen/paddingLayout"
-        tools:context=".RegisterNewUserActivity">
+        tools:context=".RegisterNewUserActivity.RegisterNewUserActivity">
+
+        <ImageView
+            android:id="@+id/imageView_backArrow"
+            android:layout_width="@dimen/sizeBackArrow"
+            android:layout_height="@dimen/sizeBackArrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
         <TextView
             android:id="@+id/textView_headerRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/marginStandard"
-            android:layout_marginTop="@dimen/marginStandard"
+            android:layout_marginTop="@dimen/marginTopHeaderRegister"
             android:layout_marginEnd="@dimen/marginStandard"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
@@ -32,6 +40,7 @@
             android:textColor="@color/colorEmailHeadHint"
             android:textSize="@dimen/textSizeHeader"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="@dimen/constraintHorizontal_biasHeaderRegister"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,16 +64,40 @@
             android:id="@+id/editText_enterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginTopEditTextNameRegister"
+            android:layout_marginTop="84dp"
             android:background="@drawable/border_email_input"
             android:fontFamily="@font/robotoregular"
-            android:hint="@string/nome_completo"
+            android:hint="@string/full_name"
             android:inputType="textPersonName"
             android:padding="@dimen/paddingEditText"
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.633"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered" />
+
+        <TextView
+            android:id="@+id/textView_enterNameRegisterError"
+            android:layout_width="313dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:fontFamily="@font/robotoregular"
+            android:text="@string/error_register_name"
+            android:textColor="@color/colorTextError"
+            android:textSize="@dimen/textSizeTiny"
+            app:layout_constraintStart_toStartOf="@+id/editText_enterName"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterName" />
+
+        <ImageView
+            android:id="@+id/imageView_enterNameRegisterError"
+            android:layout_width="@dimen/sizeAlertError"
+            android:layout_height="@dimen/sizeAlertError"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:layout_marginEnd="@dimen/marginDefault"
+            app:layout_constraintEnd_toEndOf="@+id/editText_enterName"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterName"
+            app:srcCompat="@drawable/ic_warning_black_24dp" />
 
         <EditText
             android:id="@+id/editText_enterUserName"
@@ -73,13 +106,36 @@
             android:layout_marginTop="@dimen/lineSpacing"
             android:background="@drawable/border_email_input"
             android:fontFamily="@font/robotoregular"
-            android:hint="@string/nome_de_usuario"
+            android:hint="@string/user_name"
             android:inputType="text"
             android:padding="@dimen/paddingEditText"
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText_enterName" />
+
+        <TextView
+            android:id="@+id/textView_enterUserNameError"
+            android:layout_width="313dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:fontFamily="@font/robotoregular"
+            android:text="@string/error_user_name"
+            android:textColor="@color/colorTextError"
+            android:textSize="@dimen/textSizeTiny"
+            app:layout_constraintStart_toStartOf="@+id/editText_enterUserName"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterUserName" />
+
+        <ImageView
+            android:id="@+id/imageView_enterUserNameError"
+            android:layout_width="@dimen/sizeAlertError"
+            android:layout_height="@dimen/sizeAlertError"
+            android:layout_marginEnd="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
+            app:layout_constraintEnd_toEndOf="@+id/editText_enterUserName"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterUserName"
+            app:srcCompat="@drawable/ic_warning_black_24dp" />
 
         <EditText
             android:id="@+id/editText_enterPassword"
@@ -89,20 +145,45 @@
             android:layout_marginBottom="@dimen/lineSpacing"
             android:background="@drawable/border_email_input"
             android:fontFamily="@font/robotoregular"
-            android:hint="@string/senha"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:padding="@dimen/paddingEditText"
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.633"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText_enterUserName"
-            app:layout_constraintVertical_bias="@dimen/biasVerticalFinalForm" />
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView_enterPasswordError"
+            android:layout_width="316dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:fontFamily="@font/robotoregular"
+            android:text="@string/error_password"
+            android:textColor="@color/colorTextError"
+            android:textSize="@dimen/textSizeTiny"
+            app:layout_constraintStart_toStartOf="@+id/editText_enterPassword"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterPassword" />
+
+        <ImageView
+            android:id="@+id/imageView_enterPasswordError"
+            android:layout_width="@dimen/sizeAlertError"
+            android:layout_height="@dimen/sizeAlertError"
+            android:layout_marginEnd="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
+            app:layout_constraintEnd_toEndOf="@+id/editText_enterPassword"
+            app:layout_constraintTop_toBottomOf="@+id/editText_enterPassword"
+            app:srcCompat="@drawable/ic_warning_black_24dp" />
 
         <Button
             android:id="@+id/button_nextRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/botton_next_pre_login"
             android:fontFamily="@font/dosisbold"
             android:text="@string/textButton_next"
@@ -111,6 +192,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>
