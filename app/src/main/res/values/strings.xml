@@ -2,17 +2,18 @@
     <string name="app_name">OTmovies</string>
     <string name="textView_EmailHeadHint">INFORME SUA CONTA DE\n E-MAIL</string>
     <string name="textButton_next">AVANÇAR</string>
-    <string name="emailHint">E-mail</string>
+    <string name="emailHint">E-mail (exemplo@mail.com)</string>
     <string name="textHeaderRegister">CRIE SUA NOVA \nCONTA</string>
     <string name="userEmailEntered">useremail@empresa.com</string>
     <string name="password">Senha</string>
     <string name="user_name">Nome de usuário</string>
     <string name="full_name">Nome Completo</string>
     <string name="RegexForNameUnicode">^[\\p{L} .\'-]+$</string>
-    <string name="error_email_pre_login">Insira um e-mail válido</string>
-    <string name="error_register_name">Somente letras até 50 caracteres. Se necessário, abrevie.</string>
-    <string name="error_user_name">Insira letras e/ou números até 15 caracteres</string>
-    <string name="error_password">Insira letras e números, entre 6 e 10 caracteres.</string>
+    <string name="error_email_pre_login">E-mail inválido (exemplo@mail.com)</string>
+    <string name="error_register_name">Obrigatório apenas letras e no máximo 50 caracteres.</string>
+    <string name="error_user_name">Obrigatório conter letras e/ou números, no máximo 15 caracteres.</string>
+    <string name="error_password">Obrigatório conter letras e números, entre 6 e 10 caracteres.</string>
     <string name="EmailPreLogin">EmailPreLogin</string>
-    <string name="OnlyNumberOrLetter">[a-zA-Z0-9]+</string>
+    <string name="RegexOnlyNumberOrLetter">[a-zA-Z0-9]+</string>
+    <string name="RegexOnlyNumberAndLetter">(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*</string>
 </resources>

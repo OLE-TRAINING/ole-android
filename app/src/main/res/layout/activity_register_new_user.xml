@@ -64,7 +64,7 @@
             android:id="@+id/editText_enterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginTopEnterName"
+            android:layout_marginTop="84dp"
             android:background="@drawable/border_email_input"
             android:fontFamily="@font/robotoregular"
             android:hint="@string/full_name"
@@ -72,14 +72,14 @@
             android:padding="@dimen/paddingEditText"
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="@dimen/constraintHorizontal_biasEnterName"
+            app:layout_constraintHorizontal_bias="0.633"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered" />
 
         <TextView
             android:id="@+id/textView_enterNameRegisterError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="313dp"
+            android:layout_height="18dp"
             android:layout_marginStart="@dimen/marginDefault"
             android:layout_marginTop="@dimen/marginDefault"
             android:fontFamily="@font/robotoregular"
@@ -116,9 +116,10 @@
 
         <TextView
             android:id="@+id/textView_enterUserNameError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="313dp"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
             android:fontFamily="@font/robotoregular"
             android:text="@string/error_user_name"
             android:textColor="@color/colorTextError"
@@ -131,6 +132,7 @@
             android:layout_width="@dimen/sizeAlertError"
             android:layout_height="@dimen/sizeAlertError"
             android:layout_marginEnd="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
             app:layout_constraintEnd_toEndOf="@+id/editText_enterUserName"
             app:layout_constraintTop_toBottomOf="@+id/editText_enterUserName"
             app:srcCompat="@drawable/ic_warning_black_24dp" />
@@ -149,15 +151,17 @@
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.633"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText_enterUserName"
-            app:layout_constraintVertical_bias="@dimen/biasVerticalFinalForm" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/textView_enterPasswordError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="316dp"
+            android:layout_height="17dp"
             android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
             android:fontFamily="@font/robotoregular"
             android:text="@string/error_password"
             android:textColor="@color/colorTextError"
@@ -170,6 +174,7 @@
             android:layout_width="@dimen/sizeAlertError"
             android:layout_height="@dimen/sizeAlertError"
             android:layout_marginEnd="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
             app:layout_constraintEnd_toEndOf="@+id/editText_enterPassword"
             app:layout_constraintTop_toBottomOf="@+id/editText_enterPassword"
             app:srcCompat="@drawable/ic_warning_black_24dp" />
@@ -178,6 +183,7 @@
             android:id="@+id/button_nextRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/botton_next_pre_login"
             android:fontFamily="@font/dosisbold"
             android:text="@string/textButton_next"

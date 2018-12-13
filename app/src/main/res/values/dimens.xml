@@ -6,7 +6,7 @@
     <dimen name="paddingEditText">15dp</dimen>
     <dimen name="textSizeDefault">16sp</dimen>
     <dimen name="textSizeSmall">14sp</dimen>
-    <dimen name="textSizeTiny">12sp</dimen>
+    <dimen name="textSizeTiny">10sp</dimen>
     <dimen name="defaultHeaderLetterSpacing">.15</dimen>
     <dimen name="textSizeHeader">22sp</dimen>
     <dimen name="bigMargin">16dp</dimen>
