@@ -49,12 +49,12 @@ public class PreLoginActivity extends AppCompatActivity {
 
     private void setEmailErrorVisibility (Boolean visible){
         if(visible){
-            preLoginViewHolder.editTextEnterEmail.setBackground(getDrawable(R.drawable.border_email_input_error));
+            preLoginViewHolder.editTextEnterEmail.setBackground(getDrawable(R.drawable.border_input_error));
             preLoginViewHolder.textViewEmailErrorPreLogin.setVisibility(View.VISIBLE);
             preLoginViewHolder.imageViewEmailErrorPreLogin.setVisibility(View.VISIBLE);
             setEmailValidationStatus(false);
         } else {
-            preLoginViewHolder.editTextEnterEmail.setBackground(getDrawable(R.drawable.border_email_input));
+            preLoginViewHolder.editTextEnterEmail.setBackground(getDrawable(R.drawable.border_input));
             preLoginViewHolder.textViewEmailErrorPreLogin.setVisibility(View.INVISIBLE);
             preLoginViewHolder.imageViewEmailErrorPreLogin.setVisibility(View.INVISIBLE);
             setEmailValidationStatus(true);

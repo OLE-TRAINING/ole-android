@@ -40,7 +40,7 @@
             android:id="@+id/editText_enterEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_email_input"
+            android:background="@drawable/border_input"
             android:fontFamily="@font/robotoregular"
             android:hint="@string/emailHint"
             android:inputType="textEmailAddress"
@@ -64,6 +64,7 @@
             app:layout_constraintStart_toStartOf="@+id/editText_enterEmail"
             app:layout_constraintTop_toBottomOf="@+id/editText_enterEmail" />
 
+
         <ImageView
             android:id="@+id/imageView_EmailErrorPreLogin"
             android:layout_width="@dimen/sizeAlertError"
@@ -78,7 +79,7 @@
             android:id="@+id/button_nextPreLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/botton_next_pre_login"
+            android:background="@drawable/button_style"
             android:fontFamily="@font/dosisbold"
             android:text="@string/textButton_next"
             android:textColor="@color/colorTextBottonEmailPreLogin"

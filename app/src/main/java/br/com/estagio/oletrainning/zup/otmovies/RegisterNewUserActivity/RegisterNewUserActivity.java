@@ -10,6 +10,7 @@ import android.view.View;
 
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity;
 
 public class RegisterNewUserActivity extends AppCompatActivity {
 
@@ -79,12 +80,12 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
     private void setNameErrorVisibility(Boolean visible) {
         if (visible) {
-            registerNewUserViewHolder.editTextEnterNameRegister.setBackground(getDrawable(R.drawable.border_email_input_error));
+            registerNewUserViewHolder.editTextEnterNameRegister.setBackground(getDrawable(R.drawable.border_input_error));
             registerNewUserViewHolder.textViewEnterNameRegisterError.setVisibility(View.VISIBLE);
             registerNewUserViewHolder.imageViewEnterNameRegisterError.setVisibility(View.VISIBLE);
             setNameValidationStatus(false);
         } else {
-            registerNewUserViewHolder.editTextEnterNameRegister.setBackground(getDrawable(R.drawable.border_email_input));
+            registerNewUserViewHolder.editTextEnterNameRegister.setBackground(getDrawable(R.drawable.border_input));
             registerNewUserViewHolder.textViewEnterNameRegisterError.setVisibility(View.INVISIBLE);
             registerNewUserViewHolder.imageViewEnterNameRegisterError.setVisibility(View.INVISIBLE);
             setNameValidationStatus(true);
@@ -93,12 +94,12 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
     private void setUserNameErrorVisibility(Boolean visible) {
         if (visible) {
-            registerNewUserViewHolder.editTextEnterUserName.setBackground(getDrawable(R.drawable.border_email_input_error));
+            registerNewUserViewHolder.editTextEnterUserName.setBackground(getDrawable(R.drawable.border_input_error));
             registerNewUserViewHolder.textViewEnterUserNameError.setVisibility(View.VISIBLE);
             registerNewUserViewHolder.imageViewEnterUserNameError.setVisibility(View.VISIBLE);
             setUsernameValidationStatus(false);
         } else {
-            registerNewUserViewHolder.editTextEnterUserName.setBackground(getDrawable(R.drawable.border_email_input));
+            registerNewUserViewHolder.editTextEnterUserName.setBackground(getDrawable(R.drawable.border_input));
             registerNewUserViewHolder.textViewEnterUserNameError.setVisibility(View.INVISIBLE);
             registerNewUserViewHolder.imageViewEnterUserNameError.setVisibility(View.INVISIBLE);
             setUsernameValidationStatus(true);
@@ -107,12 +108,12 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
     private void setPasswordErrorVisibility(Boolean visible) {
         if (visible) {
-            registerNewUserViewHolder.editTextEnterPassword.setBackground(getDrawable(R.drawable.border_email_input_error));
+            registerNewUserViewHolder.editTextEnterPassword.setBackground(getDrawable(R.drawable.border_input_error));
             registerNewUserViewHolder.textViewEnterPasswordError.setVisibility(View.VISIBLE);
             registerNewUserViewHolder.imageViewEnterPasswordError.setVisibility(View.VISIBLE);
             setPasswordValidationStatus(false);
         } else {
-            registerNewUserViewHolder.editTextEnterPassword.setBackground(getDrawable(R.drawable.border_email_input));
+            registerNewUserViewHolder.editTextEnterPassword.setBackground(getDrawable(R.drawable.border_input));
             registerNewUserViewHolder.textViewEnterPasswordError.setVisibility(View.INVISIBLE);
             registerNewUserViewHolder.imageViewEnterPasswordError.setVisibility(View.INVISIBLE);
             setPasswordValidationStatus(true);
@@ -148,7 +149,8 @@ public class RegisterNewUserActivity extends AppCompatActivity {
             passwordValidationStatus = validatePassword();
             setPasswordErrorVisibility(!passwordValidationStatus);
             if (nameValidationStatus && usernameValidationStatus && passwordValidationStatus) {
-
+                Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
+                startActivity(intent);
             }
         }
     };

@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterNewUserActivity.RegisterNewUserActivity"/>
-        <activity android:name=".TokenValidationActivity"></activity>
+        <activity android:name=".TokenValidationActivity"/>
+
     </application>
 
 </manifest>
