@@ -3,11 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TokenValidationActivity">
 
     <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText
+        android:id="@+id/errorEditText_token"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:setHint="Telefone"
+        app:setMessageError="Telefone feio"
+        app:setInicialErrorVisibility="true">
 
     </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText>
 

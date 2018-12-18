@@ -60,7 +60,58 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_headerRegister" />
 
-        <EditText
+        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText
+            android:id="@+id/errorEditText_enterName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="96dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
+            app:setHint="@string/full_name"
+            app:setInicialErrorVisibility="false"
+            app:setInputType="textPersonName"
+            app:setMessageError="@string/error_register_name">
+
+        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText>
+
+
+        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText
+            android:id="@+id/errorEditText_enterUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:setHint="@string/user_name"
+            app:setInicialErrorVisibility="false"
+            app:setInputType="text"
+            app:setMessageError="@string/error_user_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterName">
+
+        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText>
+
+        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText
+            android:id="@+id/errorEditText_enterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:setHint="@string/password"
+            app:setInicialErrorVisibility="false"
+            app:setInputType="textPassword"
+            app:setMessageError="@string/error_password"
+            app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.633"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterUserName"
+            app:layout_constraintVertical_bias="0.0">
+
+        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText>
+
+        <!--<EditText
             android:id="@+id/editText_enterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -177,7 +228,7 @@
             android:layout_marginTop="@dimen/marginDefault"
             app:layout_constraintEnd_toEndOf="@+id/editText_enterPassword"
             app:layout_constraintTop_toBottomOf="@+id/editText_enterPassword"
-            app:srcCompat="@drawable/ic_warning_black_24dp" />
+            app:srcCompat="@drawable/ic_warning_black_24dp" />-->
 
         <Button
             android:id="@+id/button_nextRegister"

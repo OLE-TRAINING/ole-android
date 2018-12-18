@@ -7,19 +7,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 class PreLoginViewHolder{
 
-    EditText editTextEnterEmail;
-    ImageView imageViewEmailErrorPreLogin;
-    TextView textViewEmailErrorPreLogin;
     Button buttonNextPreLogin;
+    ErrorEditText errorEditTextEnterEmail;
 
     PreLoginViewHolder(View view) {
-        editTextEnterEmail = view.findViewById(R.id.editText_enterEmail);
-        textViewEmailErrorPreLogin = view.findViewById(R.id.textView_EmailErrorPreLogin);
-        imageViewEmailErrorPreLogin = view.findViewById(R.id.imageView_EmailErrorPreLogin);
         buttonNextPreLogin = view.findViewById(R.id.button_nextPreLogin);
+        errorEditTextEnterEmail = view.findViewById(R.id.errorEditText_enterEmail);
     }
 }
