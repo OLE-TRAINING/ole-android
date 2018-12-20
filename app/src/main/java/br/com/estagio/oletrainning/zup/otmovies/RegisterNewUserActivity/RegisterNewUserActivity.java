@@ -8,9 +8,11 @@ import android.text.TextWatcher;
 import android.view.View;
 
 
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginViewHolder;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity;
+import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 public class RegisterNewUserActivity extends AppCompatActivity {
 
@@ -21,25 +23,14 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private final Integer MAXSIZEPASS = 10;
     private final Integer MAXSIZEUSERNAME = 15;
 
-    private final String NAME_VALIDATION_STATUS = "nameValidationStatus";
-    private final String USER_NAME_VALIDATION_STATUS = "userNameValidationStatus";
-    private final String PASSWORD_VALIDATION_STATUS = "passwordValidationStatus";
+    private final String NAME_VALIDATION_STATUS = "nameContainsError";
+    private final String USER_NAME_VALIDATION_STATUS = "userNameContainsError";
+    private final String PASSWORD_VALIDATION_STATUS = "passwordContainsError";
 
-    private boolean nameValidationStatus;
-    private boolean usernameValidationStatus;
-    private boolean passwordValidationStatus;
+    private boolean nameContainsError;
+    private boolean userNameContainsError;
+    private boolean passwordContainsError;
 
-    public void setNameValidationStatus(boolean nameValidationStatus) {
-        this.nameValidationStatus = nameValidationStatus;
-    }
-
-    public void setUsernameValidationStatus(boolean usernameValidationStatus) {
-        this.usernameValidationStatus = usernameValidationStatus;
-    }
-
-    public void setPasswordValidationStatus(boolean passwordValidationStatus) {
-        this.passwordValidationStatus = passwordValidationStatus;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,39 +42,33 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
         setupListeners();
 
-        String emailEntered = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-        registerNewUserViewHolder.textViewEmailEntered.setText(emailEntered);
-
-        setNameValidationStatus(true);
-        setUsernameValidationStatus(true);
-        setPasswordValidationStatus(true);
-        registerNewUserViewHolder.errorEditTextEnterNameRegister.setErrorVisibility(false);
-        registerNewUserViewHolder.errorEditTextEnterUserName.setErrorVisibility(false);
-        registerNewUserViewHolder.errorEditTextEnterPassword.setErrorVisibility(false);
+        String emailed = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
+        registerNewUserViewHolder.textViewEmailEntered.setText(emailed);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(NAME_VALIDATION_STATUS, nameValidationStatus);
-        outState.putBoolean(USER_NAME_VALIDATION_STATUS, usernameValidationStatus);
-        outState.putBoolean(PASSWORD_VALIDATION_STATUS, passwordValidationStatus);
+        outState.putBoolean(NAME_VALIDATION_STATUS, nameContainsError);
+        outState.putBoolean(USER_NAME_VALIDATION_STATUS, userNameContainsError);
+        outState.putBoolean(PASSWORD_VALIDATION_STATUS, passwordContainsError);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        nameValidationStatus = savedInstanceState.getBoolean(NAME_VALIDATION_STATUS);
-        usernameValidationStatus = savedInstanceState.getBoolean(USER_NAME_VALIDATION_STATUS);
-        passwordValidationStatus = savedInstanceState.getBoolean(PASSWORD_VALIDATION_STATUS);
-        registerNewUserViewHolder.errorEditTextEnterNameRegister.setErrorVisibility(!nameValidationStatus);
-        registerNewUserViewHolder.errorEditTextEnterUserName.setErrorVisibility(!usernameValidationStatus);
-        registerNewUserViewHolder.errorEditTextEnterPassword.setErrorVisibility(!passwordValidationStatus);
+        nameContainsError = savedInstanceState.getBoolean(NAME_VALIDATION_STATUS);
+        userNameContainsError = savedInstanceState.getBoolean(USER_NAME_VALIDATION_STATUS);
+        passwordContainsError = savedInstanceState.getBoolean(PASSWORD_VALIDATION_STATUS);
+        registerNewUserViewHolder.customComponentErrorEditTextName.setErrorVisibility(nameContainsError);
+        registerNewUserViewHolder.customComponentErrorEditTextUserName.setErrorVisibility(userNameContainsError);
+        registerNewUserViewHolder.customComponentErrorEditTextPassword.setErrorVisibility(passwordContainsError);
     }
 
-
-
     private void setupListeners() {
+        registerNewUserViewHolder.customComponentErrorEditTextName.getEditText().addTextChangedListener(editTextNameTextChangedListener);
+        registerNewUserViewHolder.customComponentErrorEditTextUserName.getEditText().addTextChangedListener(editTextUserNameTextChangedListener);
+        registerNewUserViewHolder.customComponentErrorEditTextPassword.getEditText().addTextChangedListener(editTextPasswordTextChangedListener);
         registerNewUserViewHolder.imageViewBackArrow.setOnClickListener(imageViewBackArrowOnClickListener);
         registerNewUserViewHolder.buttonNextRegister.setOnClickListener(buttonNextRegisterOnClickListener);
     }
@@ -102,49 +87,100 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            nameValidationStatus = validateName();
-            usernameValidationStatus = validateUserName();
-            passwordValidationStatus = validatePassword();
-            registerNewUserViewHolder.errorEditTextEnterNameRegister.setErrorVisibility(!nameValidationStatus);
-            registerNewUserViewHolder.errorEditTextEnterUserName.setErrorVisibility(!usernameValidationStatus);
-            registerNewUserViewHolder.errorEditTextEnterPassword.setErrorVisibility(!passwordValidationStatus);
-            if (nameValidationStatus && usernameValidationStatus && passwordValidationStatus) {
-                Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
+            nameContainsError = !validateName();
+            userNameContainsError = !validateUserName();
+            passwordContainsError = !validatePassword();
+            registerNewUserViewHolder.customComponentErrorEditTextName.setErrorVisibility(nameContainsError);
+            registerNewUserViewHolder.customComponentErrorEditTextUserName.setErrorVisibility(userNameContainsError);
+            registerNewUserViewHolder.customComponentErrorEditTextPassword.setErrorVisibility(passwordContainsError);
+            if (validateName() && validateUserName() && validatePassword()) {
+                Intent intent = new Intent(RegisterNewUserActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         }
     };
 
-
     private boolean validateName() {
-        String name = registerNewUserViewHolder.errorEditTextEnterNameRegister.getText().toString().trim();
+        String name = registerNewUserViewHolder.customComponentErrorEditTextName.getText().toString().trim();
         return (!name.isEmpty() && validateNameFormat());
+    }
 
+    private boolean validateUserName() {
+        String userName = registerNewUserViewHolder.customComponentErrorEditTextUserName.getText().toString().trim();
+        return (!userName.isEmpty() && validateUserNameFormat());
+    }
+
+    private boolean validatePassword() {
+        String password = registerNewUserViewHolder.customComponentErrorEditTextPassword.getText().toString().trim();
+        return (!password.isEmpty() && validatePasswordFormat());
     }
 
     private boolean validateNameFormat() {
-        String name = registerNewUserViewHolder.errorEditTextEnterNameRegister.getText().toString().trim();
+        String name = registerNewUserViewHolder.customComponentErrorEditTextName.getText().toString().trim();
         return name.length() <= MAXSIZENAME && name.matches(getString(R.string.RegexForNameUnicode));
     }
 
     private boolean validateUserNameFormat() {
-        String userName = registerNewUserViewHolder.errorEditTextEnterUserName.getText().toString().trim();
+        String userName = registerNewUserViewHolder.customComponentErrorEditTextUserName.getText().toString().trim();
         return userName.length() <= MAXSIZEUSERNAME && userName.matches(getString(R.string.RegexOnlyNumberOrLetter));
     }
 
-    private boolean validateUserName() {
-        String userName = registerNewUserViewHolder.errorEditTextEnterUserName.getText().toString().trim();
-        return (!userName.isEmpty() && validateUserNameFormat());
-
-    }
-
     private boolean validatePasswordFormat() {
-        String userName = registerNewUserViewHolder.errorEditTextEnterPassword.getText().toString().trim();
+        String userName = registerNewUserViewHolder.customComponentErrorEditTextPassword.getText().toString().trim();
         return userName.length() >= MINSIZEPASS && userName.length() <= MAXSIZEPASS && userName.matches(getString(R.string.RegexOnlyNumberAndLetter));
     }
 
-    private boolean validatePassword() {
-        String password = registerNewUserViewHolder.errorEditTextEnterPassword.getText().toString().trim();
-        return (!password.isEmpty() && validatePasswordFormat());
-    }
+    private TextWatcher editTextNameTextChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            nameContainsError = false;
+            registerNewUserViewHolder.customComponentErrorEditTextName.setErrorVisibility(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    private TextWatcher editTextUserNameTextChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            userNameContainsError = false;
+            registerNewUserViewHolder.customComponentErrorEditTextUserName.setErrorVisibility(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    private TextWatcher editTextPasswordTextChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            passwordContainsError = false;
+            registerNewUserViewHolder.customComponentErrorEditTextPassword.setErrorVisibility(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 }

@@ -9,7 +9,7 @@
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/Layout_Register"
+        android:id="@+id/layout_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBackground"
@@ -25,20 +25,17 @@
             app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
         <TextView
-            android:id="@+id/textView_headerRegister"
+            android:id="@+id/textView_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/marginStandard"
-            android:layout_marginTop="@dimen/marginTopHeaderRegister"
-            android:layout_marginEnd="@dimen/marginStandard"
+            android:layout_marginTop="@dimen/marginTopHeaderPreLogin"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
-            android:text="@string/textHeaderRegister"
+            android:text="INFORME SUA SENHA"
             android:textAlignment="center"
             android:textColor="@color/colorEmailHeadHint"
             android:textSize="@dimen/textSizeHeader"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="@dimen/constraintHorizontal_biasHeaderRegister"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,83 +43,61 @@
             android:id="@+id/textView_emailEntered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/marginStandard"
-            android:layout_marginTop="@dimen/marginStandard"
-            android:layout_marginEnd="@dimen/marginStandard"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/robotoregular"
             android:text="@string/userEmailEntered"
             android:textAlignment="center"
-            android:textColor="@color/colorEmailHeadHint"
+            android:textColor="@color/colorTextDefault"
             android:textSize="@dimen/textSizeDefault"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_headerRegister" />
+            app:layout_constraintBottom_toTopOf="@+id/errorEditText_login"
+            app:layout_constraintStart_toStartOf="@+id/errorEditText_login" />
 
         <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
-            android:id="@+id/errorEditText_enterName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="96dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
-            app:setHint="@string/full_name"
-            app:setInicialErrorVisibility="false"
-            app:setInputType="textPersonName"
-            app:setMessageError="@string/error_register_name">
-
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
-
-
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
-            android:id="@+id/errorEditText_enterUserName"
+            android:id="@+id/errorEditText_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            app:setHint="@string/user_name"
+            app:layout_constraintBottom_toTopOf="@+id/button_sign_in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_header"
+            app:setHint="Código"
             app:setInicialErrorVisibility="false"
             app:setInputType="text"
-            app:setMessageError="@string/error_user_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterName">
+            app:setMessageError="Código inválido">
 
         </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
-            android:id="@+id/errorEditText_enterPassword"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textView_password"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            app:setHint="@string/password"
-            app:setInicialErrorVisibility="false"
-            app:setInputType="textPassword"
-            app:setMessageError="@string/error_password"
-            app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.633"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterUserName"
-            app:layout_constraintVertical_bias="0.0">
-
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/robotoregular"
+            android:text="Esqueceu sua senha?"
+            android:textAlignment="center"
+            android:textColor="@color/colorTextDefault"
+            android:textSize="@dimen/textSizeDefault"
+            app:layout_constraintEnd_toEndOf="@+id/errorEditText_login"
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_login" />
 
         <Button
-            android:id="@+id/button_nextRegister"
+            android:id="@+id/button_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:background="@drawable/button_style"
             android:fontFamily="@font/dosisbold"
-            android:text="@string/textButton_next"
+            android:text="entrar"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>
+
+
+

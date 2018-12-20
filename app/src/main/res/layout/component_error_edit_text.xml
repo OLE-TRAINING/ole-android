@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_ErrorEditText"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_ErrorTextInputLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorTransparent">
+    android:background="@color/colorTransparent"
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/editText_ErrorEditText"
@@ -21,10 +23,13 @@
 
     <TextView
         android:id="@+id/textView_ErrorEditText"
-        android:layout_width="314dp"
-        android:layout_height="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/editText_ErrorEditText"
         android:layout_marginStart="@dimen/marginDefault"
-        android:layout_marginTop="@dimen/marginDefault"
+        android:layout_marginTop="8sp"
+        android:layout_marginEnd="8dp"
+        android:drawableEnd="@drawable/ic_warning_black_24dp"
         android:fontFamily="@font/robotoregular"
         android:text="@string/error_email_pre_login"
         android:textColor="@color/colorTextError"
@@ -32,14 +37,4 @@
         app:layout_constraintStart_toStartOf="@+id/editText_ErrorEditText"
         app:layout_constraintTop_toBottomOf="@+id/editText_ErrorEditText" />
 
-    <ImageView
-        android:id="@+id/imageView_ErrorEditText"
-        android:layout_width="@dimen/sizeAlertError"
-        android:layout_height="@dimen/sizeAlertError"
-        android:layout_marginTop="@dimen/marginDefault"
-        android:layout_marginEnd="@dimen/marginDefault"
-        app:layout_constraintEnd_toEndOf="@+id/editText_ErrorEditText"
-        app:layout_constraintTop_toBottomOf="@+id/editText_ErrorEditText"
-        app:srcCompat="@drawable/ic_warning_black_24dp" />
-
-</android.support.constraint.ConstraintLayout>
+</merge>

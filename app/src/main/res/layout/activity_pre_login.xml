@@ -3,22 +3,18 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView_Layout_PreLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/layout_PreLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBackground"
         android:clipToPadding="false"
-        android:padding="@dimen/paddingLayout"
-        tools:context=".PreLoginActivity.PreLoginActivity"
-        tools:outlineProvider="background">
+        android:padding="@dimen/paddingLayout">
 
         <TextView
             android:id="@+id/textView_headerPreLogin"
@@ -35,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText
+        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
             android:id="@+id/errorEditText_enterEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +43,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView_headerPreLogin">
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ErrorEditText>
+        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
         <Button
             android:id="@+id/button_nextPreLogin"

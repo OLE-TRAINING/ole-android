@@ -1,9 +1,10 @@
 package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
 import android.content.Intent;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -13,12 +14,9 @@ import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.Register
 public class PreLoginActivity extends AppCompatActivity {
 
     private PreLoginViewHolder preLoginViewHolder;
-    private boolean emailValidationStatus;
-    private final String EMAIL_VALIDATION_STATUS = "emailValidationStatus";
+    private boolean emailContainsError;
+    private final String EMAIL_VALIDATION_STATUS = "emailContainsError";
 
-    public void setEmailValidationStatus(boolean emailValidationStatus) {
-        this.emailValidationStatus = emailValidationStatus;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,37 +27,36 @@ public class PreLoginActivity extends AppCompatActivity {
         setContentView(view);
 
         setupListeners();
-
-        setEmailValidationStatus(true);
-        preLoginViewHolder.errorEditTextEnterEmail.setErrorVisibility(false);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(EMAIL_VALIDATION_STATUS, emailValidationStatus);
+        outState.putBoolean(EMAIL_VALIDATION_STATUS, emailContainsError);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        emailValidationStatus = savedInstanceState.getBoolean(EMAIL_VALIDATION_STATUS);
-        preLoginViewHolder.errorEditTextEnterEmail.setErrorVisibility(!emailValidationStatus);
+        emailContainsError = savedInstanceState.getBoolean(EMAIL_VALIDATION_STATUS);
+        preLoginViewHolder.customComponentErrorEditTextEmail.setErrorVisibility(emailContainsError);
     }
 
 
     private void setupListeners() {
         preLoginViewHolder.buttonNextPreLogin.setOnClickListener(buttonNextPreLoginOnClickListener);
+        preLoginViewHolder.customComponentErrorEditTextEmail.getEditText().addTextChangedListener(editTextPasswordTextChangedListener);
+
     }
 
     private View.OnClickListener buttonNextPreLoginOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-                emailValidationStatus = validateEmail();
-                preLoginViewHolder.errorEditTextEnterEmail.setErrorVisibility(!emailValidationStatus);
-                if (emailValidationStatus) {
+                emailContainsError = !validateEmail();
+                preLoginViewHolder.customComponentErrorEditTextEmail.setErrorVisibility(emailContainsError);
+                if (validateEmail()) {
                     Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
-                    String emailInput = preLoginViewHolder.errorEditTextEnterEmail.getText().toString().trim();
+                    String emailInput = preLoginViewHolder.customComponentErrorEditTextEmail.getText().toString().trim();
                     intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                     startActivity(intent);
                 }
@@ -68,11 +65,29 @@ public class PreLoginActivity extends AppCompatActivity {
     };
 
     private boolean validateEmail() {
-        String emailInput = preLoginViewHolder.errorEditTextEnterEmail.getText().toString().trim();
+        String emailInput = preLoginViewHolder.customComponentErrorEditTextEmail.getText().toString().trim();
         return (!emailInput.isEmpty() && validateEmailFormat(emailInput));
     }
 
     private boolean validateEmailFormat(final String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+    private TextWatcher editTextPasswordTextChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            emailContainsError = false;
+            preLoginViewHolder.customComponentErrorEditTextEmail.setErrorVisibility(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 }

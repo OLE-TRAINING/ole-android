@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="ErrorEditText">
+    <declare-styleable name="ComponentErrorEditText">
         <attr name="setHint" format="string"/>
         <attr name="setMessageError" format="string"/>
         <attr name="setInicialErrorVisibility" format="boolean"/>
