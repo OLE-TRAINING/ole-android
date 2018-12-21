@@ -7,28 +7,30 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
+
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/layout_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBackground"
-        android:clipToPadding="false"
-        android:padding="@dimen/paddingLayout">
+        android:background="@color/colorBackground">
 
         <ImageView
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
+            android:layout_margin="30dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout_red_toast"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
         <TextView
             android:id="@+id/textView_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginTopHeaderPreLogin"
+            android:layout_marginTop="76dp"
+            android:layout_marginLeft="@dimen/paddingLayout"
+            android:layout_marginEnd="@dimen/paddingLayout"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="INFORME SUA SENHA"
@@ -36,14 +38,15 @@
             android:textColor="@color/colorEmailHeadHint"
             android:textSize="@dimen/textSizeHeader"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.559"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout_red_toast" />
 
         <TextView
             android:id="@+id/textView_emailEntered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:fontFamily="@font/robotoregular"
             android:text="@string/userEmailEntered"
             android:textAlignment="center"
@@ -56,13 +59,12 @@
             android:id="@+id/errorEditText_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="30dp"
             app:layout_constraintBottom_toTopOf="@+id/button_sign_in"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_header"
-            app:setHint="Código"
+            app:setHint="Senha"
             app:setInicialErrorVisibility="false"
             app:setInputType="text"
             app:setMessageError="Código inválido">
@@ -89,12 +91,41 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_style"
             android:fontFamily="@font/dosisbold"
+            android:layout_margin="@dimen/paddingLayout"
             android:text="entrar"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/linearLayout_red_toast"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:visibility="visible"
+            android:background="@color/colorBorderEmailInputError"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_red_toast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/robotoregular"
+                android:gravity="center_vertical"
+                android:text="Usuário ou senha inválido!"
+                android:textColor="@color/colorTextWhite"
+                android:textSize="@dimen/textSizeDefault" />
+
+        </LinearLayout>
+
+
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>
