@@ -18,6 +18,7 @@
         android:padding="@dimen/paddingLayout">
 
         <ImageView
+            android:contentDescription="@string/imageview_backarrow"
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
@@ -32,7 +33,7 @@
             android:layout_marginTop="@dimen/marginTopHeaderPreLogin"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
-            android:text="PARA SUA SEGURANÇA,\n INFORME O CÓDIGO ENVIADO\n PARA O SEU\n E-MAIL:"
+            android:text="@string/token_sended"
             android:textAlignment="center"
             android:textColor="@color/colorEmailHeadHint"
             android:textSize="@dimen/textSizeHeader"
@@ -59,17 +60,16 @@
             android:id="@+id/errorEditText_token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="124dp"
-            android:layout_marginBottom="168dp"
+            android:layout_marginTop="@dimen/marginTopErrorEditText_Token"
+            android:layout_marginBottom="@dimen/marginBottonErrorEditText_token"
             app:layout_constraintBottom_toTopOf="@id/button_nextPreLogin"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
-            app:layout_constraintVertical_bias="0.83"
-            app:setHint="Código"
+            app:setHint="@string/code"
             app:setInicialErrorVisibility="false"
             app:setInputType="text"
-            app:setMessageError="Código inválido">
+            app:setMessageError="@string/errorCode">
 
         </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
@@ -77,14 +77,13 @@
             android:id="@+id/textView_NotReceiveToken"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
             android:fontFamily="@font/robotoregular"
-            android:text="Não recebeu o código?"
+            android:text="@string/noReceiveCode"
             android:textAlignment="center"
             android:textColor="@color/colorTextDefault"
             android:textSize="@dimen/textSizeDefault"
-
             app:layout_constraintStart_toStartOf="@+id/errorEditText_token"
             app:layout_constraintTop_toBottomOf="@+id/errorEditText_token" />
 
@@ -92,10 +91,10 @@
             android:id="@+id/textView_ReSendToken"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginTop="@dimen/marginDefault"
             android:fontFamily="@font/robotoregular"
-            android:text="Enviar novamente"
+            android:text="@string/SendAgain"
             android:textAlignment="center"
             android:textColor="@color/colorTextRed"
             android:textSize="@dimen/textSizeDefault"
@@ -108,7 +107,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_style"
             android:fontFamily="@font/dosisbold"
-            android:text="validar"
+            android:text="@string/validate"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -16,4 +16,24 @@
     <string name="EmailPreLogin">EmailPreLogin</string>
     <string name="RegexOnlyNumberOrLetter">[a-zA-Z0-9]+</string>
     <string name="RegexOnlyNumberAndLetter">(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*</string>
+    <string name="confirmInformation">CONFIRME AS INFORMAÇÕES\nDE SUA CONTA</string>
+    <string name="avancar">avançar</string>
+    <string name="imageview_backarrow">imageView_backArrow</string>
+    <string name="headerFirst_informTokenAndNewPassword">IDENTIFICAMOS QUE VOCÊ JÁ  INICIOU UM CADASTRO, PARA  CONCLUIRMOS, INFORME O  CÓDIGO ENVIADO PARA O SEU  E-MAIL:</string>
+    <string name="noReceiveCode">Não recebeu o código?</string>
+    <string name="SendAgain">Enviar novamente</string>
+    <string name="validate">validar</string>
+    <string name="token_sended">PARA SUA SEGURANÇA\nINFORME O CÓDIGO ENVIADO\nPARA O SEU\nE-MAIL:</string>
+    <string name="create_new_password">CRIE SUA NOVA  SENHA:</string>
+    <string name="change_password">alterar senha</string>
+    <string name="code">Código</string>
+    <string name="errorCode">Código inválido</string>
+    <string name="passwordConfirm">Confirme sua senha</string>
+    <string name="noMatchPassword">As senhas não batem</string>
+    <string name="newPassword">Nova Senha</string>
+    <string name="enterPassword">INFORME SUA SENHA</string>
+    <string name="forgotPassword">Esqueceu sua senha?</string>
+    <string name="enter">entrar</string>
+    <string name="errorUserOrPassword">Usuário ou senha inválido!</string>
+    <string name="tokenValidation">Token de validação</string>
 </resources>

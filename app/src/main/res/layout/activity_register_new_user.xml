@@ -17,6 +17,7 @@
         android:padding="@dimen/paddingLayout">
 
         <ImageView
+            android:contentDescription="@string/imageview_backarrow"
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
@@ -62,7 +63,7 @@
             android:id="@+id/errorEditText_enterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="96dp"
+            android:layout_marginTop="@dimen/ninetySix"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
@@ -78,8 +79,8 @@
             android:id="@+id/errorEditText_enterUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:layout_marginBottom="@dimen/marginDefault"
             app:setHint="@string/user_name"
             app:setInicialErrorVisibility="false"
             app:setInputType="text"
@@ -94,18 +95,16 @@
             android:id="@+id/errorEditText_enterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:layout_marginBottom="@dimen/marginDefault"
             app:setHint="@string/password"
             app:setInicialErrorVisibility="false"
             app:setInputType="textPassword"
             app:setMessageError="@string/error_password"
             app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.633"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterUserName"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterUserName">
 
         </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
@@ -113,7 +112,7 @@
             android:id="@+id/button_nextRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/marginDefault"
             android:background="@drawable/button_style"
             android:fontFamily="@font/dosisbold"
             android:text="@string/textButton_next"

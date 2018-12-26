@@ -18,9 +18,10 @@
         </activity>
         <activity android:name=".RegisterNewUserActivity.RegisterNewUserActivity" />
         <activity android:name=".TokenValidationActivity.TokenValidationActivity" />
-        <activity android:name=".EnterPasswordActivity.EnterPasswordActivity" />
         <activity android:name=".FinishYourRegistrationActivity.FinishYourRegistrationActivity" />
-        <activity android:name=".LoginActivity.LoginActivity"></activity>
+        <activity android:name=".LoginActivity.LoginActivity" />
+        <activity android:name=".informTokenAndNewPasswordActivity.informTokenAndNewPasswordActivity" />
+        <activity android:name=".confirmInformationActivity.confirmInformationActivity"></activity>
     </application>
 
 </manifest>

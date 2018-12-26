@@ -21,5 +21,17 @@
     <dimen name="constraintHorizontal_biasHeaderRegister">0.502</dimen>
     <dimen name="constraintHorizontal_biasEnterName">0.633</dimen>
     <dimen name="marginTopEnterName">56dp</dimen>
+    <dimen name="marginTopErrorEditText_Token">124dp</dimen>
+    <dimen name="marginBottonErrorEditText_token">168dp</dimen>
+    <dimen name="marginBotton_backArrow">8dp</dimen>
+    <dimen name="marginTopErrorEditText_token">112dp</dimen>
+    <dimen name="marginTopMedium">64dp</dimen>
+    <dimen name="marginTopSmall">12dp</dimen>
+    <dimen name="marginThirty">30dp</dimen>
+    <dimen name="marginSeventySix">76dp</dimen>
+    <dimen name="toastHeight">50dp</dimen>
+    <dimen name="ninetySix">96dp</dimen>
+    <dimen name="marginTwentyEight">28dp</dimen>
+
 
 </resources>
