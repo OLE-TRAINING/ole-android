@@ -1,20 +1,8 @@
 package br.com.estagio.oletrainning.zup.otmovies.LoginActivity;
 
-import android.animation.LayoutTransition;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.ChangeBounds;
-import android.transition.Transition;
-import android.transition.TransitionManager;
-import android.transition.TransitionValues;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.Interpolator;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.R;
 

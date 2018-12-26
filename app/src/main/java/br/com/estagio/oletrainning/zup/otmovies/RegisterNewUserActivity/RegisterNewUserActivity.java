@@ -7,12 +7,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
-
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
-import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginViewHolder;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 public class RegisterNewUserActivity extends AppCompatActivity {
 
