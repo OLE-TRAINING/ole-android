@@ -10,10 +10,10 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 class PreLoginViewHolder{
 
     Button buttonNextPreLogin;
-    ComponentErrorEditText customComponentErrorEditTextEmail;
+    ComponentErrorEditText errorEditTextEmail;
 
     PreLoginViewHolder(View view) {
         buttonNextPreLogin = view.findViewById(R.id.button_nextPreLogin);
-        customComponentErrorEditTextEmail = view.findViewById(R.id.errorEditText_enterEmail);
+        errorEditTextEmail = view.findViewById(R.id.errorEditText_enterEmail);
     }
 }

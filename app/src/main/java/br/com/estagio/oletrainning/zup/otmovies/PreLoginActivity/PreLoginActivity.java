@@ -39,13 +39,13 @@ public class PreLoginActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         emailContainsError = savedInstanceState.getBoolean(EMAIL_VALIDATION_STATUS);
-        preLoginViewHolder.customComponentErrorEditTextEmail.setErrorVisibility(emailContainsError);
+        preLoginViewHolder.errorEditTextEmail.setErrorVisibility(emailContainsError);
     }
 
 
     private void setupListeners() {
         preLoginViewHolder.buttonNextPreLogin.setOnClickListener(buttonNextPreLoginOnClickListener);
-        preLoginViewHolder.customComponentErrorEditTextEmail.getEditText().addTextChangedListener(editTextPasswordTextChangedListener);
+        preLoginViewHolder.errorEditTextEmail.getEditText().addTextChangedListener(editTextPasswordTextChangedListener);
 
     }
 
@@ -53,10 +53,10 @@ public class PreLoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
                 emailContainsError = !validateEmail();
-                preLoginViewHolder.customComponentErrorEditTextEmail.setErrorVisibility(emailContainsError);
+                preLoginViewHolder.errorEditTextEmail.setErrorVisibility(emailContainsError);
                 if (validateEmail()) {
                     Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
-                    String emailInput = preLoginViewHolder.customComponentErrorEditTextEmail.getText().toString().trim();
+                    String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                     intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                     startActivity(intent);
                 }
@@ -65,7 +65,7 @@ public class PreLoginActivity extends AppCompatActivity {
     };
 
     private boolean validateEmail() {
-        String emailInput = preLoginViewHolder.customComponentErrorEditTextEmail.getText().toString().trim();
+        String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
         return (!emailInput.isEmpty() && validateEmailFormat(emailInput));
     }
 
@@ -82,7 +82,7 @@ public class PreLoginActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             emailContainsError = false;
-            preLoginViewHolder.customComponentErrorEditTextEmail.setErrorVisibility(false);
+            preLoginViewHolder.errorEditTextEmail.setErrorVisibility(false);
         }
 
         @Override

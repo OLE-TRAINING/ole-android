@@ -10,15 +10,15 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 
 public class ConfirmInformationViewHolder {
 
-    private ImageView imageView;
-    private TextView textViewEmail;
-    private ComponentErrorEditText componentErrorEditText;
-    private Button button;
+    ImageView imageView;
+    TextView textViewEmail;
+    ComponentErrorEditText errorEditText;
+    Button button;
 
     ConfirmInformationViewHolder (View view) {
         imageView = view.findViewById(R.id.imageView_backArrow);
         textViewEmail = view.findViewById(R.id.textView_emailEntered);
-        componentErrorEditText = view.findViewById(R.id.errorEditText_token);
+        errorEditText = view.findViewById(R.id.errorEditText_token);
         button = view.findViewWithTag(R.id.button_next);
     }
 

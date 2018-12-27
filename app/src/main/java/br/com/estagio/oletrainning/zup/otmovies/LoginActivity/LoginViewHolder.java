@@ -14,7 +14,7 @@ public class LoginViewHolder {
 
         ImageView imageViewBackArrow;
         TextView textViewEmailEntered;
-        ComponentErrorEditText customComponentErrorEditTextPassword;
+        ComponentErrorEditText errorEditTextPassword;
         TextView textViewForgetPassword;
         LinearLayout linearLayout;
         Button buttonSignIn;
@@ -25,7 +25,7 @@ public class LoginViewHolder {
             imageViewBackArrow = view.findViewById(R.id.imageView_backArrow);
             textViewEmailEntered = view.findViewById(R.id.textView_emailEntered);
             textViewForgetPassword = view.findViewById(R.id.textView_password);
-            customComponentErrorEditTextPassword = view.findViewById(R.id.errorEditText_login);
+            errorEditTextPassword = view.findViewById(R.id.errorEditText_login);
             constraintLayout = view.findViewById(R.id.layout_login);
             linearLayout = view.findViewById(R.id.linearLayout_red_toast);
             buttonSignIn = view.findViewById(R.id.button_sign_in);
