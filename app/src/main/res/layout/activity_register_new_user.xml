@@ -101,7 +101,6 @@
             app:setInicialErrorVisibility="false"
             app:setInputType="textPassword"
             app:setMessageError="@string/error_password"
-            app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterUserName">
@@ -118,6 +117,7 @@
             android:text="@string/textButton_next"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterPassword"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

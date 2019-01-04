@@ -6,10 +6,17 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.RegisterNewUserService;
+import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
+import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterNewUserActivity extends AppCompatActivity {
 
@@ -39,8 +46,8 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
         setupListeners();
 
-        String emailed = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-        registerNewUserViewHolder.textViewEmailEntered.setText(emailed);
+        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
+        registerNewUserViewHolder.textViewEmailEntered.setText(emailAdd);
     }
 
     @Override
@@ -91,8 +98,33 @@ public class RegisterNewUserActivity extends AppCompatActivity {
             registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(userNameContainsError);
             registerNewUserViewHolder.errorEditTextPassword.setErrorVisibility(passwordContainsError);
             if (validateName() && validateUserName() && validatePassword()) {
-                Intent intent = new Intent(RegisterNewUserActivity.this, LoginActivity.class);
-                startActivity(intent);
+                RegisterNewUserService registerNewUserService = ServiceBuilder.buildService(RegisterNewUserService.class);
+                UserDates userDates = new UserDates();
+                userDates.setEmail(getIntent().getStringExtra(getString(R.string.EmailPreLogin)));
+                userDates.setPassword(registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim());
+                userDates.setCompleteName(registerNewUserViewHolder.errorEditTextName.getText().toString().trim());
+                userDates.setUsername(registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim());
+                Call<UserDates> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+
+                createNewUser.enqueue(new Callback<UserDates>() {
+                    @Override
+                    public void onResponse(Call<UserDates> call, Response<UserDates> response) {
+                        int code = response.code();
+                        if(code == 200){
+                            Intent intent = new Intent(RegisterNewUserActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(RegisterNewUserActivity.this,response.message(),Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserDates> call, Throwable t) {
+                        Toast.makeText(RegisterNewUserActivity.this,"Falha ao criar usuário",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         }
     };
