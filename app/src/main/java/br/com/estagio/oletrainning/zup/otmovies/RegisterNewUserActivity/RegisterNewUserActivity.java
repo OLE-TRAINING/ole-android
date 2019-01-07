@@ -88,6 +88,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         }
     };
 
+
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -104,11 +105,11 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                 userDates.setPassword(registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim());
                 userDates.setCompleteName(registerNewUserViewHolder.errorEditTextName.getText().toString().trim());
                 userDates.setUsername(registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim());
-                Call<UserDates> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+                Call<Void> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
 
-                createNewUser.enqueue(new Callback<UserDates>() {
+                createNewUser.enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<UserDates> call, Response<UserDates> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) {
                         int code = response.code();
                         if(code == 200){
                             Intent intent = new Intent(RegisterNewUserActivity.this, LoginActivity.class);
@@ -116,11 +117,10 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(RegisterNewUserActivity.this,response.message(),Toast.LENGTH_SHORT).show();
                         }
-
                     }
 
                     @Override
-                    public void onFailure(Call<UserDates> call, Throwable t) {
+                    public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(RegisterNewUserActivity.this,"Falha ao criar usuário",Toast.LENGTH_SHORT).show();
                     }
                 });

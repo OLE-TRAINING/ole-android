@@ -1,5 +1,13 @@
 package br.com.estagio.oletrainning.zup.otmovies.Services;
 
+import android.content.Intent;
+import android.widget.Toast;
+
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
+import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+
 public class UserDates {
 
     private String email;
@@ -39,4 +47,5 @@ public class UserDates {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }
