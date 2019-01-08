@@ -8,12 +8,23 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.RegisterNewUserService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import okhttp3.MediaType;
+import okhttp3.ResponseBody;
+import okio.BufferedSource;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -105,22 +116,28 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                 userDates.setPassword(registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim());
                 userDates.setCompleteName(registerNewUserViewHolder.errorEditTextName.getText().toString().trim());
                 userDates.setUsername(registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim());
-                Call<Void> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+                Call<ErrorMessage> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
 
-                createNewUser.enqueue(new Callback<Void>() {
+                createNewUser.enqueue(new Callback<ErrorMessage>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        int code = response.code();
-                        if(code == 200){
+                    public void onResponse(Call<ErrorMessage> call, Response<ErrorMessage> response) {
+                        if (response.isSuccessful()) {
                             Intent intent = new Intent(RegisterNewUserActivity.this, LoginActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(RegisterNewUserActivity.this,response.message(),Toast.LENGTH_SHORT).show();
+                            try {
+                                Gson gson = new Gson();
+                                Type type = new TypeToken<ErrorMessage>() {}.getType();
+                                ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(),type);
+                                Toast.makeText(RegisterNewUserActivity.this,errorMessage.getMessage(), Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+                                Toast.makeText(RegisterNewUserActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
+                    public void onFailure(Call<ErrorMessage> call, Throwable t) {
                         Toast.makeText(RegisterNewUserActivity.this,"Falha ao criar usuário",Toast.LENGTH_SHORT).show();
                     }
                 });

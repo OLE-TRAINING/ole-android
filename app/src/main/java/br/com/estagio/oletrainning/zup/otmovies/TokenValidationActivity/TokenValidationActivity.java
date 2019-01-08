@@ -15,9 +15,8 @@ public class TokenValidationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_token_validation);
 
-        View view = this.getLayoutInflater().inflate(R.layout.activity_login, null);
+        View view = this.getLayoutInflater().inflate(R.layout.activity_token_validation, null);
         this.tokenValidationViewHolder = new TokenValidationViewHolder(view);
         setContentView(view);
 

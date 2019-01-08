@@ -32,6 +32,8 @@
     <dimen name="toastHeight">50dp</dimen>
     <dimen name="ninetySix">96dp</dimen>
     <dimen name="marginTwentyEight">28dp</dimen>
+    <dimen name="marginDefaultLayout">30dp</dimen>
+    <dimen name="marginHeaderTopLayout">70dp</dimen>
 
 
 </resources>

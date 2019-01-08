@@ -2,14 +2,12 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-
         android:id="@+id/layout_token"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,7 +100,7 @@
             app:layout_constraintTop_toBottomOf="@+id/errorEditText_token" />
 
         <Button
-            android:id="@+id/button_validade"
+            android:id="@+id/button_validate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_style"

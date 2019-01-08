@@ -32,6 +32,10 @@ public class UserDates {
         return registrationStatus;
     }
 
+    public void setRegistrationStatus(String registrationStatus) {
+        this.registrationStatus = registrationStatus;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -47,5 +51,6 @@ public class UserDates {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
 }

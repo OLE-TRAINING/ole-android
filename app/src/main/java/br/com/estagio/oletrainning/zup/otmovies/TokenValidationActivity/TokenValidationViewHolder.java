@@ -21,6 +21,6 @@ public class TokenValidationViewHolder {
         textViewEmail = view.findViewById(R.id.textView_emailEntered);
         errorEditText = view.findViewById(R.id.errorEditText_token);
         textViewReSendToken = view.findViewById(R.id.textView_ReSendToken);
-        button = view.findViewById(R.id.button_validade);
+        button = view.findViewById(R.id.button_validate);
     }
 }
