@@ -12,15 +12,15 @@
         android:id="@+id/Layout_Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBackground"
-        android:clipToPadding="false"
-        android:padding="@dimen/paddingLayout">
+        android:background="@color/colorBackground">
 
         <ImageView
-            android:contentDescription="@string/imageview_backarrow"
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:contentDescription="@string/imageview_backarrow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
@@ -63,8 +63,11 @@
             android:id="@+id/errorEditText_enterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ninetySix"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="112dp"
+            android:layout_marginRight="30dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.733"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
             app:setHint="@string/full_name"
@@ -79,15 +82,16 @@
             android:id="@+id/errorEditText_enterUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:layout_marginTop="@dimen/marginDefault"
-            android:layout_marginBottom="@dimen/marginDefault"
+            android:layout_marginRight="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterName"
             app:setHint="@string/user_name"
             app:setInicialErrorVisibility="false"
             app:setInputType="text"
-            app:setMessageError="@string/error_user_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterName">
+            app:setMessageError="@string/error_user_name">
 
         </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
@@ -95,15 +99,16 @@
             android:id="@+id/errorEditText_enterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:layout_marginTop="@dimen/marginDefault"
-            android:layout_marginBottom="@dimen/marginDefault"
+            android:layout_marginRight="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterUserName"
             app:setHint="@string/password"
             app:setInicialErrorVisibility="false"
             app:setInputType="textPassword"
-            app:setMessageError="@string/error_password"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterUserName">
+            app:setMessageError="@string/error_password">
 
         </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
@@ -111,16 +116,37 @@
             android:id="@+id/button_nextRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/marginDefault"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/button_style"
             android:fontFamily="@font/dosisbold"
             android:text="@string/textButton_next"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterPassword"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterPassword"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="-3dp"
+                android:visibility="visible"
+                style= "?android:attr/progressBarStyleHorizontal"
+                android:background="@color/colorTransparent"
+                android:max="100" />
+
+        </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>
 

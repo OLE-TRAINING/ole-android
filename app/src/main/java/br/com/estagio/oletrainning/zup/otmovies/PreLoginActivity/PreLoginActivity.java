@@ -72,41 +72,35 @@ public class PreLoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextPreLoginOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            new SyncProgressBar(PreLoginActivity.this, preLoginViewHolder.progressBar).execute();
             emailContainsError = !validateEmail();
             preLoginViewHolder.errorEditTextEmail.setErrorVisibility(emailContainsError);
             String emailEntered = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
             if (validateEmail()) {
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                preLoginViewHolder.progressBar.setVisibility(View.VISIBLE);
-                new SyncProgressBar(PreLoginActivity.this, preLoginViewHolder.progressBar).execute();
-
                 RetrievingUserDatesService retrievingUserDatesService = ServiceBuilder.buildService(RetrievingUserDatesService.class);
                 Call<UserDates> userDatesCall = retrievingUserDatesService.getUsersDate(emailEntered, "593c3280aedd01364c73000d3ac06d76");
-
                 userDatesCall.enqueue(new Callback<UserDates>() {
                     @Override
                     public void onResponse(Call<UserDates> call, Response<UserDates> response) {
-                        preLoginViewHolder.progressBar.setProgress(80);
+                        preLoginViewHolder.progressBar.setProgress(100);
                         UserDates userDates = response.body();
                         if (response.isSuccessful() && userDates != null) {
                             if (userDates.getRegistrationStatus().equals("REGISTERED")) {
                                 Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
                                 String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                                 intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                                preLoginViewHolder.progressBar.setProgress(100);
                                 startActivity(intent);
                             } else if (userDates.getRegistrationStatus().equals("PENDING")) {
                                 Intent intent = new Intent(PreLoginActivity.this, TokenValidationActivity.class);
                                 String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                                 intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                                preLoginViewHolder.progressBar.setProgress(100);
                                 startActivity(intent);
                             } else if (userDates.getRegistrationStatus().equals("INEXISTENT")) {
                                 Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
                                 String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                                 intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                                preLoginViewHolder.progressBar.setProgress(100);
                                 startActivity(intent);
                             }
                         } else {
@@ -125,14 +119,13 @@ public class PreLoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<UserDates> call, Throwable t) {
                         preLoginViewHolder.progressBar.setProgress(100);
-                        preLoginViewHolder.progressBar.setVisibility(View.INVISIBLE);
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         Toast.makeText(PreLoginActivity.this, "Falha ao identificar o usuário, tente novamente mais tarde", Toast.LENGTH_SHORT).show();
                     }
                 });
 
             }
-
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     };
 

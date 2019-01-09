@@ -21,6 +21,7 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.RegisterNewUserService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
+import br.com.estagio.oletrainning.zup.otmovies.Services.ServicesFunctions;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
@@ -45,6 +46,12 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private boolean nameContainsError;
     private boolean userNameContainsError;
     private boolean passwordContainsError;
+
+    private ErrorMessage errorMessage = new ErrorMessage();
+
+    public ErrorMessage getErrorMessage() {
+        return errorMessage;
+    }
 
 
     @Override
@@ -116,35 +123,66 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                 userDates.setPassword(registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim());
                 userDates.setCompleteName(registerNewUserViewHolder.errorEditTextName.getText().toString().trim());
                 userDates.setUsername(registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim());
-                Call<ErrorMessage> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+                Call<Void> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
 
-                createNewUser.enqueue(new Callback<ErrorMessage>() {
+                isPostRequestOk(userDates, registerNewUserService, createNewUser);
+
+                Toast.makeText(RegisterNewUserActivity.this, getErrorMessage().getMessage(), Toast.LENGTH_LONG).show();
+
+                /*createNewUser.enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<ErrorMessage> call, Response<ErrorMessage> response) {
-                        if (response.isSuccessful()) {
-                            Intent intent = new Intent(RegisterNewUserActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                        } else {
-                            try {
-                                Gson gson = new Gson();
-                                Type type = new TypeToken<ErrorMessage>() {}.getType();
-                                ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(),type);
-                                Toast.makeText(RegisterNewUserActivity.this,errorMessage.getMessage(), Toast.LENGTH_LONG).show();
-                            } catch (Exception e) {
-                                Toast.makeText(RegisterNewUserActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(response.raw().code() == 200){
+                                Intent intent = new Intent(RegisterNewUserActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            } else
+                                try {
+                                    Gson gson = new Gson();
+                                    Type type = new TypeToken<ErrorMessage>() {}.getType();
+                                    ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(),type);
+                                    Toast.makeText(RegisterNewUserActivity.this,errorMessage.getMessage(), Toast.LENGTH_LONG).show();
+                                } catch (Exception e) {
+                                    Toast.makeText(RegisterNewUserActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                         }
-                    }
 
                     @Override
-                    public void onFailure(Call<ErrorMessage> call, Throwable t) {
+                    public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(RegisterNewUserActivity.this,"Falha ao criar usuário",Toast.LENGTH_SHORT).show();
                     }
                 });
+*/
 
             }
         }
     };
+
+    public ErrorMessage isPostRequestOk(UserDates body, RegisterNewUserService regNewUserService, Call<Void> voidCall) {
+        voidCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.raw().code() == 200){
+                    getErrorMessage().setMessage("Usuário cadastrado com sucesso!");
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<ErrorMessage>() {}.getType();
+                        ErrorMessage errorMessage = new ErrorMessage();
+                        errorMessage = gson.fromJson(response.errorBody().charStream(),type);
+                        getErrorMessage().setMessage(errorMessage.getMessage());
+                    } catch (Exception e) {
+                        getErrorMessage().setMessage(e.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                getErrorMessage().setMessage("Falha ao criar usuário");
+            }
+        });
+        return getErrorMessage();
+    }
 
     private boolean validateName() {
         String name = registerNewUserViewHolder.errorEditTextName.getText().toString().trim();

@@ -8,5 +8,5 @@ import retrofit2.http.Query;
 public interface RegisterNewUserService {
 
     @POST ("users")
-    Call <ErrorMessage> userRegister(@Body UserDates newUser, @Query("gw-app-key") String gwkey);
+    Call <Void> userRegister(@Body UserDates newUser, @Query("gw-app-key") String gwkey);
 }

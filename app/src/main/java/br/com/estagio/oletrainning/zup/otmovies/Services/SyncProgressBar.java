@@ -8,7 +8,7 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
 
     private ProgressBar progressBar;
     private int total = 0;
-    private static int PROGRESSO = 20;
+    private static int PROGRESS = 20;
 
     public SyncProgressBar(Context context, ProgressBar progressBar) {
         this.progressBar = progressBar;
@@ -23,11 +23,11 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
     protected String doInBackground(Object... params) {
         try {
 
-            Thread.sleep(250);
+            Thread.sleep(500);
 
-            for (int i=0; i<16; i++) {
+            for (int i=0; i<8; i++) {
                 publishProgress();
-                Thread.sleep(250);
+                Thread.sleep(500);
             }
 
         } catch (InterruptedException e) {
@@ -39,8 +39,8 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
 
     @Override
     protected void onProgressUpdate(Object... values) {
-        total += PROGRESSO;
-        progressBar.incrementProgressBy(PROGRESSO);
+        total += PROGRESS;
+        progressBar.incrementProgressBy(PROGRESS);
 
         super.onProgressUpdate(values);
     }
