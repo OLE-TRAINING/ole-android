@@ -8,27 +8,17 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
+import java.io.IOException;
 
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.PostRegisterNewUserService.CallbackNewUser;
 import br.com.estagio.oletrainning.zup.otmovies.Services.RegisterNewUserService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
-import br.com.estagio.oletrainning.zup.otmovies.Services.ServicesFunctions;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
-import okhttp3.MediaType;
-import okhttp3.ResponseBody;
-import okio.BufferedSource;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RegisterNewUserActivity extends AppCompatActivity {
 
@@ -46,12 +36,6 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private boolean nameContainsError;
     private boolean userNameContainsError;
     private boolean passwordContainsError;
-
-    private ErrorMessage errorMessage = new ErrorMessage();
-
-    public ErrorMessage getErrorMessage() {
-        return errorMessage;
-    }
 
 
     @Override
@@ -123,11 +107,17 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                 userDates.setPassword(registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim());
                 userDates.setCompleteName(registerNewUserViewHolder.errorEditTextName.getText().toString().trim());
                 userDates.setUsername(registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim());
-                Call<Void> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
 
-                isPostRequestOk(userDates, registerNewUserService, createNewUser);
+                CallbackNewUser postNewUserService =
+                        new CallbackNewUser(RegisterNewUserActivity.this);
 
-                Toast.makeText(RegisterNewUserActivity.this, getErrorMessage().getMessage(), Toast.LENGTH_LONG).show();
+
+
+                Call<Void> callNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+
+                callNewUser.enqueue(postNewUserService);
+
+                Toast.makeText(RegisterNewUserActivity.this,postNewUserService.getTextErrorMessage()[1],Toast.LENGTH_SHORT).show();
 
                 /*createNewUser.enqueue(new Callback<Void>() {
                     @Override
@@ -157,32 +147,6 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         }
     };
 
-    public ErrorMessage isPostRequestOk(UserDates body, RegisterNewUserService regNewUserService, Call<Void> voidCall) {
-        voidCall.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.raw().code() == 200){
-                    getErrorMessage().setMessage("Usuário cadastrado com sucesso!");
-                } else {
-                    try {
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<ErrorMessage>() {}.getType();
-                        ErrorMessage errorMessage = new ErrorMessage();
-                        errorMessage = gson.fromJson(response.errorBody().charStream(),type);
-                        getErrorMessage().setMessage(errorMessage.getMessage());
-                    } catch (Exception e) {
-                        getErrorMessage().setMessage(e.getMessage());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                getErrorMessage().setMessage("Falha ao criar usuário");
-            }
-        });
-        return getErrorMessage();
-    }
 
     private boolean validateName() {
         String name = registerNewUserViewHolder.errorEditTextName.getText().toString().trim();

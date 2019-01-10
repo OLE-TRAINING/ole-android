@@ -43,7 +43,7 @@ public class ComponentErrorEditText extends ConstraintLayout {
         String errorMessageTextView = typedArray.getString(
                 R.styleable.ComponentErrorEditText_setMessageError);
         if (errorMessageTextView != null) {
-            textView.setText(errorMessageTextView);
+            setMessageError(errorMessageTextView);
         }
 
         Boolean defaultErrorVisibility = typedArray.getBoolean(R.styleable.ComponentErrorEditText_setInicialErrorVisibility,Boolean.FALSE);
@@ -69,7 +69,7 @@ public class ComponentErrorEditText extends ConstraintLayout {
         return editText.getText();
     }
 
-    public void init(Context context) {
+   private void init(Context context) {
         view = inflate(context,R.layout.component_error_edit_text,this);
         editText = view.findViewById(R.id.editText_ErrorEditText);
         textView = view.findViewById(R.id.textView_ErrorEditText);
@@ -83,5 +83,9 @@ public class ComponentErrorEditText extends ConstraintLayout {
             editText.setBackground(getResources().getDrawable(R.drawable.border_input,null));
             textView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void setMessageError(String text){
+        textView.setText(text);
     }
 }
