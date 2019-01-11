@@ -36,4 +36,9 @@
     <string name="enter">entrar</string>
     <string name="errorUserOrPassword">Usuário ou senha inválido!</string>
     <string name="tokenValidation">Token de validação</string>
+    <string name="registerOk">Usuário cadastrado com sucesso!</string>
+    <string name="error_nullfield">Não são permitidos campos nulos ou vazios</string>
+    <string name="duplicate_email">Email já cadastrado</string>
+    <string name="duplicate_username">Nome de usuário já cadastrado</string>
+    <string name="emailregister">emailregister</string>
 </resources>

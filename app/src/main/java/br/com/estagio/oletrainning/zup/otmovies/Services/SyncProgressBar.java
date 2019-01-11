@@ -47,7 +47,7 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        progressBar.setVisibility(ProgressBar.INVISIBLE);
         super.onPostExecute(result);
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
     }
 }

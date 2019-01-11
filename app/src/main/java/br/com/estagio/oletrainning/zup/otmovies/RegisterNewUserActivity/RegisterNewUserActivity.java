@@ -6,19 +6,26 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
+import java.io.IOException;
+import java.lang.reflect.Type;
+
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
-import br.com.estagio.oletrainning.zup.otmovies.Services.PostRegisterNewUserService.CallbackNewUser;
 import br.com.estagio.oletrainning.zup.otmovies.Services.RegisterNewUserService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
+import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterNewUserActivity extends AppCompatActivity {
 
@@ -94,6 +101,9 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            new SyncProgressBar(RegisterNewUserActivity.this, registerNewUserViewHolder.progressBar).execute();
             nameContainsError = !validateName();
             userNameContainsError = !validateUserName();
             passwordContainsError = !validatePassword();
@@ -108,44 +118,67 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                 userDates.setCompleteName(registerNewUserViewHolder.errorEditTextName.getText().toString().trim());
                 userDates.setUsername(registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim());
 
-                CallbackNewUser postNewUserService =
-                        new CallbackNewUser(RegisterNewUserActivity.this);
+                Call<Void> createNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
 
-
-
-                Call<Void> callNewUser = registerNewUserService.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
-
-                callNewUser.enqueue(postNewUserService);
-
-                Toast.makeText(RegisterNewUserActivity.this,postNewUserService.getTextErrorMessage()[1],Toast.LENGTH_SHORT).show();
-
-                /*createNewUser.enqueue(new Callback<Void>() {
+                createNewUser.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                            if(response.raw().code() == 200){
-                                Intent intent = new Intent(RegisterNewUserActivity.this, LoginActivity.class);
-                                startActivity(intent);
-                            } else
-                                try {
-                                    Gson gson = new Gson();
-                                    Type type = new TypeToken<ErrorMessage>() {}.getType();
-                                    ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(),type);
-                                    Toast.makeText(RegisterNewUserActivity.this,errorMessage.getMessage(), Toast.LENGTH_LONG).show();
-                                } catch (Exception e) {
-                                    Toast.makeText(RegisterNewUserActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                        }
+                        registerNewUserViewHolder.progressBar.setProgress(100);
+                        controlResponse(response);
+                    }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(RegisterNewUserActivity.this,"Falha ao criar usuário",Toast.LENGTH_SHORT).show();
+                        registerNewUserViewHolder.progressBar.setProgress(100);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        if(t instanceof IOException){
+                            Toast.makeText(RegisterNewUserActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(RegisterNewUserActivity.this,"Falha ao cadastrar o usuário", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
-*/
+            }
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
 
+    };
+
+    private void controlResponse(Response response){
+        if(response.code() == 200){
+            Toast.makeText(RegisterNewUserActivity.this,getString(R.string.registerOk), Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
+            intent.putExtra(getString(R.string.emailregister),registerNewUserViewHolder.textViewEmailEntered.getText());
+            startActivity(intent);
+        } else {
+            try {
+                Gson gson = new Gson();
+                Type type = new TypeToken<ErrorMessage>() {
+                }.getType();
+                ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(), type);
+                switch (errorMessage.getKey()) {
+                    case "error.invalid.name":
+                        registerNewUserViewHolder.errorEditTextName.setErrorVisibility(true);
+                        break;
+                    case "error.invalid.username":
+                        registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(true);
+                        break;
+                    case "error.invalid.password":
+                        registerNewUserViewHolder.errorEditTextPassword.setErrorVisibility(true);
+                        break;
+                    case "error.resource.username.duplicated":
+                        registerNewUserViewHolder.errorEditTextUserName.setMessageError(getString(R.string.duplicate_username));
+                        registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(true);
+                        break;
+                    default:
+                        Toast.makeText(RegisterNewUserActivity.this, errorMessage.getMessage(), Toast.LENGTH_LONG).show();
+                        break;
+                }
+            } catch (Exception e) {
+                Toast.makeText(RegisterNewUserActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
-    };
+    }
 
 
     private boolean validateName() {
@@ -231,4 +264,11 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
         }
     };
+
+  @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(RegisterNewUserActivity.this, PreLoginActivity.class);
+        startActivity(intent);
+    }
 }

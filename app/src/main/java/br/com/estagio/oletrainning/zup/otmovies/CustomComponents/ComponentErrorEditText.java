@@ -86,6 +86,6 @@ public class ComponentErrorEditText extends ConstraintLayout {
     }
 
     public void setMessageError(String text){
-        textView.setText(text);
+        this.textView.setText(text);
     }
 }

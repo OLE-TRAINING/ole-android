@@ -1,11 +1,13 @@
 package br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 public class FinishYourRegistrationActivity extends AppCompatActivity {
@@ -25,14 +27,18 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        finishYourRegistrationViewHolder.button.setOnClickListener(buttonOnClickListener);
+        finishYourRegistrationViewHolder.imageView.setOnClickListener(backArrowOnClickListener);
         finishYourRegistrationViewHolder.errorEditText.getEditText().addTextChangedListener(errorEditTextTextWatcher);
     }
 
-    View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
+    View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            int id = v.getId();
+            if (id == R.id.imageView_backArrow) {
+                Intent intent = new Intent(FinishYourRegistrationActivity.this, PreLoginActivity.class);
+                startActivity(intent);
+            }
         }
     };
 
@@ -52,4 +58,11 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(FinishYourRegistrationActivity.this, PreLoginActivity.class);
+        startActivity(intent);
+    }
 }

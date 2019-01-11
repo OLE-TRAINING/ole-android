@@ -1,12 +1,15 @@
 package br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 
 public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
 
@@ -25,15 +28,20 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        informTokenAndNewPasswordViewHolder.button.setOnClickListener(buttonOnClickListener);
+        informTokenAndNewPasswordViewHolder.imageView.setOnClickListener(backArrowOnClickListener);
         informTokenAndNewPasswordViewHolder.errorEditTextToken.getEditText().addTextChangedListener(errorEditTextTextWatcherToken);
         informTokenAndNewPasswordViewHolder.errorEditTextPassword.getEditText().addTextChangedListener(errorEditTextTextWatcherPassword);
         informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.getEditText().addTextChangedListener(errorEditTextTextWatcherConfirmPassword);
     }
 
-    private View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            int id = v.getId();
+            if (id == R.id.imageView_backArrow) {
+                Intent intent = new Intent(InformTokenAndNewPasswordActivity.this, PreLoginActivity.class);
+                startActivity(intent);
+            }
 
         }
     };
@@ -88,5 +96,12 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(InformTokenAndNewPasswordActivity.this, PreLoginActivity.class);
+        startActivity(intent);
+    }
 
 }

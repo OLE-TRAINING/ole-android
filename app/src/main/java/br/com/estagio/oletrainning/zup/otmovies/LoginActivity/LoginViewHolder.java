@@ -29,7 +29,6 @@ public class LoginViewHolder {
             constraintLayout = view.findViewById(R.id.layout_login);
             linearLayout = view.findViewById(R.id.linearLayout_red_toast);
             buttonSignIn = view.findViewById(R.id.button_sign_in);
-
         }
     }
 

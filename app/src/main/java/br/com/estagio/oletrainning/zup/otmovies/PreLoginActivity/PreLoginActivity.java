@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
@@ -43,8 +44,6 @@ public class PreLoginActivity extends AppCompatActivity {
         View view = this.getLayoutInflater().inflate(R.layout.activity_pre_login, null);
         this.preLoginViewHolder = new PreLoginViewHolder(view);
         setContentView(view);
-
-
 
         setupListeners();
     }
@@ -108,19 +107,26 @@ public class PreLoginActivity extends AppCompatActivity {
                                 Gson gson = new Gson();
                                 Type type = new TypeToken<ErrorMessage>() {}.getType();
                                 ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(),type);
-                                Toast.makeText(PreLoginActivity.this,errorMessage.getMessage(), Toast.LENGTH_LONG).show();
+                                if(errorMessage.getKey().equals("error.invalid.username")){
+                                    preLoginViewHolder.errorEditTextEmail.setErrorVisibility(true);
+                                } else {
+                                    Toast.makeText(PreLoginActivity.this,errorMessage.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             } catch (Exception e) {
                                 Toast.makeText(PreLoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
-
                     }
 
                     @Override
                     public void onFailure(Call<UserDates> call, Throwable t) {
                         preLoginViewHolder.progressBar.setProgress(100);
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        Toast.makeText(PreLoginActivity.this, "Falha ao identificar o usuário, tente novamente mais tarde", Toast.LENGTH_SHORT).show();
+                        if(t instanceof IOException){
+                            Toast.makeText(PreLoginActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(PreLoginActivity.this,"Falha ao inserir e-mail", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 

@@ -1,10 +1,11 @@
 package br.com.estagio.oletrainning.zup.otmovies.LoginActivity;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-
-import br.com.estagio.oletrainning.zup.otmovies.R;
+        import android.content.Intent;
+        import android.support.v7.app.AppCompatActivity;
+        import android.os.Bundle;
+        import android.view.View;
+        import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
+        import br.com.estagio.oletrainning.zup.otmovies.R;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,13 +25,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupListeners() {
         loginViewHolder.buttonSignIn.setOnClickListener(buttonSignInOnClickListener);
-        loginViewHolder.textViewForgetPassword.setOnClickListener(textViewForgetPasswordOnClickListener);
+        loginViewHolder.imageViewBackArrow.setOnClickListener(backArrowOnClickListener);
+        loginViewHolder.buttonSignIn.setOnClickListener(buttonSignInOnClickListener);
     }
 
     View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(hideToast){
+            if (hideToast) {
                 showToast();
                 hideToast = false;
             } else {
@@ -50,6 +52,19 @@ public class LoginActivity extends AppCompatActivity {
         toast.show();
     }*/
 
+    View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            int id = v.getId();
+            if (id == R.id.imageView_backArrow) {
+                Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
+                startActivity(intent);
+            }
+        }
+    };
+
+
     private void showToast() {
         loginViewHolder.linearLayout.setVisibility(View.VISIBLE);
 
@@ -65,4 +80,11 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
+        startActivity(intent);
+    }
 }

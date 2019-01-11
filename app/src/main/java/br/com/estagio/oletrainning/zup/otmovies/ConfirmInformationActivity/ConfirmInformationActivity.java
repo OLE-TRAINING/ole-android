@@ -1,12 +1,15 @@
 package br.com.estagio.oletrainning.zup.otmovies.ConfirmInformationActivity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 
 public class ConfirmInformationActivity extends AppCompatActivity {
 
@@ -24,14 +27,18 @@ public class ConfirmInformationActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        confirmInformationViewHolder.button.setOnClickListener(buttonOnClickListener);
+        confirmInformationViewHolder.imageView.setOnClickListener(backArrowOnClickListener);
         confirmInformationViewHolder.errorEditText.getEditText().addTextChangedListener(errorEditTextTextWatcher);
     }
 
-    View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
+    View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            int id = v.getId();
+            if (id == R.id.imageView_backArrow) {
+                Intent intent = new Intent(ConfirmInformationActivity.this, PreLoginActivity.class);
+                startActivity(intent);
+            }
         }
     };
 
@@ -51,4 +58,11 @@ public class ConfirmInformationActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(ConfirmInformationActivity.this, PreLoginActivity.class);
+        startActivity(intent);
+    }
 }

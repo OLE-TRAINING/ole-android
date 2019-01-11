@@ -4,6 +4,7 @@ package br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText;
@@ -17,6 +18,7 @@ public class RegisterNewUserViewHolder {
     ComponentErrorEditText errorEditTextUserName;
     ComponentErrorEditText errorEditTextPassword;
     Button buttonNextRegister;
+    ProgressBar progressBar;
 
     public RegisterNewUserViewHolder(View view) {
         imageViewBackArrow = view.findViewById(R.id.imageView_backArrow);
@@ -25,5 +27,6 @@ public class RegisterNewUserViewHolder {
         errorEditTextUserName = view.findViewById(R.id.errorEditText_enterUserName);
         errorEditTextPassword = view.findViewById(R.id.errorEditText_enterPassword);
         buttonNextRegister = view.findViewById(R.id.button_nextRegister);
+        progressBar = view.findViewById(R.id.progress_bar);
     }
 }
