@@ -68,7 +68,8 @@
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorTransparent">
+            android:background="@color/colorTransparent"
+            tools:ignore="MissingConstraints">
 
             <ProgressBar
                 android:id="@+id/progress_bar"

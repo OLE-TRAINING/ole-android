@@ -104,6 +104,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             new SyncProgressBar(RegisterNewUserActivity.this, registerNewUserViewHolder.progressBar).execute();
+            registerNewUserViewHolder.progressBar.setVisibility(View.VISIBLE);
             nameContainsError = !validateName();
             userNameContainsError = !validateUserName();
             passwordContainsError = !validatePassword();
@@ -130,7 +131,6 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         registerNewUserViewHolder.progressBar.setProgress(100);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         if(t instanceof IOException){
                             Toast.makeText(RegisterNewUserActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
                         } else {
@@ -148,7 +148,6 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         if(response.code() == 200){
             Toast.makeText(RegisterNewUserActivity.this,getString(R.string.registerOk), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
-            intent.putExtra(getString(R.string.emailregister),registerNewUserViewHolder.textViewEmailEntered.getText());
             startActivity(intent);
         } else {
             try {

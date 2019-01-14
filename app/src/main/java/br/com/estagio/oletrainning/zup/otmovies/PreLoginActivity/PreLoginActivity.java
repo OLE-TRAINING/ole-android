@@ -74,6 +74,7 @@ public class PreLoginActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             new SyncProgressBar(PreLoginActivity.this, preLoginViewHolder.progressBar).execute();
+            preLoginViewHolder.progressBar.setVisibility(View.VISIBLE);
             emailContainsError = !validateEmail();
             preLoginViewHolder.errorEditTextEmail.setErrorVisibility(emailContainsError);
             String emailEntered = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
@@ -121,7 +122,6 @@ public class PreLoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<UserDates> call, Throwable t) {
                         preLoginViewHolder.progressBar.setProgress(100);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         if(t instanceof IOException){
                             Toast.makeText(PreLoginActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
                         } else {

@@ -2,6 +2,7 @@ package br.com.estagio.oletrainning.zup.otmovies.Services;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ProgressBar;
 
 public class SyncProgressBar extends AsyncTask<Object, Object, String> {
@@ -48,6 +49,5 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        progressBar.setVisibility(ProgressBar.INVISIBLE);
     }
 }
