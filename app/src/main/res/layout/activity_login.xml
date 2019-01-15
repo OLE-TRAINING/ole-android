@@ -13,7 +13,8 @@
         android:id="@+id/layout_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBackground">
+        android:background="@color/colorBackground"
+        android:animateLayoutChanges="true">
 
         <ImageView
             android:contentDescription="@string/imageview_backarrow"
@@ -29,8 +30,8 @@
             android:id="@+id/textView_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginSeventySix"
             android:layout_marginStart="@dimen/paddingLayout"
+            android:layout_marginTop="108dp"
             android:layout_marginEnd="@dimen/paddingLayout"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
@@ -66,8 +67,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_header"
             app:setHint="@string/password"
             app:setInicialErrorVisibility="false"
-            app:setInputType="text"
-            app:setMessageError="@string/errorCode">
+            app:setInputType="textPassword">
 
         </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
@@ -105,7 +105,8 @@
             android:layout_height="@dimen/toastHeight"
             android:visibility="visible"
             android:background="@color/colorBorderEmailInputError"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
 
             <TextView
                 android:id="@+id/textView_red_toast"
@@ -124,6 +125,25 @@
                 android:textSize="@dimen/textSizeDefault" />
 
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            tools:ignore="MissingConstraints">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="-3dp"
+                android:visibility="visible"
+                style= "?android:attr/progressBarStyleHorizontal"
+                android:background="@color/colorTransparent"
+                android:max="100" />
+
+        </FrameLayout>
 
 
     </android.support.constraint.ConstraintLayout>

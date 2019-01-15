@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText;
@@ -19,6 +20,8 @@ public class LoginViewHolder {
         LinearLayout linearLayout;
         Button buttonSignIn;
         ConstraintLayout constraintLayout;
+        ProgressBar progressBar;
+        TextView textViewRedToast;
 
 
         LoginViewHolder(View view) {
@@ -29,6 +32,8 @@ public class LoginViewHolder {
             constraintLayout = view.findViewById(R.id.layout_login);
             linearLayout = view.findViewById(R.id.linearLayout_red_toast);
             buttonSignIn = view.findViewById(R.id.button_sign_in);
+            progressBar = view.findViewById(R.id.progress_bar);
+            textViewRedToast = view.findViewById(R.id.textView_red_toast);
         }
     }
 

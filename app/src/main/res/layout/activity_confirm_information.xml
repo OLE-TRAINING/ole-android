@@ -13,25 +13,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBackground"
-        android:clipToPadding="false"
-        android:padding="@dimen/paddingLayout">
+        android:clipToPadding="false">
 
         <ImageView
-            android:contentDescription="@string/imageview_backarrow"
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_marginBottom="@dimen/marginBotton_backArrow"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:contentDescription="@string/imageview_backarrow"
             app:layout_constraintBottom_toTopOf="@+id/textView_header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
         <TextView
             android:id="@+id/textView_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginTopHeaderPreLogin"
+            android:layout_marginTop="100dp"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="@string/confirmInformation"
@@ -61,7 +62,9 @@
             android:id="@+id/errorEditText_token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginTopErrorEditText_Token"
+            android:layout_marginTop="180dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:layout_marginBottom="@dimen/marginBottonErrorEditText_token"
             app:layout_constraintBottom_toTopOf="@id/button_nextPreLogin"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -78,6 +81,10 @@
             android:id="@+id/button_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/button_style"
             android:fontFamily="@font/dosisbold"
             android:text="@string/avancar"
@@ -85,7 +92,29 @@
             android:textSize="@dimen/textSizeDefault"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/errorEditText_token"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            tools:ignore="MissingConstraints">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="-3dp"
+                android:visibility="visible"
+                style= "?android:attr/progressBarStyleHorizontal"
+                android:background="@color/colorTransparent"
+                android:max="100" />
+
+        </FrameLayout>
+
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

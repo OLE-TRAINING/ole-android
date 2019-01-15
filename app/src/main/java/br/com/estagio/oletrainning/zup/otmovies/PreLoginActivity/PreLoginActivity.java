@@ -64,27 +64,26 @@ public class PreLoginActivity extends AppCompatActivity {
 
     private void setupListeners() {
         preLoginViewHolder.buttonNextPreLogin.setOnClickListener(buttonNextPreLoginOnClickListener);
-        preLoginViewHolder.errorEditTextEmail.getEditText().addTextChangedListener(editTextPasswordTextChangedListener);
+        preLoginViewHolder.errorEditTextEmail.getEditText().addTextChangedListener(editTextEmailTextChangedListener);
 
     }
 
     private View.OnClickListener buttonNextPreLoginOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            new SyncProgressBar(PreLoginActivity.this, preLoginViewHolder.progressBar).execute();
             preLoginViewHolder.progressBar.setVisibility(View.VISIBLE);
             emailContainsError = !validateEmail();
             preLoginViewHolder.errorEditTextEmail.setErrorVisibility(emailContainsError);
             String emailEntered = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
             if (validateEmail()) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                new SyncProgressBar(PreLoginActivity.this, preLoginViewHolder.progressBar).execute();
                 RetrievingUserDatesService retrievingUserDatesService = ServiceBuilder.buildService(RetrievingUserDatesService.class);
                 Call<UserDates> userDatesCall = retrievingUserDatesService.getUsersDate(emailEntered, "593c3280aedd01364c73000d3ac06d76");
                 userDatesCall.enqueue(new Callback<UserDates>() {
                     @Override
                     public void onResponse(Call<UserDates> call, Response<UserDates> response) {
-                        preLoginViewHolder.progressBar.setProgress(100);
                         UserDates userDates = response.body();
                         if (response.isSuccessful() && userDates != null) {
                             if (userDates.getRegistrationStatus().equals("REGISTERED")) {
@@ -104,6 +103,8 @@ public class PreLoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         } else {
+                            preLoginViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             try {
                                 Gson gson = new Gson();
                                 Type type = new TypeToken<ErrorMessage>() {}.getType();
@@ -121,7 +122,8 @@ public class PreLoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<UserDates> call, Throwable t) {
-                        preLoginViewHolder.progressBar.setProgress(100);
+                        preLoginViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         if(t instanceof IOException){
                             Toast.makeText(PreLoginActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
                         } else {
@@ -129,13 +131,11 @@ public class PreLoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-
+            } else {
+                preLoginViewHolder.progressBar.setVisibility(View.INVISIBLE);
             }
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     };
-
-
 
     private boolean validateEmail() {
         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
@@ -146,7 +146,7 @@ public class PreLoginActivity extends AppCompatActivity {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private TextWatcher editTextPasswordTextChangedListener = new TextWatcher() {
+    private TextWatcher editTextEmailTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

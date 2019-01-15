@@ -18,14 +18,11 @@ import java.lang.reflect.Type;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
-import br.com.estagio.oletrainning.zup.otmovies.Services.RegisterNewUserService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ResendTokenToEmail;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SendTokenToValidade;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +49,7 @@ public class TokenValidationActivity extends AppCompatActivity {
 
         String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
         tokenValidationViewHolder.textViewEmail.setText(emailAdd);
+
     }
 
     @Override
@@ -93,13 +91,13 @@ public class TokenValidationActivity extends AppCompatActivity {
                 createNewUser.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        tokenValidationViewHolder.progressBar.setProgress(100);
                         controlResponseValidateToken(response);
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        tokenValidationViewHolder.progressBar.setProgress(100);
+                        tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         if(t instanceof IOException){
                             Toast.makeText(TokenValidationActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
                         } else {
@@ -107,9 +105,8 @@ public class TokenValidationActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             } else {
+                tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
                 tokenValidationViewHolder.errorEditText.setErrorVisibility(true);
                 tokenContainsError = true;
             }
@@ -120,9 +117,12 @@ public class TokenValidationActivity extends AppCompatActivity {
         if(response.code() == 200){
             Toast.makeText(TokenValidationActivity.this,"Código confirmado com sucesso!", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(TokenValidationActivity.this, LoginActivity.class);
-            intent.putExtra("emailToken",tokenValidationViewHolder.textViewEmail.getText());
+            String emailInput = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         } else {
+            tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             try {
                 Gson gson = new Gson();
                 Type type = new TypeToken<ErrorMessage>() {
@@ -149,10 +149,10 @@ public class TokenValidationActivity extends AppCompatActivity {
     View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            tokenValidationViewHolder.progressBar.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             new SyncProgressBar(TokenValidationActivity.this, tokenValidationViewHolder.progressBar).execute();
-            tokenValidationViewHolder.progressBar.setVisibility(View.VISIBLE);
 
             ResendTokenToEmail resendTokenToEmail = ServiceBuilder.buildService(ResendTokenToEmail.class);
 
@@ -162,14 +162,13 @@ public class TokenValidationActivity extends AppCompatActivity {
             createNewUser.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    tokenValidationViewHolder.progressBar.setProgress(100);
                     controlResponseResendToken(response);
-                    tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    tokenValidationViewHolder.progressBar.setProgress(100);
+                    tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     if(t instanceof IOException){
                         Toast.makeText(TokenValidationActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
                     } else {
@@ -177,14 +176,17 @@ public class TokenValidationActivity extends AppCompatActivity {
                     }
                 }
             });
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     };
 
     private void controlResponseResendToken(Response response){
         if(response.code() == 200){
             Toast.makeText(TokenValidationActivity.this,"Código reenviado com sucesso!", Toast.LENGTH_LONG).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
         } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
             try {
                 Gson gson = new Gson();
                 Type type = new TypeToken<ErrorMessage>() {
@@ -194,7 +196,6 @@ public class TokenValidationActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Toast.makeText(TokenValidationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
-            tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
         }
     }
 

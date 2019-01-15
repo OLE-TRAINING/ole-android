@@ -101,9 +101,6 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            new SyncProgressBar(RegisterNewUserActivity.this, registerNewUserViewHolder.progressBar).execute();
             registerNewUserViewHolder.progressBar.setVisibility(View.VISIBLE);
             nameContainsError = !validateName();
             userNameContainsError = !validateUserName();
@@ -112,6 +109,9 @@ public class RegisterNewUserActivity extends AppCompatActivity {
             registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(userNameContainsError);
             registerNewUserViewHolder.errorEditTextPassword.setErrorVisibility(passwordContainsError);
             if (validateName() && validateUserName() && validatePassword()) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                new SyncProgressBar(RegisterNewUserActivity.this, registerNewUserViewHolder.progressBar).execute();
                 RegisterNewUserService registerNewUserService = ServiceBuilder.buildService(RegisterNewUserService.class);
                 UserDates userDates = new UserDates();
                 userDates.setEmail(getIntent().getStringExtra(getString(R.string.EmailPreLogin)));
@@ -124,13 +124,13 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                 createNewUser.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        registerNewUserViewHolder.progressBar.setProgress(100);
                         controlResponse(response);
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        registerNewUserViewHolder.progressBar.setProgress(100);
+                        registerNewUserViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         if(t instanceof IOException){
                             Toast.makeText(RegisterNewUserActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
                         } else {
@@ -138,8 +138,9 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                         }
                     }
                 });
+            } else {
+                registerNewUserViewHolder.progressBar.setVisibility(View.INVISIBLE);
             }
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
 
     };
@@ -148,8 +149,12 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         if(response.code() == 200){
             Toast.makeText(RegisterNewUserActivity.this,getString(R.string.registerOk), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
+            String emailInput = registerNewUserViewHolder.textViewEmailEntered.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         } else {
+            registerNewUserViewHolder.progressBar.setVisibility(View.INVISIBLE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             try {
                 Gson gson = new Gson();
                 Type type = new TypeToken<ErrorMessage>() {
@@ -238,6 +243,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             userNameContainsError = false;
             registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(false);
+            
         }
 
         @Override
