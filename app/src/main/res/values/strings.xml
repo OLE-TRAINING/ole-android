@@ -30,7 +30,7 @@
     <string name="errorCode">Código inválido</string>
     <string name="passwordConfirm">Confirme sua senha</string>
     <string name="noMatchPassword">As senhas não batem</string>
-    <string name="newPassword">Nova Senha</string>
+    <string name="newPassword">Nova senha</string>
     <string name="enterPassword">INFORME SUA SENHA</string>
     <string name="forgotPassword">Esqueceu sua senha?</string>
     <string name="forgotUsername">Esqueceu seu usuário?</string>

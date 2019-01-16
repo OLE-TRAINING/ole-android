@@ -121,6 +121,26 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            tools:ignore="MissingConstraints">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="-3dp"
+                android:visibility="visible"
+                style= "?android:attr/progressBarStyleHorizontal"
+                android:background="@color/colorTransparent"
+                android:max="100" />
+
+        </FrameLayout>
+
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

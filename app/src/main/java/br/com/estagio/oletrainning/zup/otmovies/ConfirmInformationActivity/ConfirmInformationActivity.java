@@ -20,6 +20,7 @@ import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivit
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ConfirmUserName;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.ResendTokenToEmail;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
@@ -73,8 +74,9 @@ public class ConfirmInformationActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(ConfirmInformationActivity.this, InformTokenAndNewPasswordActivity.class);
-            String emailInput = confirmInformationViewHolder.errorEditText.getText().toString().trim();
+            String emailInput = confirmInformationViewHolder.textViewEmail.getText().toString().trim();
             intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            tokenResender();
             startActivity(intent);
         }
     };
@@ -135,8 +137,9 @@ public class ConfirmInformationActivity extends AppCompatActivity {
         if(response.code() == 200){
             Toast.makeText(ConfirmInformationActivity.this,"Usuário confirmado com sucesso!", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(ConfirmInformationActivity.this, InformTokenAndNewPasswordActivity.class);
-            String emailInput = confirmInformationViewHolder.errorEditText.getText().toString().trim();
+            String emailInput = confirmInformationViewHolder.textViewEmail.getText().toString().trim();
             intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            tokenResender();
             startActivity(intent);
         } else {
             confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
@@ -187,5 +190,55 @@ public class ConfirmInformationActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(ConfirmInformationActivity.this, PreLoginActivity.class);
         startActivity(intent);
+    }
+
+    private void tokenResender(){
+        confirmInformationViewHolder.progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        new SyncProgressBar(ConfirmInformationActivity.this, confirmInformationViewHolder.progressBar).execute();
+
+        ResendTokenToEmail resendTokenToEmail = ServiceBuilder.buildService(ResendTokenToEmail.class);
+
+        Call<Void> createNewUser = resendTokenToEmail.resendToken(confirmInformationViewHolder.textViewEmail.getText().toString().trim(),
+                "593c3280aedd01364c73000d3ac06d76");
+
+        createNewUser.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                controlResponseResendToken(response);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                if(t instanceof IOException){
+                    Toast.makeText(ConfirmInformationActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ConfirmInformationActivity.this,"Falha ao enviar o código", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void controlResponseResendToken(Response response){
+        if(response.code() == 200){
+            Toast.makeText(ConfirmInformationActivity.this,"Código enviado para seu e-mail!", Toast.LENGTH_LONG).show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
+            try {
+                Gson gson = new Gson();
+                Type type = new TypeToken<ErrorMessage>() {
+                }.getType();
+                ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(), type);
+                Toast.makeText(ConfirmInformationActivity.this, errorMessage.getMessage(), Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Toast.makeText(ConfirmInformationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

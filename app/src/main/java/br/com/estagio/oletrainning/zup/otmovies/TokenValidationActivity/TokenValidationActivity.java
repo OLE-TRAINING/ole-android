@@ -149,33 +149,7 @@ public class TokenValidationActivity extends AppCompatActivity {
     View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            tokenValidationViewHolder.progressBar.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            new SyncProgressBar(TokenValidationActivity.this, tokenValidationViewHolder.progressBar).execute();
-
-            ResendTokenToEmail resendTokenToEmail = ServiceBuilder.buildService(ResendTokenToEmail.class);
-
-            Call<Void> createNewUser = resendTokenToEmail.resendToken(tokenValidationViewHolder.textViewEmail.getText().toString().trim(),
-                    "593c3280aedd01364c73000d3ac06d76");
-
-            createNewUser.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    controlResponseResendToken(response);
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    if(t instanceof IOException){
-                        Toast.makeText(TokenValidationActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(TokenValidationActivity.this,"Falha ao reenviar o código", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+            textViewTokenResender();
         }
     };
 
@@ -239,5 +213,35 @@ public class TokenValidationActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(TokenValidationActivity.this, PreLoginActivity.class);
         startActivity(intent);
+    }
+
+    private void textViewTokenResender(){
+        tokenValidationViewHolder.progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        new SyncProgressBar(TokenValidationActivity.this, tokenValidationViewHolder.progressBar).execute();
+
+        ResendTokenToEmail resendTokenToEmail = ServiceBuilder.buildService(ResendTokenToEmail.class);
+
+        Call<Void> createNewUser = resendTokenToEmail.resendToken(tokenValidationViewHolder.textViewEmail.getText().toString().trim(),
+                "593c3280aedd01364c73000d3ac06d76");
+
+        createNewUser.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                controlResponseResendToken(response);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                if(t instanceof IOException){
+                    Toast.makeText(TokenValidationActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(TokenValidationActivity.this,"Falha ao reenviar o código", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }

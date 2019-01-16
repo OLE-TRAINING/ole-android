@@ -20,6 +20,7 @@ import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.ResendTokenToEmail;
 import br.com.estagio.oletrainning.zup.otmovies.Services.RetrievingUserDatesService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
