@@ -18,20 +18,18 @@
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_marginStart="30dp"
             android:layout_marginTop="30dp"
-            android:contentDescription="@string/imageview_backarrow"
+            android:layout_marginStart="30dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp"
+            android:contentDescription="@string/imageview_backarrow"/>
 
         <TextView
             android:id="@+id/textView_headerRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/marginStandard"
-            android:layout_marginTop="@dimen/marginTopHeaderRegister"
-            android:layout_marginEnd="@dimen/marginStandard"
+            android:layout_marginTop="30dp"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="@string/textHeaderRegister"
@@ -39,7 +37,7 @@
             android:textColor="@color/colorEmailHeadHint"
             android:textSize="@dimen/textSizeHeader"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="@dimen/constraintHorizontal_biasHeaderRegister"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,76 +57,73 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_headerRegister" />
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
-            android:id="@+id/errorEditText_enterName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="112dp"
-            android:layout_marginRight="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.733"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
-            app:setHint="@string/full_name"
-            app:setInicialErrorVisibility="false"
-            app:setInputType="textPersonName"
-            app:setMessageError="@string/error_register_name">
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
+            app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered">
 
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+                android:id="@+id/errorEditText_enterName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                app:setHint="@string/full_name"
+                app:setInicialErrorVisibility="false"
+                app:setInputType="textPersonName"
+                app:setMessageError="@string/error_register_name">
+
+            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
-            android:id="@+id/errorEditText_enterUserName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="@dimen/marginDefault"
-            android:layout_marginRight="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterName"
-            app:setHint="@string/user_name"
-            app:setInicialErrorVisibility="false"
-            app:setInputType="text"
-            app:setMessageError="@string/error_user_name">
+            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+                android:id="@+id/errorEditText_enterUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="@dimen/marginDefault"
+                android:layout_marginRight="30dp"
+                app:setHint="@string/user_name"
+                app:setInicialErrorVisibility="false"
+                app:setInputType="text"
+                app:setMessageError="@string/error_user_name">
 
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
-            android:id="@+id/errorEditText_enterPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="@dimen/marginDefault"
-            android:layout_marginRight="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterUserName"
-            app:setHint="@string/password"
-            app:setInicialErrorVisibility="false"
-            app:setInputType="textPassword"
-            app:setMessageError="@string/error_password">
+            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+                android:id="@+id/errorEditText_enterPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="30dp"
+                app:setHint="@string/password"
+                app:setInicialErrorVisibility="false"
+                app:setInputType="textPassword"
+                app:setMessageError="@string/error_password">
 
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/button_nextRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="30dp"
             android:background="@drawable/button_style"
             android:fontFamily="@font/dosisbold"
             android:text="@string/textButton_next"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
+            android:layout_marginBottom="@dimen/marginDefaultLayout"
+            android:layout_marginLeft="@dimen/marginDefaultLayout"
+            android:layout_marginRight="@dimen/marginDefaultLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_enterPassword"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <FrameLayout
             android:id="@+id/frame_layout"

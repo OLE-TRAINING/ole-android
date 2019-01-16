@@ -16,6 +16,7 @@ public class ConfirmInformationViewHolder {
     ComponentErrorEditText errorEditText;
     Button button;
     ProgressBar progressBar;
+    TextView textViewForgotUserName;
 
     ConfirmInformationViewHolder (View view) {
         imageView = view.findViewById(R.id.imageView_backArrow);
@@ -23,6 +24,7 @@ public class ConfirmInformationViewHolder {
         errorEditText = view.findViewById(R.id.errorEditText_token);
         button = view.findViewById(R.id.button_next);
         progressBar = view.findViewById(R.id.progress_bar);
+        textViewForgotUserName = view.findViewById(R.id.textView_username);
     }
 
 }

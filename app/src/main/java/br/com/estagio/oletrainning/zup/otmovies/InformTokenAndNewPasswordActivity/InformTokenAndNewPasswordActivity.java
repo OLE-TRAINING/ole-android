@@ -25,6 +25,9 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
         setContentView(view);
 
         setupListeners();
+
+        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
+        informTokenAndNewPasswordViewHolder.textViewEmail.setText(emailAdd);
     }
 
     private void setupListeners() {

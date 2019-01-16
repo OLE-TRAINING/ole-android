@@ -19,7 +19,7 @@
     <string name="confirmInformation">CONFIRME AS INFORMAÇÕES\nDE SUA CONTA</string>
     <string name="avancar">avançar</string>
     <string name="imageview_backarrow">imageView_backArrow</string>
-    <string name="headerFirst_informTokenAndNewPassword">IDENTIFICAMOS QUE VOCÊ JÁ  INICIOU UM CADASTRO, PARA  CONCLUIRMOS, INFORME O  CÓDIGO ENVIADO PARA O SEU  E-MAIL:</string>
+    <string name="headerFirst_informTokenAndNewPassword">IDENTIFICAMOS QUE VOCÊ JÁ\nINICIOU UM CADASTRO, PARA\nCONCLUIRMOS, INFORME O\nCÓDIGO ENVIADO PARA O SEU\nE-MAIL:</string>
     <string name="noReceiveCode">Não recebeu o código?</string>
     <string name="SendAgain">Enviar novamente</string>
     <string name="validate">validar</string>
@@ -33,6 +33,7 @@
     <string name="newPassword">Nova Senha</string>
     <string name="enterPassword">INFORME SUA SENHA</string>
     <string name="forgotPassword">Esqueceu sua senha?</string>
+    <string name="forgotUsername">Esqueceu seu usuário?</string>
     <string name="enter">entrar</string>
     <string name="errorUserOrPassword">Usuário ou senha inválido!</string>
     <string name="tokenValidation">Token de validação</string>

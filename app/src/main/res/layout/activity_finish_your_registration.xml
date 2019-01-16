@@ -13,25 +13,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBackground"
-        android:clipToPadding="false"
-        android:padding="@dimen/paddingLayout">
+        android:clipToPadding="false">
 
         <ImageView
-            android:contentDescription="@string/imageview_backarrow"
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp"
+            android:contentDescription="@string/imageview_backarrow"/>
 
         <TextView
             android:id="@+id/textView_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginTopHeaderPreLogin"
+            android:layout_marginTop="30dp"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
+
             android:text="@string/headerFirst_informTokenAndNewPassword"
             android:textAlignment="center"
             android:textColor="@color/colorEmailHeadHint"
@@ -46,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/marginStandard"
             android:layout_marginEnd="@dimen/marginStandard"
-            android:fontFamily="@font/robotoregular"
+            android:fontFamily="@font/robotobold"
             android:text="@string/userEmailEntered"
             android:textAlignment="center"
             android:textColor="@color/colorTextRed"
@@ -55,50 +57,54 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_header" />
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
-            android:id="@+id/errorEditText_token"
+        <LinearLayout
+            android:id="@+id/linearLayout_token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginTopErrorEditText_token"
-            android:layout_marginBottom="@dimen/marginBottonErrorEditText_token"
-            app:layout_constraintBottom_toTopOf="@id/button_nextPreLogin"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/button_validate"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
-            app:setHint="@string/code"
-            app:setInicialErrorVisibility="false"
-            app:setInputType="text"
-            app:setMessageError="@string/errorCode">
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp">
 
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+                android:id="@+id/errorEditText_token"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:setHint="@string/tokenValidation"
+                app:setInicialErrorVisibility="false"
+                app:setInputType="text"
+                app:setMessageError="@string/errorCode">
 
-        <TextView
-            android:id="@+id/textView_NotReceiveToken"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/marginStandard"
-            android:layout_marginTop="@dimen/marginStandard"
-            android:fontFamily="@font/robotoregular"
-            android:text="@string/noReceiveCode"
-            android:textAlignment="center"
-            android:textColor="@color/colorTextDefault"
-            android:textSize="@dimen/textSizeDefault"
-            app:layout_constraintStart_toStartOf="@+id/errorEditText_token"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_token" />
+            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
-        <TextView
-            android:id="@+id/textView_ReSendToken"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/marginStandard"
-            android:layout_marginTop="@dimen/marginStandard"
-            android:fontFamily="@font/robotoregular"
-            android:text="@string/SendAgain"
-            android:textAlignment="center"
-            android:textColor="@color/colorTextRed"
-            android:textSize="@dimen/textSizeDefault"
-            app:layout_constraintStart_toEndOf="@+id/textView_NotReceiveToken"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_token" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textView_NotReceiveToken"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/robotoregular"
+                    android:text="@string/noReceiveCode"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/colorTextDefault"
+                    android:textSize="@dimen/textSizeDefault" />
+
+                <TextView
+                    android:id="@+id/textView_ReSendToken"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/robotobold"
+                    android:text="@string/SendAgain"
+                    android:textColor="@color/colorTextRed"
+                    android:textSize="@dimen/textSizeDefault"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/button_validate"
@@ -109,6 +115,9 @@
             android:text="@string/validate"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
+            android:layout_marginBottom="@dimen/marginDefaultLayout"
+            android:layout_marginLeft="@dimen/marginDefaultLayout"
+            android:layout_marginRight="@dimen/marginDefaultLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

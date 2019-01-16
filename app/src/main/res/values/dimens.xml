@@ -16,7 +16,7 @@
     <dimen name="marginDefault">8dp</dimen>
     <dimen name="marginTopHeaderPreLogin">36dp</dimen>
     <dimen name="sizeAlertError">15dp</dimen>
-    <dimen name="sizeBackArrow">35dp</dimen>
+    <dimen name="sizeBackArrow">25dp</dimen>
     <dimen name="marginTopHeaderRegister">44dp</dimen>
     <dimen name="constraintHorizontal_biasHeaderRegister">0.502</dimen>
     <dimen name="constraintHorizontal_biasEnterName">0.633</dimen>

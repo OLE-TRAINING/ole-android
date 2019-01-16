@@ -17,22 +17,21 @@
         android:animateLayoutChanges="true">
 
         <ImageView
-            android:contentDescription="@string/imageview_backarrow"
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_margin="@dimen/marginThirty"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout_red_toast"
-            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp"
+            android:contentDescription="@string/imageview_backarrow"/>
 
         <TextView
             android:id="@+id/textView_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/paddingLayout"
-            android:layout_marginTop="108dp"
-            android:layout_marginEnd="@dimen/paddingLayout"
+            android:layout_marginTop="30dp"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="@string/enterPassword"
@@ -48,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/bigMargin"
+            android:layout_marginStart="16dp"
             android:fontFamily="@font/robotoregular"
             android:text="@string/userEmailEntered"
             android:textAlignment="center"
@@ -75,8 +75,7 @@
             android:id="@+id/textView_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginDefault"
-            android:layout_marginEnd="@dimen/marginDefault"
+            android:layout_marginEnd="8dp"
             android:fontFamily="@font/robotoregular"
             android:text="@string/forgotPassword"
             android:textAlignment="center"
@@ -95,9 +94,12 @@
             android:text="@string/enter"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
+            android:layout_marginBottom="@dimen/marginDefaultLayout"
+            android:layout_marginLeft="@dimen/marginDefaultLayout"
+            android:layout_marginRight="@dimen/marginDefaultLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/linearLayout_red_toast"

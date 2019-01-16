@@ -16,9 +16,10 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.ConfirmUserName;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
-import br.com.estagio.oletrainning.zup.otmovies.Services.RetrievingUserDatesService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
@@ -65,14 +66,25 @@ public class ConfirmInformationActivity extends AppCompatActivity {
         confirmInformationViewHolder.imageView.setOnClickListener(backArrowOnClickListener);
         confirmInformationViewHolder.errorEditText.getEditText().addTextChangedListener(errorEditTextTextWatcher);
         confirmInformationViewHolder.button.setOnClickListener(buttonNextOnClickListener);
+        confirmInformationViewHolder.textViewForgotUserName.setOnClickListener(textViewForgotUsernameOnClickListener);
     }
+
+    View.OnClickListener textViewForgotUsernameOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(ConfirmInformationActivity.this, InformTokenAndNewPasswordActivity.class);
+            String emailInput = confirmInformationViewHolder.errorEditText.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
 
     View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.imageView_backArrow) {
-                Intent intent = new Intent(ConfirmInformationActivity.this, ConfirmInformationActivity.class);
+                Intent intent = new Intent(ConfirmInformationActivity.this, PreLoginActivity.class);
                 startActivity(intent);
             }
         }
@@ -84,64 +96,63 @@ public class ConfirmInformationActivity extends AppCompatActivity {
             confirmInformationViewHolder.progressBar.setVisibility(View.VISIBLE);
             userNameContainsError = !validateUserName();
             confirmInformationViewHolder.errorEditText.setErrorVisibility(userNameContainsError);
-            String emailEntered = confirmInformationViewHolder.textViewEmail.getText().toString().trim();
             if (validateUserName()) {
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 new SyncProgressBar(ConfirmInformationActivity.this, confirmInformationViewHolder.progressBar).execute();
+                ConfirmUserName confirmUserName = ServiceBuilder.buildService(ConfirmUserName.class);
+                UserDates userDates = new UserDates();
+                userDates.setEmail(getIntent().getStringExtra(getString(R.string.EmailPreLogin)));
+                userDates.setUsername(confirmInformationViewHolder.errorEditText.getText().toString().trim());
 
-                RetrievingUserDatesService retrievingUserDatesService = ServiceBuilder.buildService(RetrievingUserDatesService.class);
-                Call<UserDates> userDatesCall = retrievingUserDatesService.getUsersDate(emailEntered, "593c3280aedd01364c73000d3ac06d76");
-                userDatesCall.enqueue(new Callback<UserDates>() {
+                Call<Void> createNewUser = confirmUserName.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+
+                createNewUser.enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<UserDates> call, Response<UserDates> response) {
-                        UserDates userDates = response.body();
-                        if (response.isSuccessful() && userDates != null) {
-                            if (userDates.getUsername().equals(confirmInformationViewHolder.errorEditText.getText().toString().trim())) {
-                                Intent intent = new Intent(ConfirmInformationActivity.this, InformTokenAndNewPasswordActivity.class);
-                                String emailInput = confirmInformationViewHolder.errorEditText.getText().toString().trim();
-                                intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                                startActivity(intent);
-                            } else{
-                                confirmInformationViewHolder.errorEditText.setMessageError("Nome de usuário ou e-mail não coincidem");
-                                confirmInformationViewHolder.errorEditText.setErrorVisibility(true);
-                                confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                            }
-                        } else {
-                            confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                            try {
-                                Gson gson = new Gson();
-                                Type type = new TypeToken<ErrorMessage>() {}.getType();
-                                ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(),type);
-                                if(errorMessage.getKey().equals("error.invalid.username")){
-                                    confirmInformationViewHolder.errorEditText.setErrorVisibility(true);
-                                } else {
-                                    Toast.makeText(ConfirmInformationActivity.this,errorMessage.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            } catch (Exception e) {
-                                Toast.makeText(ConfirmInformationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        controlResponse(response);
                     }
 
                     @Override
-                    public void onFailure(Call<UserDates> call, Throwable t) {
+                    public void onFailure(Call<Void> call, Throwable t) {
                         confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         if(t instanceof IOException){
                             Toast.makeText(ConfirmInformationActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(ConfirmInformationActivity.this,"Falha ao confirmar usuário", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ConfirmInformationActivity.this,"Falha ao validar usuário", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
             } else {
+                confirmInformationViewHolder.errorEditText.setMessageError("Nome de usuário inválido");
                 confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
             }
         }
     };
+
+    private void controlResponse(Response response){
+        if(response.code() == 200){
+            Toast.makeText(ConfirmInformationActivity.this,"Usuário confirmado com sucesso!", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(ConfirmInformationActivity.this, InformTokenAndNewPasswordActivity.class);
+            String emailInput = confirmInformationViewHolder.errorEditText.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        } else {
+            confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            try {
+                Gson gson = new Gson();
+                Type type = new TypeToken<ErrorMessage>() {
+                }.getType();
+                ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(), type);
+                confirmInformationViewHolder.errorEditText.setMessageError(errorMessage.getMessage());
+                confirmInformationViewHolder.errorEditText.setErrorVisibility(true);
+            } catch (Exception e) {
+                Toast.makeText(ConfirmInformationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     TextWatcher errorEditTextTextWatcher = new TextWatcher() {
         @Override
@@ -174,7 +185,7 @@ public class ConfirmInformationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(ConfirmInformationActivity.this, ConfirmInformationActivity.class);
+        Intent intent = new Intent(ConfirmInformationActivity.this, PreLoginActivity.class);
         startActivity(intent);
     }
 }
