@@ -42,4 +42,5 @@
     <string name="duplicate_email">Email já cadastrado</string>
     <string name="duplicate_username">Nome de usuário já cadastrado</string>
     <string name="emailregister">emailregister</string>
+    <string name="errorValidadePassword">Obrigatório conter letras e números, entre 6 e 10 caracteres.</string>
 </resources>

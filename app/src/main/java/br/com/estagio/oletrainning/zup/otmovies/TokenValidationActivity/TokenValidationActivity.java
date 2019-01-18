@@ -149,7 +149,7 @@ public class TokenValidationActivity extends AppCompatActivity {
     View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            textViewTokenResender();
+            callTokenResend();
         }
     };
 
@@ -215,7 +215,7 @@ public class TokenValidationActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void textViewTokenResender(){
+    private void callTokenResend(){
         tokenValidationViewHolder.progressBar.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

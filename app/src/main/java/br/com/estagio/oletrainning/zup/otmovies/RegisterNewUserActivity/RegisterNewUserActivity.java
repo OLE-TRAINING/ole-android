@@ -75,7 +75,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         passwordContainsError = savedInstanceState.getBoolean(PASSWORD_VALIDATION_STATUS);
         registerNewUserViewHolder.errorEditTextName.setErrorVisibility(nameContainsError);
         registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(userNameContainsError);
-        registerNewUserViewHolder.errorEditTextPassword.setErrorVisibility(passwordContainsError);
+
     }
 
     private void setupListeners() {
@@ -211,8 +211,8 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     }
 
     private boolean validatePasswordFormat() {
-        String userName = registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim();
-        return userName.length() >= MINSIZEPASS && userName.length() <= MAXSIZEPASS && userName.matches(getString(R.string.RegexOnlyNumberAndLetter));
+        String password = registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim();
+        return password.length() >= MINSIZEPASS && password.length() <= MAXSIZEPASS && password.matches(getString(R.string.RegexOnlyNumberAndLetter));
     }
 
     private TextWatcher editTextNameTextChangedListener = new TextWatcher() {

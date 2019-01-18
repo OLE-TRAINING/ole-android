@@ -138,6 +138,8 @@ public class LoginActivity extends AppCompatActivity {
         if(response.code() == 200){
             hideToast();
             Toast.makeText(LoginActivity.this,"Senha confirmada, login autorizado!", Toast.LENGTH_LONG).show();
+            loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } else {
             loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -161,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
             } catch (Exception e) {
                 hideToast();
                 Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+
             }
         }
     }

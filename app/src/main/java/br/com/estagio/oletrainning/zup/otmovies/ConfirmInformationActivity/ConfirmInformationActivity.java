@@ -67,19 +67,7 @@ public class ConfirmInformationActivity extends AppCompatActivity {
         confirmInformationViewHolder.imageView.setOnClickListener(backArrowOnClickListener);
         confirmInformationViewHolder.errorEditText.getEditText().addTextChangedListener(errorEditTextTextWatcher);
         confirmInformationViewHolder.button.setOnClickListener(buttonNextOnClickListener);
-        confirmInformationViewHolder.textViewForgotUserName.setOnClickListener(textViewForgotUsernameOnClickListener);
     }
-
-    View.OnClickListener textViewForgotUsernameOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(ConfirmInformationActivity.this, InformTokenAndNewPasswordActivity.class);
-            String emailInput = confirmInformationViewHolder.textViewEmail.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-            tokenResender();
-            startActivity(intent);
-        }
-    };
 
     View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
         @Override

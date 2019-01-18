@@ -63,12 +63,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/marginDefaultLayout"
             android:layout_marginRight="@dimen/marginDefaultLayout"
-            android:forceHasOverlappingRendering="true"
             app:layout_constraintBottom_toTopOf="@id/button_next"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView_emailEntered"
-            app:layout_constraintVertical_bias="0.43"
             app:setHint="Nome de usuário"
             app:setInicialErrorVisibility="false"
             app:setInputType="text"
@@ -76,18 +74,6 @@
 
         </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
 
-        <TextView
-            android:id="@+id/textView_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/robotoregular"
-            android:layout_marginEnd="8dp"
-            android:text="@string/forgotUsername"
-            android:textAlignment="center"
-            android:textColor="@color/colorTextDefault"
-            android:textSize="@dimen/textSizeDefault"
-            app:layout_constraintEnd_toEndOf="@+id/errorEditText_token"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_token" />
 
         <Button
             android:id="@+id/button_next"
