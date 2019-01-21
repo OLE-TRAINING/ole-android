@@ -18,8 +18,8 @@
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginTop="@dimen/marginLayout"
+            android:layout_marginStart="@dimen/marginLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp"
@@ -29,7 +29,7 @@
             android:id="@+id/textView_headerRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/marginLayout"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="@string/textHeaderRegister"
@@ -37,7 +37,6 @@
             android:textColor="@color/colorEmailHeadHint"
             android:textSize="@dimen/textSizeHeader"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,7 +59,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/smallMargin"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered">
@@ -69,8 +68,8 @@
                 android:id="@+id/errorEditText_enterName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginLeft="@dimen/marginLayout"
+                android:layout_marginRight="@dimen/marginLayout"
                 app:setHint="@string/full_name"
                 app:setInicialErrorVisibility="false"
                 app:setInputType="textPersonName"
@@ -83,9 +82,9 @@
                 android:id="@+id/errorEditText_enterUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="@dimen/marginLayout"
                 android:layout_marginTop="@dimen/marginDefault"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="@dimen/marginLayout"
                 app:setHint="@string/user_name"
                 app:setInicialErrorVisibility="false"
                 app:setInputType="text"
@@ -97,9 +96,9 @@
                 android:id="@+id/errorEditText_enterPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginLeft="@dimen/marginLayout"
+                android:layout_marginTop="@dimen/smallMargin"
+                android:layout_marginRight="@dimen/marginLayout"
                 app:setHint="@string/password"
                 app:setInicialErrorVisibility="false"
                 app:setInputType="textPassword"
@@ -135,12 +134,12 @@
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:layout_marginTop="-3dp"
+                android:layout_height="@dimen/progressBar_height"
+                android:layout_marginTop="@dimen/progressBar_marginTopAdjust"
                 android:visibility="visible"
                 style= "?android:attr/progressBarStyleHorizontal"
                 android:background="@color/colorTransparent"
-                android:max="100" />
+                android:max="@string/progressBar_fullPercentage" />
 
         </FrameLayout>
 

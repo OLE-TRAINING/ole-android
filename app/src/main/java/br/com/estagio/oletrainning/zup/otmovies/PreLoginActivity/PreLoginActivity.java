@@ -1,7 +1,10 @@
 package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,11 +23,13 @@ import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserResponse;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ResendTokenToEmail;
 import br.com.estagio.oletrainning.zup.otmovies.Services.RetrievingUserDatesService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import br.com.estagio.oletrainning.zup.otmovies.Services.ViewModel.UserDatesViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,6 +52,9 @@ public class PreLoginActivity extends AppCompatActivity {
         setContentView(view);
 
         setupListeners();
+
+        final UserDatesViewModel viewModel = ViewModelProviders
+                .of(this).get(UserDatesViewModel.class);
     }
 
     @Override
@@ -80,12 +88,32 @@ public class PreLoginActivity extends AppCompatActivity {
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 new SyncProgressBar(PreLoginActivity.this, preLoginViewHolder.progressBar).execute();
-                RetrievingUserDatesService retrievingUserDatesService = ServiceBuilder.buildService(RetrievingUserDatesService.class);
-                Call<UserDates> userDatesCall = retrievingUserDatesService.getUsersDate(emailEntered, "593c3280aedd01364c73000d3ac06d76");
-                userDatesCall.enqueue(new Callback<UserDates>() {
+                String gwKey = "593c3280aedd01364c73000d3ac06d76";
+                    if (getStatus(emailEntered,gwKey).equals("REGISTERED")) {
+                        Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
+                        String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
+                        intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+                        startActivity(intent);
+                    } else if (getStatus(emailEntered,gwKey).equals("PENDING")) {
+                        Intent intent = new Intent(PreLoginActivity.this, TokenValidationActivity.class);
+                        String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
+                        intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+                        startActivity(intent);
+                    } else if (getStatus(emailEntered,gwKey).equals("INEXISTENT")) {
+                        Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
+                        String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
+                        intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+                        startActivity(intent);
+                    } else {
+                        preLoginViewHolder.progressBar.setVisibility(View.INVISIBLE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    }
+                /*APIRequest retrievingUserDatesService = ServiceBuilder.buildService(APIRequest.class);
+                Call<UserResponse> userDatesCall = retrievingUserDatesService.getUsersDate(emailEntered, "593c3280aedd01364c73000d3ac06d76");
+                userDatesCall.enqueue(new Callback<UserResponse>() {
                     @Override
-                    public void onResponse(Call<UserDates> call, Response<UserDates> response) {
-                        UserDates userDates = response.body();
+                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                        UserResponse userDates = response.body();
                         if (response.isSuccessful() && userDates != null) {
                             if (userDates.getRegistrationStatus().equals("REGISTERED")) {
                                 Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
@@ -122,7 +150,7 @@ public class PreLoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<UserDates> call, Throwable t) {
+                    public void onFailure(Call<UserResponse> call, Throwable t) {
                         preLoginViewHolder.progressBar.setVisibility(View.INVISIBLE);
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         if(t instanceof IOException){
@@ -131,12 +159,25 @@ public class PreLoginActivity extends AppCompatActivity {
                             Toast.makeText(PreLoginActivity.this,"Falha ao inserir e-mail", Toast.LENGTH_LONG).show();
                         }
                     }
-                });
+                });*/
             } else {
                 preLoginViewHolder.progressBar.setVisibility(View.INVISIBLE);
             }
         }
     };
+
+    private void observeViewModel(UserDatesViewModel viewModel)
+    {
+        viewModel.getNewsResponseObservable()
+                .observe(this, new Observer<UserResponse>() {
+                    @Override
+                    public void onChanged(@Nullable UserResponse newsResponse) {
+                        if (newsResponse != null) {
+                            String response = newsResponse.getRegistrationStatus();
+                        }
+                    }
+                });
+    }
 
     private boolean validateEmail() {
         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();

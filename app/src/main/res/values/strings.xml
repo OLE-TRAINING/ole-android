@@ -43,4 +43,8 @@
     <string name="duplicate_username">Nome de usuário já cadastrado</string>
     <string name="emailregister">emailregister</string>
     <string name="errorValidadePassword">Obrigatório conter letras e números, entre 6 e 10 caracteres.</string>
+    <string name="progressBar_fullPercentage">100</string>
+    <string name="secureKeyResquestService">593c3280aedd01364c73000d3ac06d76</string>
+    <string name="conectionErrorMessage">Ocorreu um erro na conexão</string>
+    <string name="NoValidateUserMessage">Falha ao validar usuário</string>
 </resources>

@@ -19,8 +19,8 @@
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginTop="@dimen/marginLayout"
+            android:layout_marginStart="@dimen/marginLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp"
@@ -30,7 +30,7 @@
             android:id="@+id/textView_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/marginLayout"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="@string/confirmInformation"
@@ -101,12 +101,12 @@
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:layout_marginTop="-3dp"
+                android:layout_height="@dimen/progressBar_height"
+                android:layout_marginTop="@dimen/progressBar_marginTopAdjust"
                 android:visibility="visible"
                 style= "?android:attr/progressBarStyleHorizontal"
                 android:background="@color/colorTransparent"
-                android:max="100" />
+                android:max="@string/progressBar_fullPercentage" />
 
         </FrameLayout>
 

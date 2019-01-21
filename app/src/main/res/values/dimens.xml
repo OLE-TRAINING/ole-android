@@ -2,7 +2,7 @@
 <resources>
     <dimen name="marginTopEditTextNameRegister">100dp</dimen>
     <dimen name="marginStandard">8dp</dimen>
-    <dimen name="paddingLayout">30dp</dimen>
+    <dimen name="marginLayout">30dp</dimen>
     <dimen name="paddingEditText">15dp</dimen>
     <dimen name="textSizeDefault">16sp</dimen>
     <dimen name="textSizeSmall">14sp</dimen>
@@ -34,6 +34,12 @@
     <dimen name="marginTwentyEight">28dp</dimen>
     <dimen name="marginDefaultLayout">30dp</dimen>
     <dimen name="marginHeaderTopLayout">70dp</dimen>
+    <dimen name="progressBar_height">8dp</dimen>
+    <dimen name="progressBar_marginTopAdjust">-3dp</dimen>
+    <dimen name="marginEnd_textView">10dp</dimen>
+    <dimen name="marginStart_textView">8dp</dimen>
+    <dimen name="marginTop_ErrorEditText">16dp</dimen>
+    <dimen name="smallMargin">8dp</dimen>
 
 
 </resources>

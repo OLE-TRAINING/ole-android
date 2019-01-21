@@ -20,8 +20,8 @@
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginTop="@dimen/marginLayout"
+            android:layout_marginStart="@dimen/marginLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp"
@@ -30,8 +30,8 @@
         <TextView
             android:id="@+id/textView_header"
             android:layout_width="wrap_content"
-            android:layout_height="118dp"
-            android:layout_marginTop="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginLayout"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="@string/token_sended"
@@ -62,8 +62,8 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/button_validate"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp">
+            android:paddingLeft="@dimen/marginLayout"
+            android:paddingRight="@dimen/marginLayout">
 
             <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
                 android:id="@+id/errorEditText_token"
@@ -86,8 +86,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/robotoregular"
                     android:text="@string/noReceiveCode"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="@dimen/marginEnd_textView"
+                    android:layout_marginStart="@dimen/marginStart_textView"
                     android:textColor="@color/colorTextDefault"
                     android:textSize="@dimen/textSizeDefault" />
 
@@ -129,14 +129,13 @@
 
             <ProgressBar
                 android:id="@+id/progress_bar"
-                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:layout_marginTop="-3dp"
+                android:layout_height="@dimen/progressBar_height"
+                android:layout_marginTop="@dimen/progressBar_marginTopAdjust"
+                android:visibility="visible"
+                style= "?android:attr/progressBarStyleHorizontal"
                 android:background="@color/colorTransparent"
-                android:max="100"
-                android:visibility="visible" />
-
+                android:max="@string/progressBar_fullPercentage" />
         </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>

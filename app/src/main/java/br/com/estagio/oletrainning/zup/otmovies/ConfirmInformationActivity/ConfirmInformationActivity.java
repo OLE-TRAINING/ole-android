@@ -95,7 +95,7 @@ public class ConfirmInformationActivity extends AppCompatActivity {
                 userDates.setEmail(getIntent().getStringExtra(getString(R.string.EmailPreLogin)));
                 userDates.setUsername(confirmInformationViewHolder.errorEditText.getText().toString().trim());
 
-                Call<Void> createNewUser = confirmUserName.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+                Call<Void> createNewUser = confirmUserName.userRegister(userDates,getString(R.string.secureKeyResquestService));
 
                 createNewUser.enqueue(new Callback<Void>() {
                     @Override
@@ -108,9 +108,9 @@ public class ConfirmInformationActivity extends AppCompatActivity {
                         confirmInformationViewHolder.progressBar.setVisibility(View.INVISIBLE);
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         if(t instanceof IOException){
-                            Toast.makeText(ConfirmInformationActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ConfirmInformationActivity.this,getString(R.string.conectionErrorMessage), Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(ConfirmInformationActivity.this,"Falha ao validar usuário", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ConfirmInformationActivity.this,getString(R.string.NoValidateUserMessage), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
