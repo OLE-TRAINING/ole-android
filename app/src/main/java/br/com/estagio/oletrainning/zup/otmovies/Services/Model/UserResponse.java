@@ -25,6 +25,14 @@ public class UserResponse {
     @Expose
     private String password;
 
+    @SerializedName("key")
+    @Expose
+    private String key;
+
+    @SerializedName("message")
+    @Expose
+    private String message;
+
     public String getEmail() {
         return email;
     }
@@ -63,5 +71,21 @@ public class UserResponse {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

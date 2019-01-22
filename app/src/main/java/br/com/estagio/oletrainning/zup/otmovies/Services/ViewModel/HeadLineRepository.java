@@ -27,17 +27,13 @@ public class HeadLineRepository {
         apiService= RetrofitRequest.buildService(APIRequest.class);
     }
     public LiveData<UserResponse> getHeadLine(String email,
-                                              String gwkey)
-    {
+                                              String gwkey) {
         final MutableLiveData<UserResponse> data = new MutableLiveData<>();
         apiService.getUsersDate(email, gwkey)
-                .enqueue(new Callback<UserResponse>()
-                {
+                .enqueue(new Callback<UserResponse>() {
                     @Override
-                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response)
-                    {
-                        if (response.isSuccessful())
-                        {
+                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                        if (response.isSuccessful()) {
                             data.setValue(response.body());
                         }
                     }
