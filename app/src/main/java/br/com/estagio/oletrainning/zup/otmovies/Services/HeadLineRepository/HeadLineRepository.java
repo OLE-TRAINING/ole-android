@@ -1,4 +1,4 @@
-package br.com.estagio.oletrainning.zup.otmovies.Services.ViewModel;
+package br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -14,18 +14,10 @@ public class HeadLineRepository {
 
     private APIRequest apiService;
 
-    private static class SingletonHelper
-    {
-        private static final HeadLineRepository INSTANCE = new HeadLineRepository();
-    }
-    public static HeadLineRepository getInstance()
-    {
-        return SingletonHelper.INSTANCE;
-    }
-    public HeadLineRepository()
-    {
+    public HeadLineRepository(){
         apiService= RetrofitRequest.buildService(APIRequest.class);
     }
+
     public LiveData<UserResponse> getHeadLine(String email,
                                               String gwkey) {
         final MutableLiveData<UserResponse> data = new MutableLiveData<>();
@@ -33,7 +25,9 @@ public class HeadLineRepository {
                 .enqueue(new Callback<UserResponse>() {
                     @Override
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                        if (response.isSuccessful()) {
+                        if(response.code()==200){
+                            data.setValue(response.body());
+                        } else {
                             data.setValue(response.body());
                         }
                     }

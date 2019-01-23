@@ -132,7 +132,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/progressBar_height"
                 android:layout_marginTop="@dimen/progressBar_marginTopAdjust"
-                android:visibility="visible"
+                android:visibility="invisible"
+                android:theme="@style/MyAppTheme"
                 style= "?android:attr/progressBarStyleHorizontal"
                 android:background="@color/colorTransparent"
                 android:max="@string/progressBar_fullPercentage" />

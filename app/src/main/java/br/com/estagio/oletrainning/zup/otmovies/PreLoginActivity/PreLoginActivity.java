@@ -1,9 +1,6 @@
 package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
-
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -13,8 +10,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -28,6 +29,7 @@ public class PreLoginActivity extends AppCompatActivity {
 
     private PreLoginViewHolder preLoginViewHolder;
     private PreLoginViewModel preLoginViewModel;
+    private Boolean clicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +50,9 @@ public class PreLoginActivity extends AppCompatActivity {
         setupListeners();
     }
 
-
-    private void setupObservers(){
-        preLoginViewModel.getEmailContainsErrorStatus().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean containsErrorStatus) {
-                if(containsErrorStatus != null){
-                    preLoginViewHolder.errorEditTextEmail.setErrorVisibility(containsErrorStatus);
-                }
-            }
-        });
-
+    private void setupObservers() {
+        preLoginViewModel.getEmailContainsErrorStatus().observe(this, errorStatusObserver);
         preLoginViewModel.getIsLoading().observe(this, progressBarObserver);
-
     }
 
     private void setupListeners() {
@@ -71,17 +63,37 @@ public class PreLoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextPreLoginOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            preLoginViewModel.serviceStarting();
+            clicked = true;
             String email = preLoginViewHolder.errorEditTextEmail.getEditText().getText().toString().trim();
             preLoginViewModel.emailEntered(email);
-            preLoginViewModel.getUserResponse(email).observe(PreLoginActivity.this, serviceCallObserver);
+
         }
+    };
+
+    private Observer<Boolean> errorStatusObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(@Nullable Boolean containsErrorStatus) {
+            if (containsErrorStatus != null) {
+                if(!containsErrorStatus){
+                    if(clicked){
+                        preLoginViewModel.serviceStarting();
+                        preLoginViewModel.getUserResponse(
+                                preLoginViewHolder.errorEditTextEmail.getText().toString().trim())
+                                .observe(PreLoginActivity.this,serviceCallObserver);
+                    }
+                    } else {
+                    preLoginViewModel.serviceEnding();
+                    preLoginViewHolder.errorEditTextEmail.setErrorVisibility(true);
+                }
+            }
+        }
+
     };
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(@Nullable Boolean isLoading) {
-            if(isLoading != null) {
+            if (isLoading != null) {
                 if (isLoading) {
                     preLoginViewHolder.progressBar.setVisibility(View.VISIBLE);
                     getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -115,24 +127,16 @@ public class PreLoginActivity extends AppCompatActivity {
                     String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                     intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                     startActivity(intent);
+                } else if(userResponse.getKey().equals("error.invalid.email")){
+                    preLoginViewHolder.errorEditTextEmail.setErrorVisibility(true);
                 } else {
-                    preLoginViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    try {
-                        if (userResponse.getKey().equals("error.invalid.username")) {
-                            preLoginViewHolder.errorEditTextEmail.setErrorVisibility(true);
-                        } else {
-                            Toast.makeText(PreLoginActivity.this, userResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(PreLoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(PreLoginActivity.this, userResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(PreLoginActivity.this, "Erro inesperado, verifique sua internet e tente novamente mais tarde", Toast.LENGTH_LONG).show();
+                Toast.makeText(PreLoginActivity.this,"Falha ao validar seu email. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
             }
-
         }
+
     };
 
 
@@ -152,6 +156,5 @@ public class PreLoginActivity extends AppCompatActivity {
 
         }
     };
-
 }
 

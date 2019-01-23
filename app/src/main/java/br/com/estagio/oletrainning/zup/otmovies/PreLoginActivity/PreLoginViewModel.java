@@ -7,10 +7,12 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserResponse;
-import br.com.estagio.oletrainning.zup.otmovies.Services.ViewModel.HeadLineRepository;
+import br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository.HeadLineRepository;
 
 
 public class PreLoginViewModel extends ViewModel {
+
+    private HeadLineRepository repository = new HeadLineRepository();
 
     private MutableLiveData<Boolean> emailContainsErrorStatus = new MutableLiveData<>();
 
@@ -18,13 +20,8 @@ public class PreLoginViewModel extends ViewModel {
 
     private LiveData<UserResponse> userResponseObservable;
 
-    private static final MutableLiveData MUTABLE_LIVE_DATA = new MutableLiveData(); {
-        MUTABLE_LIVE_DATA.setValue(null);
-    }
-
     public LiveData<UserResponse> getUserResponse(@NonNull String email) {
-        userResponseObservable = HeadLineRepository.getInstance()
-                .getHeadLine(email,"593c3280aedd01364c73000d3ac06d76");
+        userResponseObservable = repository.getHeadLine(email,"593c3280aedd01364c73000d3ac06d76");
         return userResponseObservable;
     }
 
