@@ -1,17 +1,39 @@
 package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.ViewModel.HeadLineRepository;
 
 
 public class PreLoginViewModel extends ViewModel {
 
-    private MutableLiveData<Boolean> emailErrorStatus = new MutableLiveData<>();
+    private MutableLiveData<Boolean> emailContainsErrorStatus = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> getEmailErrorStatus() {
-        return emailErrorStatus;
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+
+    private LiveData<UserResponse> userResponseObservable;
+
+    private static final MutableLiveData MUTABLE_LIVE_DATA = new MutableLiveData(); {
+        MUTABLE_LIVE_DATA.setValue(null);
+    }
+
+    public LiveData<UserResponse> getUserResponse(@NonNull String email) {
+        userResponseObservable = HeadLineRepository.getInstance()
+                .getHeadLine(email,"593c3280aedd01364c73000d3ac06d76");
+        return userResponseObservable;
+    }
+
+    public MutableLiveData<Boolean> getEmailContainsErrorStatus() {
+        return emailContainsErrorStatus;
+    }
+
+    public MutableLiveData<Boolean> getIsLoading() {
+        return isLoading;
     }
 
     private boolean validateEmail(String email) {
@@ -23,11 +45,18 @@ public class PreLoginViewModel extends ViewModel {
     }
 
     public void textChanged(){
-        emailErrorStatus.postValue(true);
+        emailContainsErrorStatus.postValue(false);
     }
 
     public void emailEntered(String email){
-        emailErrorStatus.postValue(validateEmail(email));
+        emailContainsErrorStatus.postValue(!validateEmail(email));
     }
 
+    public void serviceStarting(){
+        isLoading.postValue(true);
+    }
+
+    public void serviceEnding(){
+        isLoading.postValue(false);
+    }
 }
