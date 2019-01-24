@@ -21,7 +21,7 @@ public class PreLoginViewModel extends ViewModel {
     private LiveData<UserResponse> userResponseObservable;
 
     public LiveData<UserResponse> getUserResponse(@NonNull String email) {
-        userResponseObservable = repository.getHeadLine(email,"593c3280aedd01364c73000d3ac06d76");
+        userResponseObservable = repository.getUserDate(email,"593c3280aedd01364c73000d3ac06d76");
         return userResponseObservable;
     }
 
@@ -33,7 +33,7 @@ public class PreLoginViewModel extends ViewModel {
         return isLoading;
     }
 
-    private boolean validateEmail(String email) {
+    private boolean validateEmail(@NonNull String email) {
         return (!email.isEmpty() && validateEmailFormat(email));
     }
 
@@ -55,5 +55,9 @@ public class PreLoginViewModel extends ViewModel {
 
     public void serviceEnding(){
         isLoading.postValue(false);
+    }
+
+    public boolean isValidEmail(String email){
+        return validateEmail(email);
     }
 }

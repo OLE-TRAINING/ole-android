@@ -8,7 +8,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitRequest {
+public class RetrofitServiceBuilder {
 
     private static final String URL = "https://ole.dev.gateway.zup.me/client-training/v1/";
 
