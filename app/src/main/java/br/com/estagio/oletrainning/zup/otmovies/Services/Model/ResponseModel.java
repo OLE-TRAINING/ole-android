@@ -3,7 +3,7 @@ package br.com.estagio.oletrainning.zup.otmovies.Services.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserResponse {
+public class ResponseModel {
 
     @SerializedName("email")
     @Expose

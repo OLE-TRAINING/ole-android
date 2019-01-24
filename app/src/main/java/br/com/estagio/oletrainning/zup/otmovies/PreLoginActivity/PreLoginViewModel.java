@@ -6,7 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository.HeadLineRepository;
 
 
@@ -18,9 +18,9 @@ public class PreLoginViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
-    private LiveData<UserResponse> userResponseObservable;
+    private LiveData<ResponseModel> userResponseObservable;
 
-    public LiveData<UserResponse> getUserResponse(@NonNull String email) {
+    public LiveData<ResponseModel> getUserResponse(@NonNull String email) {
         userResponseObservable = repository.getUserDate(email,"593c3280aedd01364c73000d3ac06d76");
         return userResponseObservable;
     }

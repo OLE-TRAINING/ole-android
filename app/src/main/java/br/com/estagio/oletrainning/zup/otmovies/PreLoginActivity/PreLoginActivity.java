@@ -16,7 +16,7 @@ import android.widget.Toast;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
@@ -96,33 +96,33 @@ public class PreLoginActivity extends AppCompatActivity {
         }
     };
 
-    Observer<UserResponse> serviceCallObserver = new Observer<UserResponse>() {
+    Observer<ResponseModel> serviceCallObserver = new Observer<ResponseModel>() {
         @Override
-        public void onChanged(@Nullable UserResponse userResponse) {
+        public void onChanged(@Nullable ResponseModel responseModel) {
             preLoginViewModel.serviceEnding();
-            if (userResponse != null) {
-                if (userResponse.getRegistrationStatus() != null) {
-                    if (userResponse.getRegistrationStatus().equals("REGISTERED")) {
+            if (responseModel != null) {
+                if (responseModel.getRegistrationStatus() != null) {
+                    if (responseModel.getRegistrationStatus().equals("REGISTERED")) {
                         Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
                         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
-                    } else if (userResponse.getRegistrationStatus().equals("PENDING")) {
+                    } else if (responseModel.getRegistrationStatus().equals("PENDING")) {
                         Intent intent = new Intent(PreLoginActivity.this, TokenValidationActivity.class);
                         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
-                    } else if (userResponse.getRegistrationStatus().equals("INEXISTENT")) {
+                    } else if (responseModel.getRegistrationStatus().equals("INEXISTENT")) {
                         Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
                         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
                     }
                 } else {
-                    if (userResponse.getKey().equals("error.invalid.email")) {
+                    if (responseModel.getKey().equals("error.invalid.email")) {
                         preLoginViewHolder.errorEditTextEmail.setErrorVisibility(true);
                     } else {
-                        Toast.makeText(PreLoginActivity.this, userResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(PreLoginActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             } else {

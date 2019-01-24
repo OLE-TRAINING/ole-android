@@ -13,10 +13,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
-import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
@@ -152,12 +151,12 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         }
     };
 
-    Observer<UserResponse> serviceCallObserver = new Observer<UserResponse>() {
+    Observer<ResponseModel> serviceCallObserver = new Observer<ResponseModel>() {
         @Override
-        public void onChanged(@Nullable UserResponse userResponse) {
+        public void onChanged(@Nullable ResponseModel responseModel) {
             registerNewUserViewModel.serviceEnding();
-            if (userResponse != null) {
-                if (userResponse.getCode() == 200) {
+            if (responseModel != null) {
+                if (responseModel.getCode() == 200) {
                     Toast.makeText(RegisterNewUserActivity.this,getString(R.string.registerOk), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
                     String emailInput = registerNewUserViewHolder.textViewEmailEntered.getText().toString().trim();
@@ -165,8 +164,8 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(userResponse.getKey());
-                    errorMessage.setMessage(userResponse.getMessage());
+                    errorMessage.setKey(responseModel.getKey());
+                    errorMessage.setMessage(responseModel.getMessage());
                     switch (errorMessage.getKey()) {
                         case "error.invalid.name":
                             registerNewUserViewHolder.errorEditTextName.setErrorVisibility(true);

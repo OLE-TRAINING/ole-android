@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository.HeadLineRepository;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
 
 
@@ -31,7 +31,7 @@ public class RegisterNewUserViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> passwordContainsErrorStatus = new MutableLiveData<>();
 
-    private LiveData<UserResponse> userResponseObservable;
+    private LiveData<ResponseModel> userResponseObservable;
 
     public MutableLiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -49,7 +49,7 @@ public class RegisterNewUserViewModel extends ViewModel {
         return passwordContainsErrorStatus;
     }
 
-    public LiveData<UserResponse> postUserRegister(@NonNull UserDates userDates) {
+    public LiveData<ResponseModel> postUserRegister(@NonNull UserDates userDates) {
         userResponseObservable = repository.postUserRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
         return userResponseObservable;
     }
