@@ -35,8 +35,8 @@ public class TokenValidationViewModel extends ViewModel {
         return tokenResponseObservable;
     }
 
-    public LiveData<ResponseModel> resendToken(@NonNull String email, String code) {
-        tokenresendResponseObservable = repository.resendtoken(email,"593c3280aedd01364c73000d3ac06d76");
+    public LiveData<ResponseModel> resendToken(@NonNull String email) {
+        tokenresendResponseObservable = repository.resendToken(email,"593c3280aedd01364c73000d3ac06d76");
         return tokenresendResponseObservable;
     }
 

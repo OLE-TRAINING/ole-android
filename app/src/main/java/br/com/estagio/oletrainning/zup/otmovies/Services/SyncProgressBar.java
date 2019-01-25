@@ -24,11 +24,11 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
     protected String doInBackground(Object... params) {
         try {
 
-            Thread.sleep(500);
+            Thread.sleep(250);
 
-            for (int i=0; i<8; i++) {
+            for (int i=0; i<16; i++) {
                 publishProgress();
-                Thread.sleep(500);
+                Thread.sleep(250);
             }
 
         } catch (InterruptedException e) {

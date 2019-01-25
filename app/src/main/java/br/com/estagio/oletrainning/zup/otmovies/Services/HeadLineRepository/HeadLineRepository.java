@@ -127,7 +127,7 @@ public class HeadLineRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> resendtoken (String email,
+    public LiveData<ResponseModel> resendToken (String email,
                                                 String gwkey) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
         validationServices.resendToken(email,gwkey)
@@ -197,6 +197,39 @@ public class HeadLineRepository {
                                                                String gwkey) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
         validationServices.validateTokenAndChangePass(bodyChangePassword, gwkey)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if((response.code() == 200)) {
+                            int code = response.code();
+                            ResponseModel responseModel = new ResponseModel();
+                            responseModel.setCode(code);
+                            data.setValue(responseModel);
+                        } else{
+                            if(response.errorBody() != null){
+                                Gson gson = new Gson();
+                                Type type = new TypeToken<ErrorMessage>() {
+                                }.getType();
+                                ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(), type);
+                                ResponseModel responseModel = new ResponseModel();
+                                responseModel.setKey(errorMessage.getKey());
+                                responseModel.setMessage(errorMessage.getMessage());
+                                data.setValue(responseModel);
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        data.setValue(null);
+                    }
+                });
+        return data;
+    }
+
+    public LiveData<ResponseModel> passwordValidate (UserDates userDates,
+                                                 String gwkey) {
+        final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
+        validationServices.passwordValidate(userDates,gwkey)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

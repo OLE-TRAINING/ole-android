@@ -19,4 +19,7 @@ public interface ValidationServices {
 
     @PUT("users/password")
     Call<Void> validateTokenAndChangePass(@Body BodyChangePassword bodyChangePassword, @Query("gw-app-key") String gwkey);
+
+    @POST("users/validate")
+    Call<Void> passwordValidate(@Body UserDates newUser, @Query("gw-app-key") String gwkey);
 }

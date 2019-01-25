@@ -186,9 +186,8 @@ public class TokenValidationActivity extends AppCompatActivity {
 
     private void callTokenResend(){
         String email = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
-        String code = tokenValidationViewHolder.errorEditText.getEditText().getText().toString().trim();
         tokenValidationViewModel.serviceStarting();
-        tokenValidationViewModel.resendToken(email,code)
+        tokenValidationViewModel.resendToken(email)
                 .observe(TokenValidationActivity.this, serviceCallResendObserver);
     }
 
