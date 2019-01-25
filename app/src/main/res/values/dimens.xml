@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="marginTopEditTextNameRegister">100dp</dimen>
+    <dimen name="marginStandard">8dp</dimen>
+    <dimen name="marginLayout">30dp</dimen>
+    <dimen name="paddingEditText">15dp</dimen>
+    <dimen name="textSizeDefault">16sp</dimen>
+    <dimen name="textSizeSmall">14sp</dimen>
+    <dimen name="textSizeTiny">10sp</dimen>
+    <dimen name="defaultHeaderLetterSpacing">.15</dimen>
+    <dimen name="textSizeHeader">22sp</dimen>
+    <dimen name="bigMargin">16dp</dimen>
+    <dimen name="lineSpacing">36dp</dimen>
+    <dimen name="formFinalSpacing">160dp</dimen>
+    <dimen name="biasVerticalFinalForm">0.0</dimen>
+    <dimen name="marginDefault">8dp</dimen>
+    <dimen name="marginTopHeaderPreLogin">36dp</dimen>
+    <dimen name="sizeAlertError">15dp</dimen>
+    <dimen name="sizeBackArrow">25dp</dimen>
+    <dimen name="marginTopHeaderRegister">44dp</dimen>
+    <dimen name="constraintHorizontal_biasHeaderRegister">0.502</dimen>
+    <dimen name="constraintHorizontal_biasEnterName">0.633</dimen>
+    <dimen name="marginTopEnterName">56dp</dimen>
+    <dimen name="marginTopErrorEditText_Token">124dp</dimen>
+    <dimen name="marginBottonErrorEditText_token">168dp</dimen>
+    <dimen name="marginBotton_backArrow">8dp</dimen>
+    <dimen name="marginTopErrorEditText_token">112dp</dimen>
+    <dimen name="marginTopMedium">64dp</dimen>
+    <dimen name="marginTopSmall">12dp</dimen>
+    <dimen name="marginThirty">30dp</dimen>
+    <dimen name="marginSeventySix">76dp</dimen>
+    <dimen name="toastHeight">50dp</dimen>
+    <dimen name="ninetySix">96dp</dimen>
+    <dimen name="marginTwentyEight">28dp</dimen>
+    <dimen name="marginDefaultLayout">30dp</dimen>
+    <dimen name="marginHeaderTopLayout">70dp</dimen>
+    <dimen name="progressBar_height">8dp</dimen>
+    <dimen name="progressBar_marginTopAdjust">-3dp</dimen>
+    <dimen name="marginEnd_textView">10dp</dimen>
+    <dimen name="marginStart_textView">8dp</dimen>
+    <dimen name="marginTop_ErrorEditText">16dp</dimen>
+    <dimen name="smallMargin">8dp</dimen>
+
+
+</resources>

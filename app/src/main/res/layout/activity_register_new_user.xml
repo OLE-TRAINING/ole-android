@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/Layout_Register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBackground">
+
+        <ImageView
+            android:id="@+id/imageView_backArrow"
+            android:layout_width="@dimen/sizeBackArrow"
+            android:layout_height="@dimen/sizeBackArrow"
+            android:layout_marginTop="@dimen/marginLayout"
+            android:layout_marginStart="@dimen/marginLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp"
+            android:contentDescription="@string/imageview_backarrow"/>
+
+        <TextView
+            android:id="@+id/textView_headerRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginLayout"
+            android:fontFamily="@font/dosisbold"
+            android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
+            android:text="@string/textHeaderRegister"
+            android:textAlignment="center"
+            android:textColor="@color/colorEmailHeadHint"
+            android:textSize="@dimen/textSizeHeader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_emailEntered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginStandard"
+            android:layout_marginTop="@dimen/marginStandard"
+            android:layout_marginEnd="@dimen/marginStandard"
+            android:fontFamily="@font/robotoregular"
+            android:text="@string/userEmailEntered"
+            android:textAlignment="center"
+            android:textColor="@color/colorEmailHeadHint"
+            android:textSize="@dimen/textSizeDefault"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_headerRegister" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/smallMargin"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
+            app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered">
+
+            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+                android:id="@+id/errorEditText_enterName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginLayout"
+                android:layout_marginRight="@dimen/marginLayout"
+                app:setHint="@string/full_name"
+                app:setInicialErrorVisibility="false"
+                app:setInputType="textPersonName"
+                app:setMessageError="@string/error_register_name">
+
+            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+
+
+            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+                android:id="@+id/errorEditText_enterUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginLayout"
+                android:layout_marginTop="@dimen/marginDefault"
+                android:layout_marginRight="@dimen/marginLayout"
+                app:setHint="@string/user_name"
+                app:setInicialErrorVisibility="false"
+                app:setInputType="text"
+                app:setMessageError="@string/error_user_name">
+
+            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+
+            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+                android:id="@+id/errorEditText_enterPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginLayout"
+                android:layout_marginTop="@dimen/smallMargin"
+                android:layout_marginRight="@dimen/marginLayout"
+                app:setHint="@string/password"
+                app:setInicialErrorVisibility="false"
+                app:setInputType="textPassword"
+                app:setMessageError="@string/error_password">
+
+            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/button_nextRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_style"
+            android:fontFamily="@font/dosisbold"
+            android:text="@string/textButton_next"
+            android:textColor="@color/colorTextBottonEmailPreLogin"
+            android:textSize="@dimen/textSizeDefault"
+            android:layout_marginBottom="@dimen/marginDefaultLayout"
+            android:layout_marginLeft="@dimen/marginDefaultLayout"
+            android:layout_marginRight="@dimen/marginDefaultLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            tools:ignore="MissingConstraints">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/progressBar_height"
+                android:layout_marginTop="@dimen/progressBar_marginTopAdjust"
+                android:visibility="invisible"
+                android:theme="@style/MyAppTheme"
+                style= "?android:attr/progressBarStyleHorizontal"
+                android:background="@color/colorTransparent"
+                android:max="@string/progressBar_fullPercentage" />
+
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>
