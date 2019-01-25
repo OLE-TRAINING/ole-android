@@ -31,7 +31,7 @@ public class RegisterNewUserViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> passwordContainsErrorStatus = new MutableLiveData<>();
 
-    private LiveData<ResponseModel> userResponseObservable;
+    private LiveData<ResponseModel> registerResponseObservable;
 
     public MutableLiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -50,8 +50,8 @@ public class RegisterNewUserViewModel extends ViewModel {
     }
 
     public LiveData<ResponseModel> postUserRegister(@NonNull UserDates userDates) {
-        userResponseObservable = repository.postUserRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
-        return userResponseObservable;
+        registerResponseObservable = repository.postUserRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+        return registerResponseObservable;
     }
 
     public void serviceStarting(){
