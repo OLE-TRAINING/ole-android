@@ -47,4 +47,10 @@
     <string name="secureKeyResquestService">593c3280aedd01364c73000d3ac06d76</string>
     <string name="conectionErrorMessage">Ocorreu um erro na conexão</string>
     <string name="NoValidateUserMessage">Falha ao validar usuário</string>
+    <string name="sucess_message_tokenresend">Código reenviado com sucesso!</string>
+    <string name="service_or_connection_error_tokenresend">Falha ao reenviar o código. Verifique a conexão e tente novamente.</string>
+    <string name="empty_text"> </string>
+    <string name="success_message_change_pass">Senha alterada com sucesso!</string>
+    <string name="service_or_connection_error_change_password">Falha ao trocar sua senha. Verifique a conexão e tente novamente.</string>
+    <string name="message_error_empty_input">Não são permitidos campos nulos ou vazios</string>
 </resources>

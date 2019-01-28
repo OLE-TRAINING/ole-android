@@ -15,8 +15,6 @@ import android.widget.Toast;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.BodyChangePassword;
-import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 
@@ -56,7 +54,7 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
         informTokenAndNewPasswordViewModel.getIsLoading().observe(this, progressBarObserver);
         informTokenAndNewPasswordViewModel.getTokenContainsErrorStatus().observe(this,tokenErrorStatusObserver);
         informTokenAndNewPasswordViewModel.getPasswordContainsErrorStatus().observe(this,passwordContainsErrorObserver);
-        informTokenAndNewPasswordViewModel.getPasswordContainsErrorStatus().observe(this,confirmPasswordContainsErrorObserver);
+        informTokenAndNewPasswordViewModel.getConfirmPasswordContainsErrorStatus().observe(this,confirmPasswordContainsErrorObserver);
     }
 
     private void setupListeners() {
@@ -132,12 +130,12 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
             informTokenAndNewPasswordViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
-                    Toast.makeText(InformTokenAndNewPasswordActivity.this,"Código reenviado com sucesso!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InformTokenAndNewPasswordActivity.this,getString(R.string.sucess_message_tokenresend), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(InformTokenAndNewPasswordActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(InformTokenAndNewPasswordActivity.this, "Falha ao reenviar o código. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.service_or_connection_error_tokenresend), Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -218,24 +216,21 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
     View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            BodyChangePassword bodyChangePassword = new BodyChangePassword();
-            bodyChangePassword.setEmail(getIntent().getStringExtra(getString(R.string.EmailPreLogin)));
+            String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
             String token = informTokenAndNewPasswordViewHolder.errorEditTextToken.getText().toString().trim();
             String password = informTokenAndNewPasswordViewHolder.errorEditTextPassword.getText().toString().trim();
             String confirmPassword = informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.getText().toString().trim();
-            bodyChangePassword.setConfirmationToken(token);
-            bodyChangePassword.setNewPassword(password);
-            bodyChangePassword.setNewPasswordConfirmation(confirmPassword);
             emptyInputShowErrorMessageControl(token,password,confirmPassword);
             passwordsShowErrorMessageControl(password, confirmPassword);
+            informTokenAndNewPasswordViewModel.tokenEntered(token);
+            informTokenAndNewPasswordViewModel.passwordEntered(password);
+            informTokenAndNewPasswordViewModel.confirmPasswordEntered(confirmPassword);
             if(informTokenAndNewPasswordViewModel.isValidToken(token)
                     && informTokenAndNewPasswordViewModel.isValidPassword(password)
                     &&  informTokenAndNewPasswordViewModel.isValidConfirmPassword(password,confirmPassword)){
                 informTokenAndNewPasswordViewModel.serviceStarting();
-                informTokenAndNewPasswordViewModel.validateTokenAndChangePass(bodyChangePassword)
+                informTokenAndNewPasswordViewModel.validateTokenAndChangePass(email,token,password,confirmPassword)
                         .observe(InformTokenAndNewPasswordActivity.this, serviceCallObserver);
-            } else {
-                informTokenAndNewPasswordViewHolder.progressBar.setVisibility(View.INVISIBLE);
             }
         }
     };
@@ -246,43 +241,29 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
             informTokenAndNewPasswordViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
-                    Toast.makeText(InformTokenAndNewPasswordActivity.this,"Senha alterada com sucesso!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InformTokenAndNewPasswordActivity.this,getString(R.string.success_message_change_pass), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(InformTokenAndNewPasswordActivity.this, LoginActivity.class);
                     String emailInput = informTokenAndNewPasswordViewHolder.textViewEmail.getText().toString().trim();
                     intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                     startActivity(intent);
                 } else {
-                    ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
-                    switch (errorMessage.getKey()) {
-                        case "error.invalid.password.mismatch":
-                            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError(errorMessage.getMessage());
-                            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError("");
-                            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(true);
-                            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setErrorVisibility(true);
-                            break;
-                        case "error.invalid.password":
-                            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError("");
-                            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError(errorMessage.getMessage());
-                            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(true);
-                            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setErrorVisibility(true);
-                            break;
-                        case "error.unauthorized.token":
-                            informTokenAndNewPasswordViewHolder.errorEditTextToken.setMessageError(errorMessage.getMessage());
-                            informTokenAndNewPasswordViewHolder.errorEditTextToken.setErrorVisibility(true);
-                            break;
-                        case "error.resource.token":
-                            informTokenAndNewPasswordViewHolder.errorEditTextToken.setMessageError(errorMessage.getMessage());
-                            informTokenAndNewPasswordViewHolder.errorEditTextToken.setErrorVisibility(true);
-                            break;
-                        default:
-                            Toast.makeText(InformTokenAndNewPasswordActivity.this, errorMessage.getMessage(), Toast.LENGTH_LONG).show();
-                            break;
+                    String key = responseModel.getKey();
+                    String message = responseModel.getMessage();
+                    if (informTokenAndNewPasswordViewModel.isErrorMessageKeyToPasswordInput(key)) {
+                        informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError("");
+                        informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError(message);
+                        informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(true);
+                        informTokenAndNewPasswordViewHolder.errorEditTextPassword.setErrorVisibility(true);
+                    } else if (informTokenAndNewPasswordViewModel.isErrorMessageKeyToTokenInput(key)) {
+                        informTokenAndNewPasswordViewHolder.errorEditTextToken.setMessageError(message);
+                        informTokenAndNewPasswordViewHolder.errorEditTextToken.setErrorVisibility(true);
+                    } else {
+                        Toast.makeText(InformTokenAndNewPasswordActivity.this, message, Toast.LENGTH_LONG).show();
+
                     }
                 }
             } else {
-                Toast.makeText(InformTokenAndNewPasswordActivity.this, "Falha ao trocar sua senha. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.service_or_connection_error_change_password), Toast.LENGTH_LONG).show();
             }
         }
 
@@ -298,15 +279,15 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
 
     private void emptyInputShowErrorMessageControl(String token, String password, String confirmPassword){
         if(informTokenAndNewPasswordViewModel.isEmptyTokenInput(token)){
-            informTokenAndNewPasswordViewHolder.errorEditTextToken.setMessageError("Não são permitidos campos nulos ou vazios");
+            informTokenAndNewPasswordViewHolder.errorEditTextToken.setMessageError(getString(R.string.message_error_empty_input));
             informTokenAndNewPasswordViewHolder.errorEditTextToken.setErrorVisibility(true);
         }
         if(informTokenAndNewPasswordViewModel.isEmptyPasswordInput(password)){
-            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError("Não são permitidos campos nulos ou vazios");
+            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError(getString(R.string.message_error_empty_input));
             informTokenAndNewPasswordViewHolder.errorEditTextPassword.setErrorVisibility(true);
         }
         if(informTokenAndNewPasswordViewModel.isEmptyConfirmPasswordInput(confirmPassword)){
-            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError("Não são permitidos campos nulos ou vazios");
+            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError(getString(R.string.message_error_empty_input));
             informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(true);
         }
 
@@ -314,8 +295,8 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
 
     private void passwordsShowErrorMessageControl(String password, String confirmPassword){
         if(!informTokenAndNewPasswordViewModel.isValidConfirmPassword(password,confirmPassword)){
-            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError("");
-            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError("As senhas não batem");
+            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError(getString(R.string.empty_text));
+            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError(getString(R.string.noMatchPassword));
             informTokenAndNewPasswordViewHolder.errorEditTextPassword.setErrorVisibility(true);
             informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(true);
         }
