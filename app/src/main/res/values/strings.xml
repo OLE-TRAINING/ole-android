@@ -45,6 +45,22 @@
     <string name="errorValidadePassword">Obrigatório conter letras e números, entre 6 e 10 caracteres.</string>
     <string name="progressBar_fullPercentage">100</string>
     <string name="secureKeyResquestService">593c3280aedd01364c73000d3ac06d76</string>
-    <string name="conectionErrorMessage">Ocorreu um erro na conexão</string>
+    <string name="connectionErrorMessage">Ocorreu um erro na conexão</string>
     <string name="NoValidateUserMessage">Falha ao validar usuário</string>
+    <string name="success_message_login">Senha confirmada, login autorizado!</string>
+    <string name="service_or_connection_error_login">Falha ao validar sua senha. Verifique a conexão e tente novamente.</string>
+    <string name="success_message_email">Foi enviado um código para seu e-mail!</string>
+    <string name="service_or_connection_error_token">Falha ao enviar código para o e-mail. Verifique a conexão e tente novamente.</string>
+    <string name="registered">REGISTERED</string>
+    <string name="pending">PENDING</string>
+    <string name="inexistent">INEXISTENT</string>
+    <string name="invalid_email_key">error.invalid.email</string>
+    <string name="service_or_connection_validate_email">Falha ao validar seu email. Verifique a conexão e tente novamente.</string>
+    <string name="service_or_connection_error_register">Falha ao registrar seu cadastro. Verifique a conexão e tente novamente.</string>
+    <string name="service_or_connection_error_resend_token">Falha ao reenviar o código. Verifique a conexão e tente novamente.</string>
+    <string name="success_resend_token">Código reenviado com sucesso!</string>
+    <string name="service_or_connection_error_validate_token">Falha ao validar o código. Verifique a conexão e tente novamente.</string>
+    <string name="unauthorized_token_key">error.unauthorized.token</string>
+    <string name="invalid_token_key">error.invalid.token</string>
+    <string name="success_message_validate_token">Código confirmado com sucesso!</string>
 </resources>

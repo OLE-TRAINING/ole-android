@@ -15,10 +15,9 @@ package br.com.estagio.oletrainning.zup.otmovies.LoginActivity;
         import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
         import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
         import br.com.estagio.oletrainning.zup.otmovies.R;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
         import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
         import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -98,14 +97,12 @@ public class LoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            UserDates userDates = new UserDates();
-            userDates.setEmail(getIntent().getStringExtra(getString(R.string.EmailPreLogin)));
+            String email =getIntent().getStringExtra(getString(R.string.EmailPreLogin));
             String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
-            userDates.setPassword(password);
             loginViewModel.passwordEntered(password);
             if (loginViewModel.isValidPassword(password)) {
                 loginViewModel.serviceStarting();
-                loginViewModel.passwordValidation(userDates)
+                loginViewModel.passwordValidation(email, password)
                         .observe(LoginActivity.this, serviceCallPassValidationObserver);
             }
         }
@@ -118,26 +115,19 @@ public class LoginActivity extends AppCompatActivity {
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     loginViewModel.setPasswordContainsErrorStatus(false);
-                    Toast.makeText(LoginActivity.this,"Senha confirmada, login autorizado!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this,getString(R.string.success_message_login), Toast.LENGTH_LONG).show();
                 } else {
-                    ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
-                    if (errorMessage.getKey().equals("error.invalid.password")) {
-                        loginViewHolder.textViewRedToast.setText(errorMessage.getMessage());
+                    String key = responseModel.getKey();
+                    String message = responseModel.getMessage();
+                    if (loginViewModel.isMessageToPutInTopToast(key)) {
+                        loginViewHolder.textViewRedToast.setText(message);
                         loginViewModel.setPasswordContainsErrorStatus(true);
-                    } else if (errorMessage.getKey().equals("error.unauthorized.login")) {
-                        loginViewHolder.textViewRedToast.setText(errorMessage.getMessage());
-                        loginViewModel.setPasswordContainsErrorStatus(true);
-                    } else if (errorMessage.getKey().equals("error.unauthorized.password")) {
-                        loginViewHolder.textViewRedToast.setText(errorMessage.getMessage());
-                        loginViewModel.setPasswordContainsErrorStatus(true);
-                    } else {
-                        Toast.makeText(LoginActivity.this, errorMessage.getMessage(), Toast.LENGTH_LONG).show();
+                    }  else {
+                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                     }
                 }
             } else {
-                Toast.makeText(LoginActivity.this, "Falha ao validar sua senha. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.service_or_connection_error_login), Toast.LENGTH_LONG).show();
             }
         }
 
@@ -149,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
             loginViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
-                    Toast.makeText(LoginActivity.this,"Foi enviado um código para seu e-mail!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this,getString(R.string.success_message_email), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
                     String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
                     intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
@@ -158,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(LoginActivity.this, "Falha ao enviar código para o e-mail. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.service_or_connection_error_token), Toast.LENGTH_LONG).show();
             }
         }
     };

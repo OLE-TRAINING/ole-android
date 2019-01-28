@@ -84,14 +84,10 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
-            UserDates userDates = new UserDates();
-            userDates.setEmail(getIntent().getStringExtra(getString(R.string.EmailPreLogin)));
+            String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
             String name = registerNewUserViewHolder.errorEditTextName.getText().toString().trim();
             String username = registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim();
             String password = registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim();
-            userDates.setCompleteName(name);
-            userDates.setUsername(username);
-            userDates.setPassword(password);
             registerNewUserViewModel.nameEntered(name);
             registerNewUserViewModel.userNameEntered(username);
             registerNewUserViewModel.passwordEntered(password);
@@ -99,7 +95,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                     && registerNewUserViewModel.isValidUserName(username)
                     && registerNewUserViewModel.isValidPassword(password)) {
                 registerNewUserViewModel.serviceStarting();
-                registerNewUserViewModel.postUserRegister(userDates)
+                registerNewUserViewModel.postUserRegister(email,name,username,password)
                         .observe(RegisterNewUserActivity.this, serviceCallObserver);
             }
 
@@ -186,7 +182,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                Toast.makeText(RegisterNewUserActivity.this, "Falha ao registrar seu cadastro. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegisterNewUserActivity.this, getString(R.string.service_or_connection_error_register), Toast.LENGTH_LONG).show();
             }
         }
 
