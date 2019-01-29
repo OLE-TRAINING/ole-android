@@ -30,10 +30,9 @@ public class HeadLineRepository {
         validationServices = RetrofitServiceBuilder.buildService(ValidationServices.class);
     }
 
-    public LiveData<ResponseModel> getUserDate(String email,
-                                               String gwkey) {
+    public LiveData<ResponseModel> getUserDate(String email) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        userServices.getUsersDate(email, gwkey)
+        userServices.getUsersDate(email)
                 .enqueue(new Callback<ResponseModel>() {
                     @Override
                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
@@ -61,10 +60,9 @@ public class HeadLineRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> postUserRegister (UserDates userDates,
-                                                     String gwkey) {
+    public LiveData<ResponseModel> postUserRegister (UserDates userDates) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        userServices.userRegister(userDates,gwkey)
+        userServices.userRegister(userDates)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -94,10 +92,9 @@ public class HeadLineRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> confirmUserName (UserDates userDates,
-                                                    String gwkey) {
+    public LiveData<ResponseModel> confirmUserName (UserDates userDates) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        userServices.confirmUserName(userDates,gwkey)
+        userServices.confirmUserName(userDates)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -127,10 +124,9 @@ public class HeadLineRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> resendtoken (String email,
-                                                String gwkey) {
+    public LiveData<ResponseModel> resendtoken (String email) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        validationServices.resendToken(email,gwkey)
+        validationServices.resendToken(email)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -160,10 +156,9 @@ public class HeadLineRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> confirmToken (String email, String code,
-                                                 String gwkey) {
+    public LiveData<ResponseModel> confirmToken (String email, String code) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        validationServices.confirmToken(email, code, gwkey)
+        validationServices.confirmToken(email, code)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -193,10 +188,9 @@ public class HeadLineRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> validateTokenAndChangePass (BodyChangePassword bodyChangePassword,
-                                                               String gwkey) {
+    public LiveData<ResponseModel> validateTokenAndChangePass (BodyChangePassword bodyChangePassword) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        validationServices.validateTokenAndChangePass(bodyChangePassword, gwkey)
+        validationServices.validateTokenAndChangePass(bodyChangePassword)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

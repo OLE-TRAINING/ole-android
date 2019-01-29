@@ -17,7 +17,6 @@ public class InformTokenAndNewPasswordViewModel extends ViewModel {
     private final Integer MAX_SIZE_PASS = 10;
 
     private String REGEX_ONLY_NUMBER_AND_LETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
-    private String KEY_SERVICE_VALIDATION = "593c3280aedd01364c73000d3ac06d76";
 
     private String INVALID_PASSWORD_MISMATCH_KEY = "error.invalid.password.mismatch";
     private String INVALID_PASSWORD_KEY = "error.invalid.password";
@@ -38,12 +37,12 @@ public class InformTokenAndNewPasswordViewModel extends ViewModel {
         bodyChangePassword.setConfirmationToken(token);
         bodyChangePassword.setNewPassword(password);
         bodyChangePassword.setNewPasswordConfirmation(confirmPassword);
-        validateTokenAndChangePassObservable = repository.validateTokenAndChangePass(bodyChangePassword,KEY_SERVICE_VALIDATION);
+        validateTokenAndChangePassObservable = repository.validateTokenAndChangePass(bodyChangePassword);
         return validateTokenAndChangePassObservable;
     }
 
     public LiveData<ResponseModel> resendToken(String email) {
-        tokenresendResponseObservable = repository.resendtoken(email,KEY_SERVICE_VALIDATION);
+        tokenresendResponseObservable = repository.resendtoken(email);
         return tokenresendResponseObservable;
     }
 

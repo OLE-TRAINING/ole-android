@@ -12,11 +12,11 @@ import retrofit2.http.Query;
 public interface UserServices {
 
     @GET("users/{email}")
-    Call<ResponseModel> getUsersDate(@Path("email") String email, @Query("gw-app-key") String gwkey);
+    Call<ResponseModel> getUsersDate(@Path("email") String email);
 
     @POST("users")
-    Call <Void> userRegister(@Body UserDates newUser, @Query("gw-app-key") String gwkey);
+    Call <Void> userRegister(@Body UserDates newUser);
 
     @POST("users/confirm-data")
-    Call<Void> confirmUserName(@Body UserDates newUser, @Query("gw-app-key") String gwkey);
+    Call<Void> confirmUserName(@Body UserDates newUser);
 }

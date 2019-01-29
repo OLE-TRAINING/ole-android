@@ -50,7 +50,7 @@ public class RegisterNewUserViewModel extends ViewModel {
     }
 
     public LiveData<ResponseModel> postUserRegister(@NonNull UserDates userDates) {
-        registerResponseObservable = repository.postUserRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
+        registerResponseObservable = repository.postUserRegister(userDates);
         return registerResponseObservable;
     }
 

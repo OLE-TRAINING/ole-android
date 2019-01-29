@@ -31,12 +31,12 @@ public class TokenValidationViewModel extends ViewModel {
     }
 
     public LiveData<ResponseModel> tokenValidation(@NonNull String email, String code) {
-        tokenResponseObservable = repository.confirmToken(email,code,"593c3280aedd01364c73000d3ac06d76");
+        tokenResponseObservable = repository.confirmToken(email,code);
         return tokenResponseObservable;
     }
 
     public LiveData<ResponseModel> resendToken(@NonNull String email, String code) {
-        tokenresendResponseObservable = repository.resendtoken(email,"593c3280aedd01364c73000d3ac06d76");
+        tokenresendResponseObservable = repository.resendtoken(email);
         return tokenresendResponseObservable;
     }
 

@@ -21,7 +21,7 @@ public class PreLoginViewModel extends ViewModel {
     private LiveData<ResponseModel> userResponseObservable;
 
     public LiveData<ResponseModel> getUserResponse(@NonNull String email) {
-        userResponseObservable = repository.getUserDate(email,"593c3280aedd01364c73000d3ac06d76");
+        userResponseObservable = repository.getUserDate(email);
         return userResponseObservable;
     }
 

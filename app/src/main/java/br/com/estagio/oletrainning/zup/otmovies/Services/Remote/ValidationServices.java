@@ -12,11 +12,11 @@ import retrofit2.http.Query;
 public interface ValidationServices {
 
     @PUT("tokens/{email}")
-    Call<Void> resendToken(@Path("email") String email, @Query("gw-app-key") String gwkey);
+    Call<Void> resendToken(@Path("email") String email);
 
     @POST("users/{email}/register/{code}")
-    Call<Void> confirmToken(@Path("email") String email, @Path("code") String code, @Query("gw-app-key") String gwkey);
+    Call<Void> confirmToken(@Path("email") String email, @Path("code") String code);
 
     @PUT("users/password")
-    Call<Void> validateTokenAndChangePass(@Body BodyChangePassword bodyChangePassword, @Query("gw-app-key") String gwkey);
+    Call<Void> validateTokenAndChangePass(@Body BodyChangePassword bodyChangePassword);
 }
