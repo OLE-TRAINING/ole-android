@@ -130,7 +130,7 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
             informTokenAndNewPasswordViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
-                    Toast.makeText(InformTokenAndNewPasswordActivity.this,getString(R.string.sucess_message_tokenresend), Toast.LENGTH_LONG).show();
+                    Toast.makeText(InformTokenAndNewPasswordActivity.this,getString(R.string.success_resend_token), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(InformTokenAndNewPasswordActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
                 }

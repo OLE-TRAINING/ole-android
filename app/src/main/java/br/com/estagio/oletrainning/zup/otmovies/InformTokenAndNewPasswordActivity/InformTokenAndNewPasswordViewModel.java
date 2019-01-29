@@ -5,12 +5,12 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.BodyChangePassword;
-import br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository.HeadLineRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 
 public class InformTokenAndNewPasswordViewModel extends ViewModel {
 
-    private HeadLineRepository repository = new HeadLineRepository();
+    private ValidationRepository repository = new ValidationRepository();
 
     private final int MAX_SIZE_TOKEN = 6;
     private final Integer MIN_SIZE_PASS = 6;
@@ -42,7 +42,7 @@ public class InformTokenAndNewPasswordViewModel extends ViewModel {
     }
 
     public LiveData<ResponseModel> resendToken(String email) {
-        tokenresendResponseObservable = repository.resendtoken(email);
+        tokenresendResponseObservable = repository.resendToken(email);
         return tokenresendResponseObservable;
     }
 

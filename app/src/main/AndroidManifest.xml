@@ -23,7 +23,6 @@
         <activity android:name=".FinishYourRegistrationActivity.FinishYourRegistrationActivity" />
         <activity android:name=".LoginActivity.LoginActivity" />
         <activity android:name=".InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity" />
-        <activity android:name=".ConfirmInformationActivity.ConfirmInformationActivity"></activity>
     </application>
 
 </manifest>

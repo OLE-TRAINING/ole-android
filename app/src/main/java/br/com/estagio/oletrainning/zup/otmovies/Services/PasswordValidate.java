@@ -8,5 +8,5 @@ import retrofit2.http.Query;
 public interface PasswordValidate {
 
     @POST("users/validate")
-    Call<Void> userRegister(@Body UserDates newUser, @Query("gw-app-key") String gwkey);
+    Call<Void> userRegister(@Body UserData newUser, @Query("gw-app-key") String gwkey);
 }

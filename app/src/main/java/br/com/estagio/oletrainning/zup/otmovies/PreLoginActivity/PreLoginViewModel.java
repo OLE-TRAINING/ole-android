@@ -2,17 +2,14 @@ package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository.HeadLineRepository;
-
+import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 
 public class PreLoginViewModel extends ViewModel {
 
-    private HeadLineRepository repository = new HeadLineRepository();
+    private UserRepository repository = new UserRepository();
 
     private MutableLiveData<Boolean> emailContainsErrorStatus = new MutableLiveData<>();
 
@@ -20,7 +17,7 @@ public class PreLoginViewModel extends ViewModel {
 
     private LiveData<ResponseModel> userResponseObservable;
 
-    public LiveData<ResponseModel> getUserResponse(@NonNull String email) {
+    public LiveData<ResponseModel> getUserResponse(String email) {
         userResponseObservable = repository.getUserDate(email);
         return userResponseObservable;
     }
@@ -33,7 +30,7 @@ public class PreLoginViewModel extends ViewModel {
         return isLoading;
     }
 
-    private boolean validateEmail(@NonNull String email) {
+    private boolean validateEmail( String email) {
         return (!email.isEmpty() && validateEmailFormat(email));
     }
 

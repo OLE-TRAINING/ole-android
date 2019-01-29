@@ -3,16 +3,15 @@ package br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository.HeadLineRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 
 public class TokenValidationViewModel extends ViewModel {
 
-    private HeadLineRepository repository = new HeadLineRepository();
+    private ValidationRepository repository = new ValidationRepository();
 
-    private final int MAXSIZETOKEN = 6;
+    private final int MAX_SIZE_TOKEN = 6;
 
     private MutableLiveData<Boolean> tokenContainsErrorStatus = new MutableLiveData<>();
 
@@ -30,18 +29,18 @@ public class TokenValidationViewModel extends ViewModel {
         return tokenContainsErrorStatus;
     }
 
-    public LiveData<ResponseModel> tokenValidation(@NonNull String email, String code) {
+    public LiveData<ResponseModel> tokenValidation(String email, String code) {
         tokenResponseObservable = repository.confirmToken(email,code);
         return tokenResponseObservable;
     }
 
-    public LiveData<ResponseModel> resendToken(@NonNull String email, String code) {
-        tokenresendResponseObservable = repository.resendtoken(email);
+    public LiveData<ResponseModel> resendToken(String email) {
+        tokenresendResponseObservable = repository.resendToken(email);
         return tokenresendResponseObservable;
     }
 
-    private boolean validateTokenSize(@NonNull String tokenEntered) {
-        return (tokenEntered.length() == MAXSIZETOKEN);
+    private boolean validateTokenSize(String tokenEntered) {
+        return (tokenEntered.length() == MAX_SIZE_TOKEN);
     }
 
     public void serviceStarting(){
@@ -63,5 +62,4 @@ public class TokenValidationViewModel extends ViewModel {
     public boolean isValidToken(String code){
         return validateTokenSize(code);
     }
-
 }

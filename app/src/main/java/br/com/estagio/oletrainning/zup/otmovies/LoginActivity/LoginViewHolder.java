@@ -13,27 +13,26 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 
 public class LoginViewHolder {
 
-        ImageView imageViewBackArrow;
-        TextView textViewEmailEntered;
-        ComponentErrorEditText errorEditTextPassword;
-        TextView textViewForgetPassword;
-        LinearLayout linearLayout;
-        Button buttonSignIn;
-        ConstraintLayout constraintLayout;
-        ProgressBar progressBar;
-        TextView textViewRedToast;
+    ImageView imageViewBackArrow;
+    TextView textViewEmailEntered;
+    ComponentErrorEditText errorEditTextPassword;
+    TextView textViewForgetPassword;
+    LinearLayout linearLayout;
+    Button buttonSignIn;
+    ConstraintLayout constraintLayout;
+    ProgressBar progressBar;
+    TextView textViewRedToast;
 
 
-        LoginViewHolder(View view) {
-            imageViewBackArrow = view.findViewById(R.id.imageView_backArrow);
-            textViewEmailEntered = view.findViewById(R.id.textView_emailEntered);
-            textViewForgetPassword = view.findViewById(R.id.textView_password);
-            errorEditTextPassword = view.findViewById(R.id.errorEditText_login);
-            constraintLayout = view.findViewById(R.id.layout_login);
-            linearLayout = view.findViewById(R.id.linearLayout_red_toast);
-            buttonSignIn = view.findViewById(R.id.button_sign_in);
-            progressBar = view.findViewById(R.id.progress_bar);
-            textViewRedToast = view.findViewById(R.id.textView_red_toast);
-        }
+    LoginViewHolder(View view) {
+        imageViewBackArrow = view.findViewById(R.id.imageView_backArrow);
+        textViewEmailEntered = view.findViewById(R.id.textView_emailEntered);
+        textViewForgetPassword = view.findViewById(R.id.textView_password);
+        errorEditTextPassword = view.findViewById(R.id.errorEditText_login);
+        constraintLayout = view.findViewById(R.id.layout_login);
+        linearLayout = view.findViewById(R.id.linearLayout_red_toast);
+        buttonSignIn = view.findViewById(R.id.button_sign_in);
+        progressBar = view.findViewById(R.id.progress_bar);
+        textViewRedToast = view.findViewById(R.id.textView_red_toast);
     }
-
+}

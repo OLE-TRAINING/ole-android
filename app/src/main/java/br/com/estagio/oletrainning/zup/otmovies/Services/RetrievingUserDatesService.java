@@ -8,5 +8,5 @@ import retrofit2.http.Query;
 public interface RetrievingUserDatesService {
 
     @GET("users/{email}")
-    Call<UserDates> getUsersDate(@Path("email") String email, @Query("gw-app-key") String gwkey);
+    Call<UserData> getUsersDate(@Path("email") String email, @Query("gw-app-key") String gwkey);
 }

@@ -106,7 +106,7 @@
             android:id="@+id/linearLayout_red_toast"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toastHeight"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@color/colorBorderEmailInputError"
             android:orientation="vertical"
             tools:ignore="MissingConstraints">

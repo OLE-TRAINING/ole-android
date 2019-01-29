@@ -3,25 +3,23 @@ package br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository.HeadLineRepository;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
-
+import br.com.estagio.oletrainning.zup.otmovies.Services.UserData;
 
 public class RegisterNewUserViewModel extends ViewModel {
 
-    private final Integer MAXSIZENAME = 50;
-    private final Integer MINSIZEPASS = 6;
-    private final Integer MAXSIZEPASS = 10;
-    private final Integer MAXSIZEUSERNAME = 15;
+    private final Integer MAX_SIZE_NAME = 50;
+    private final Integer MIN_SIZE_PASS = 6;
+    private final Integer MAX_SIZE_PASS = 10;
+    private final Integer MAX_SIZE_USERNAME = 15;
 
-    private String REGEXFORNAME = "^[\\p{L} .'-]+$";
-    private String REGEXONLYNUMBERORLETTER = "[a-zA-Z0-9]+";
-    private String REGEXONLYNUMBERANDLETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
+    private String REGEX_FOR_NAME = "^[\\p{L} .'-]+$";
+    private String REGEX_ONLY_NUMBER_OR_LETTER = "[a-zA-Z0-9]+";
+    private String REGEX_ONLY_NUMBER_AND_LETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
 
-    private HeadLineRepository repository = new HeadLineRepository();
+    private UserRepository repository = new UserRepository();
 
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
@@ -49,8 +47,13 @@ public class RegisterNewUserViewModel extends ViewModel {
         return passwordContainsErrorStatus;
     }
 
-    public LiveData<ResponseModel> postUserRegister(@NonNull UserDates userDates) {
-        registerResponseObservable = repository.postUserRegister(userDates);
+    public LiveData<ResponseModel> postUserRegister(String email,String name,String username, String password) {
+        UserData userData = new UserData();
+        userData.setEmail(email);
+        userData.setCompleteName(name);
+        userData.setUsername(username);
+        userData.setPassword(password);
+        registerResponseObservable = repository.postUserRegister(userData);
         return registerResponseObservable;
     }
 
@@ -62,28 +65,28 @@ public class RegisterNewUserViewModel extends ViewModel {
         isLoading.postValue(false);
     }
 
-    private boolean validateName(@NonNull String name) {
+    private boolean validateName( String name) {
         return (!name.isEmpty() && validateNameFormat(name));
     }
 
-    private boolean validateUserName(@NonNull String userName) {
+    private boolean validateUserName( String userName) {
         return (!userName.isEmpty() && validateUserNameFormat(userName));
     }
 
-    private boolean validatePassword(@NonNull String password) {
+    private boolean validatePassword( String password) {
         return (!password.isEmpty() && validatePasswordFormat(password));
     }
 
-    private boolean validateNameFormat(@NonNull String name) {
-        return name.length() <= MAXSIZENAME && name.matches(REGEXFORNAME);
+    private boolean validateNameFormat( String name) {
+        return name.length() <= MAX_SIZE_NAME && name.matches(REGEX_FOR_NAME);
     }
 
-    private boolean validateUserNameFormat(@NonNull String userName) {
-        return userName.length() <= MAXSIZEUSERNAME && userName.matches(REGEXONLYNUMBERORLETTER);
+    private boolean validateUserNameFormat( String userName) {
+        return userName.length() <= MAX_SIZE_USERNAME && userName.matches(REGEX_ONLY_NUMBER_OR_LETTER);
     }
 
-    private boolean validatePasswordFormat(@NonNull String password) {
-        return password.length() >= MINSIZEPASS && password.length() <= MAXSIZEPASS && password.matches(REGEXONLYNUMBERANDLETTER);
+    private boolean validatePasswordFormat( String password) {
+        return password.length() >= MIN_SIZE_PASS && password.length() <= MAX_SIZE_PASS && password.matches(REGEX_ONLY_NUMBER_AND_LETTER);
     }
 
     public boolean isValidName(String name){

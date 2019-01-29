@@ -1,13 +1,12 @@
 package br.com.estagio.oletrainning.zup.otmovies.Services.Remote;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import br.com.estagio.oletrainning.zup.otmovies.Services.UserData;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface UserServices {
 
@@ -15,8 +14,5 @@ public interface UserServices {
     Call<ResponseModel> getUsersDate(@Path("email") String email);
 
     @POST("users")
-    Call <Void> userRegister(@Body UserDates newUser);
-
-    @POST("users/confirm-data")
-    Call<Void> confirmUserName(@Body UserDates newUser);
+    Call <Void> userRegister(@Body UserData newUser);
 }

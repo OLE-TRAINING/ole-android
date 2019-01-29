@@ -1,42 +1,28 @@
 package br.com.estagio.oletrainning.zup.otmovies.LoginActivity;
 
-        import android.content.Intent;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.text.Editable;
-        import android.text.TextWatcher;
-        import android.view.View;
-        import android.view.WindowManager;
-        import android.widget.Toast;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Toast;
 
-        import com.google.gson.Gson;
-        import com.google.gson.reflect.TypeToken;
+import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
+import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 
-        import java.io.IOException;
-        import java.lang.reflect.Type;
-
-        import br.com.estagio.oletrainning.zup.otmovies.ConfirmInformationActivity.ConfirmInformationActivity;
-        import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
-        import br.com.estagio.oletrainning.zup.otmovies.R;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.PasswordValidate;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.ServiceBuilder;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
-        import retrofit2.Call;
-        import retrofit2.Callback;
-        import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewHolder loginViewHolder;
-
-    private final Integer MINSIZEPASS = 6;
-    private final Integer MAXSIZEPASS = 10;
-
-    private final String PASSWORD_VALIDATION_STATUS = "passwordContainsError";
-
-    private boolean passwordContainsError;
+    private LoginViewModel loginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,31 +32,23 @@ public class LoginActivity extends AppCompatActivity {
         this.loginViewHolder = new LoginViewHolder(view);
         setContentView(view);
 
-        setupListeners();
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
         String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
         loginViewHolder.textViewEmailEntered.setText(emailAdd);
 
-        hideToast();
+        setupObservers();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(PASSWORD_VALIDATION_STATUS, passwordContainsError);
+    protected void onPostResume() {
+        super.onPostResume();
+        setupListeners();
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        passwordContainsError = savedInstanceState.getBoolean(PASSWORD_VALIDATION_STATUS);
-        loginViewHolder.errorEditTextPassword.setErrorVisibility(passwordContainsError);
-        loginViewHolder.errorEditTextPassword.setMessageError("");
-        if(passwordContainsError){
-            showToast();
-        } else {
-            hideToast();
-        }
+    private void setupObservers() {
+        loginViewModel.getPasswordContainsErrorStatus().observe(this, passwordContainsErrorObserver);
+        loginViewModel.getIsLoading().observe(this, progressBarObserver);
     }
 
     private void setupListeners() {
@@ -81,92 +59,100 @@ public class LoginActivity extends AppCompatActivity {
         loginViewHolder.textViewForgetPassword.setOnClickListener(textViewForgetPasswordOnClickListener);
     }
 
-    View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
+    private Observer<Boolean> passwordContainsErrorObserver = new Observer<Boolean>() {
         @Override
-        public void onClick(View v) {
-            loginViewHolder.progressBar.setVisibility(View.VISIBLE);
-            passwordContainsError = !validatePassword();
-            loginViewHolder.errorEditTextPassword.setErrorVisibility(passwordContainsError);
-            loginViewHolder.errorEditTextPassword.setMessageError("");
-            if (passwordContainsError) {
-                showToast();
-            } else {
-                hideToast();
-            }
-            if (validatePassword()) {
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                new SyncProgressBar(LoginActivity.this, loginViewHolder.progressBar).execute();
-                PasswordValidate passwordValidate = ServiceBuilder.buildService(PasswordValidate.class);
-                UserDates userDates = new UserDates();
-                userDates.setEmail(getIntent().getStringExtra(getString(R.string.EmailPreLogin)));
-                userDates.setPassword(loginViewHolder.errorEditTextPassword.getText().toString().trim());
-
-                Call<Void> createNewUser = passwordValidate.userRegister(userDates,"593c3280aedd01364c73000d3ac06d76");
-
-                createNewUser.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        
-                        controlResponse(response);
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        hideToast();
-                        if(t instanceof IOException){
-                            Toast.makeText(LoginActivity.this,"Ocorreu um erro na conexão", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this,"Falha ao validar a senha", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            } else {
-                loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                loginViewHolder.textViewRedToast.setText(getString(R.string.errorUserOrPassword));
-                loginViewHolder.errorEditTextPassword.setErrorVisibility(passwordContainsError);
+        public void onChanged(@Nullable Boolean containsErrorStatus) {
+            if (containsErrorStatus != null) {
+                loginViewHolder.errorEditTextPassword.setErrorVisibility(containsErrorStatus);
                 loginViewHolder.errorEditTextPassword.setMessageError("");
-                passwordContainsError = true;
-                showToast();
+                if (loginViewModel.getPasswordContainsErrorStatus().getValue() != null) {
+                    if (loginViewModel.getPasswordContainsErrorStatus().getValue()) {
+                        loginViewHolder.linearLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        loginViewHolder.linearLayout.setVisibility(View.GONE);
+                    }
+                }
             }
         }
     };
 
-    private void controlResponse(Response response){
-        if(response.code() == 200){
-            hideToast();
-            Toast.makeText(LoginActivity.this,"Senha confirmada, login autorizado!", Toast.LENGTH_LONG).show();
-            loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } else {
-            loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            try {
-                Gson gson = new Gson();
-                Type type = new TypeToken<ErrorMessage>() {
-                }.getType();
-                ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(), type);
-                if (errorMessage.getKey().equals("error.invalid.password")) {
-                    loginViewHolder.textViewRedToast.setText(errorMessage.getMessage());
-                    showToast();
-                } else if (errorMessage.getKey().equals("error.unauthorized.login")) {
-                    loginViewHolder.textViewRedToast.setText(errorMessage.getMessage());
-                    showToast();
-                } else if (errorMessage.getKey().equals("error.unauthorized.password")) {
-                    loginViewHolder.textViewRedToast.setText(errorMessage.getMessage());
-                    showToast();
+    private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(@Nullable Boolean isLoading) {
+            if (isLoading != null) {
+                if (isLoading) {
+                    loginViewHolder.progressBar.setVisibility(View.VISIBLE);
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    new SyncProgressBar(LoginActivity.this, loginViewHolder.progressBar).execute();
                 } else {
-                        Toast.makeText(LoginActivity.this, errorMessage.getMessage(), Toast.LENGTH_LONG).show();
+                    loginViewHolder.progressBar.setProgress(100);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
                 }
-            } catch (Exception e) {
-                hideToast();
-                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-
             }
         }
-    }
+    };
+
+    private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
+            String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
+            loginViewModel.passwordEntered(password);
+            if (loginViewModel.isValidPassword(password)) {
+                loginViewModel.serviceStarting();
+                loginViewModel.passwordValidation(email, password)
+                        .observe(LoginActivity.this, serviceCallPassValidationObserver);
+            }
+        }
+    };
+
+    Observer<ResponseModel> serviceCallPassValidationObserver = new Observer<ResponseModel>() {
+        @Override
+        public void onChanged(@Nullable ResponseModel responseModel) {
+            loginViewModel.serviceEnding();
+            if (responseModel != null) {
+                if (responseModel.getCode() == 200) {
+                    loginViewModel.setPasswordContainsErrorStatus(false);
+                    Toast.makeText(LoginActivity.this, getString(R.string.success_message_login), Toast.LENGTH_LONG).show();
+                } else {
+                    String key = responseModel.getKey();
+                    String message = responseModel.getMessage();
+                    if (loginViewModel.isMessageToPutInTopToast(key)) {
+                        loginViewHolder.textViewRedToast.setText(message);
+                        loginViewModel.setPasswordContainsErrorStatus(true);
+                    } else {
+                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+                    }
+                }
+            } else {
+                Toast.makeText(LoginActivity.this, getString(R.string.service_or_connection_error_login), Toast.LENGTH_LONG).show();
+            }
+        }
+
+    };
+
+    Observer<ResponseModel> serviceCallResendObserver = new Observer<ResponseModel>() {
+        @Override
+        public void onChanged(@Nullable ResponseModel responseModel) {
+            loginViewModel.serviceEnding();
+            if (responseModel != null) {
+                if (responseModel.getCode() == 200) {
+                    Toast.makeText(LoginActivity.this, getString(R.string.success_message_email), Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
+                    String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
+                    intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(LoginActivity.this, getString(R.string.service_or_connection_error_token), Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
 
     View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
 
@@ -180,23 +166,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-
-    private void showToast() {
-        loginViewHolder.linearLayout.setVisibility(View.VISIBLE);
-
-    }
-
-    private void hideToast() {
-        loginViewHolder.linearLayout.setVisibility(View.GONE);
-    }
-
     View.OnClickListener textViewForgetPasswordOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(LoginActivity.this, ConfirmInformationActivity.class);
-            String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-            startActivity(intent);
+            callTokenResend();
         }
     };
 
@@ -207,16 +180,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private boolean validatePassword() {
-        String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
-        return (!password.isEmpty() && validatePasswordFormat());
-    }
-
-    private boolean validatePasswordFormat() {
-        String userName = loginViewHolder.errorEditTextPassword.getText().toString().trim();
-        return userName.length() >= MINSIZEPASS && userName.length() <= MAXSIZEPASS && userName.matches(getString(R.string.RegexOnlyNumberAndLetter));
-    }
-
     private TextWatcher editTextPasswordTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -225,10 +188,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            passwordContainsError = false;
-            loginViewHolder.errorEditTextPassword.setErrorVisibility(false);
-            hideToast();
-
+            loginViewModel.passwordTextChanged();
         }
 
         @Override
@@ -236,4 +196,11 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     };
+
+    private void callTokenResend() {
+        String email = loginViewHolder.textViewEmailEntered.getText().toString().trim();
+        loginViewModel.serviceStarting();
+        loginViewModel.resendToken(email)
+                .observe(LoginActivity.this, serviceCallResendObserver);
+    }
 }

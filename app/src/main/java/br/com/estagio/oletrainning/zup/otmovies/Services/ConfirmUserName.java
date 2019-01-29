@@ -7,5 +7,5 @@ import retrofit2.http.Query;
 
 public interface ConfirmUserName {
     @POST("users/confirm-data")
-    Call<Void> userRegister(@Body UserDates newUser, @Query("gw-app-key") String gwkey);
+    Call<Void> userRegister(@Body UserData newUser, @Query("gw-app-key") String gwkey);
 }
