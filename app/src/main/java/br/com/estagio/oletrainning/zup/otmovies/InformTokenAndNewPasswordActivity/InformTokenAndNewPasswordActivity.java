@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -28,7 +29,8 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inform_token_and_new_password);
+
+        colorStatusBar();
 
         View view = this.getLayoutInflater().inflate(R.layout.activity_inform_token_and_new_password, null);
         this.informTokenAndNewPasswordViewHolder = new InformTokenAndNewPasswordViewHolder(view);
@@ -43,6 +45,16 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
 
         setupObservers();
     }
+
+    private void colorStatusBar(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getColor(R.color.colorBackground));
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
 
     @Override
     protected void onPostResume() {

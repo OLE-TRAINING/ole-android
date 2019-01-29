@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        colorStatusBar();
+
         View view = this.getLayoutInflater().inflate(R.layout.activity_register_new_user, null);
         this.registerNewUserViewHolder = new RegisterNewUserViewHolder(view);
         setContentView(view);
@@ -41,6 +44,15 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         registerNewUserViewModel = ViewModelProviders.of(this).get(RegisterNewUserViewModel.class);
 
         setupObservers();
+    }
+
+    private void colorStatusBar(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getColor(R.color.colorBackground));
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
     @Override

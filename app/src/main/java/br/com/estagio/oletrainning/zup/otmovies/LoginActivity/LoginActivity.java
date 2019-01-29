@@ -2,13 +2,16 @@ package br.com.estagio.oletrainning.zup.otmovies.LoginActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -28,16 +31,38 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         View view = this.getLayoutInflater().inflate(R.layout.activity_login, null);
         this.loginViewHolder = new LoginViewHolder(view);
         setContentView(view);
 
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
+        colorStatusBarBackground();
+
         String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
         loginViewHolder.textViewEmailEntered.setText(emailAdd);
 
         setupObservers();
+    }
+
+    private void colorStatusBarBackground(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getColor(R.color.colorBackground));
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
+    private void colorStatusBarRed(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.GONE);
+        window.setStatusBarColor(getColor(R.color.colorRed));
     }
 
     @Override
@@ -68,8 +93,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginViewModel.getPasswordContainsErrorStatus().getValue() != null) {
                     if (loginViewModel.getPasswordContainsErrorStatus().getValue()) {
                         loginViewHolder.linearLayout.setVisibility(View.VISIBLE);
+                        colorStatusBarRed();
                     } else {
                         loginViewHolder.linearLayout.setVisibility(View.GONE);
+                        colorStatusBarBackground();
                     }
                 }
             }
