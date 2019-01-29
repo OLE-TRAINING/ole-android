@@ -3,16 +3,17 @@ package br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.HeadLineRepository.HeadLineRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 
 public class TokenValidationViewModel extends ViewModel {
 
-    private HeadLineRepository repository = new HeadLineRepository();
+    private ValidationRepository repository = new ValidationRepository();
 
-    private final int MAXSIZETOKEN = 6;
+    private final int MAX_SIZE_TOKEN = 6;
+
+    private String KEY_AUTENTICATION_SERVICE = "593c3280aedd01364c73000d3ac06d76";
 
     private MutableLiveData<Boolean> tokenContainsErrorStatus = new MutableLiveData<>();
 
@@ -30,18 +31,18 @@ public class TokenValidationViewModel extends ViewModel {
         return tokenContainsErrorStatus;
     }
 
-    public LiveData<ResponseModel> tokenValidation(@NonNull String email, String code) {
-        tokenResponseObservable = repository.confirmToken(email,code,"593c3280aedd01364c73000d3ac06d76");
+    public LiveData<ResponseModel> tokenValidation(String email, String code) {
+        tokenResponseObservable = repository.confirmToken(email,code,KEY_AUTENTICATION_SERVICE);
         return tokenResponseObservable;
     }
 
-    public LiveData<ResponseModel> resendToken(@NonNull String email, String code) {
-        tokenresendResponseObservable = repository.resendtoken(email,"593c3280aedd01364c73000d3ac06d76");
+    public LiveData<ResponseModel> resendToken(String email) {
+        tokenresendResponseObservable = repository.resendToken(email,KEY_AUTENTICATION_SERVICE);
         return tokenresendResponseObservable;
     }
 
-    private boolean validateTokenSize(@NonNull String tokenEntered) {
-        return (tokenEntered.length() == MAXSIZETOKEN);
+    private boolean validateTokenSize(String tokenEntered) {
+        return (tokenEntered.length() == MAX_SIZE_TOKEN);
     }
 
     public void serviceStarting(){

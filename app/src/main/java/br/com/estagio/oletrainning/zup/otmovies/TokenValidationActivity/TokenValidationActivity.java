@@ -93,7 +93,7 @@ public class TokenValidationActivity extends AppCompatActivity {
             tokenValidationViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
-                    Toast.makeText(TokenValidationActivity.this,"Código confirmado com sucesso!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TokenValidationActivity.this,getString(R.string.success_message_validate_token), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(TokenValidationActivity.this, LoginActivity.class);
                     String emailInput = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
                     intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
@@ -102,10 +102,10 @@ public class TokenValidationActivity extends AppCompatActivity {
                     ErrorMessage errorMessage = new ErrorMessage();
                     errorMessage.setKey(responseModel.getKey());
                     errorMessage.setMessage(responseModel.getMessage());
-                    if(errorMessage.getKey().equals("error.unauthorized.token")){
+                    if(errorMessage.getKey().equals(getString(R.string.unauthorized_token_key))){
                         tokenValidationViewHolder.errorEditText.setMessageError(errorMessage.getMessage());
                         tokenValidationViewHolder.errorEditText.setErrorVisibility(true);
-                    } else if (errorMessage.getKey().equals("error.invalid.token")) {
+                    } else if (errorMessage.getKey().equals(getString(R.string.invalid_token_key))) {
                         tokenValidationViewHolder.errorEditText.setMessageError(errorMessage.getMessage());
                         tokenValidationViewHolder.errorEditText.setErrorVisibility(true);
                     } else{
@@ -113,7 +113,7 @@ public class TokenValidationActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                Toast.makeText(TokenValidationActivity.this, "Falha ao validar o código. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(TokenValidationActivity.this, getString(R.string.service_or_connection_error_validate_token), Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -124,12 +124,12 @@ public class TokenValidationActivity extends AppCompatActivity {
             tokenValidationViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
-                    Toast.makeText(TokenValidationActivity.this,"Código reenviado com sucesso!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TokenValidationActivity.this,getString(R.string.success_resend_token), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(TokenValidationActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(TokenValidationActivity.this, "Falha ao reenviar o código. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(TokenValidationActivity.this, getString(R.string.service_or_connection_error_resend_token), Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -186,9 +186,8 @@ public class TokenValidationActivity extends AppCompatActivity {
 
     private void callTokenResend(){
         String email = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
-        String code = tokenValidationViewHolder.errorEditText.getEditText().getText().toString().trim();
         tokenValidationViewModel.serviceStarting();
-        tokenValidationViewModel.resendToken(email,code)
+        tokenValidationViewModel.resendToken(email)
                 .observe(TokenValidationActivity.this, serviceCallResendObserver);
     }
 

@@ -102,31 +102,31 @@ public class PreLoginActivity extends AppCompatActivity {
             preLoginViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getRegistrationStatus() != null) {
-                    if (responseModel.getRegistrationStatus().equals("REGISTERED")) {
+                    if (responseModel.getRegistrationStatus().equals(getString(R.string.registered))) {
                         Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
                         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
-                    } else if (responseModel.getRegistrationStatus().equals("PENDING")) {
+                    } else if (responseModel.getRegistrationStatus().equals(getString(R.string.pending))) {
                         Intent intent = new Intent(PreLoginActivity.this, TokenValidationActivity.class);
                         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
-                    } else if (responseModel.getRegistrationStatus().equals("INEXISTENT")) {
+                    } else if (responseModel.getRegistrationStatus().equals(getString(R.string.inexistent))) {
                         Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
                         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
                     }
                 } else {
-                    if (responseModel.getKey().equals("error.invalid.email")) {
+                    if (responseModel.getKey().equals(getString(R.string.invalid_email_key))) {
                         preLoginViewHolder.errorEditTextEmail.setErrorVisibility(true);
                     } else {
                         Toast.makeText(PreLoginActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             } else {
-                Toast.makeText(PreLoginActivity.this, "Falha ao validar seu email. Verifique a conexão e tente novamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(PreLoginActivity.this, getString(R.string.service_or_connection_validate_email), Toast.LENGTH_LONG).show();
             }
         }
 

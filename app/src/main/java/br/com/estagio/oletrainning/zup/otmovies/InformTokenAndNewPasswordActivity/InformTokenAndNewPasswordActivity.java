@@ -133,6 +133,7 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             informTokenAndNewPasswordViewHolder.errorEditTextPassword.setErrorVisibility(false);
+            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(false);
             passwordsContainsError = false;
             if(validatePassword()){
                 informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(false);
