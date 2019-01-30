@@ -68,4 +68,8 @@
     <string name="success_message_change_pass">Senha alterada com sucesso!</string>
     <string name="service_or_connection_error_change_password">Falha ao trocar sua senha. Verifique a conexão e tente novamente.</string>
     <string name="message_error_empty_input">Não são permitidos campos nulos ou vazios</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
