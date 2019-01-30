@@ -30,8 +30,6 @@ public class TokenValidationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        colorStatusBar();
-
         View view = this.getLayoutInflater().inflate(R.layout.activity_token_validation, null);
         this.tokenValidationViewHolder = new TokenValidationViewHolder(view);
         setContentView(view);
@@ -56,6 +54,7 @@ public class TokenValidationActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        colorStatusBar();
         setupListeners();
     }
 

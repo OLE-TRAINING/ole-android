@@ -2,10 +2,8 @@ package br.com.estagio.oletrainning.zup.otmovies.LoginActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -31,15 +29,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         View view = this.getLayoutInflater().inflate(R.layout.activity_login, null);
         this.loginViewHolder = new LoginViewHolder(view);
         setContentView(view);
 
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-
-        colorStatusBarBackground();
 
         String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
         loginViewHolder.textViewEmailEntered.setText(emailAdd);
@@ -68,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        colorStatusBarBackground();
         setupListeners();
     }
 
@@ -200,13 +195,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
-        startActivity(intent);
-    }
-
     private TextWatcher editTextPasswordTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -229,5 +217,12 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.serviceStarting();
         loginViewModel.resendToken(email)
                 .observe(LoginActivity.this, serviceCallResendObserver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
+        startActivity(intent);
     }
 }

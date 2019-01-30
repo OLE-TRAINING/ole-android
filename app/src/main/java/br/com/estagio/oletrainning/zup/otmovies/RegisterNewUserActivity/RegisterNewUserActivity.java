@@ -32,8 +32,6 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        colorStatusBar();
-
         View view = this.getLayoutInflater().inflate(R.layout.activity_register_new_user, null);
         this.registerNewUserViewHolder = new RegisterNewUserViewHolder(view);
         setContentView(view);
@@ -58,6 +56,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        colorStatusBar();
         setupListeners();
     }
 

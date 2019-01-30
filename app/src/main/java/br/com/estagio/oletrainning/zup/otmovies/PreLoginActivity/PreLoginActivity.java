@@ -3,7 +3,6 @@ package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,12 +14,12 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 
+import br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity.FinishYourRegistrationActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
-import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 public class PreLoginActivity extends AppCompatActivity {
 
@@ -30,8 +29,6 @@ public class PreLoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        colorStatusBar();
 
         View view = this.getLayoutInflater().inflate(R.layout.activity_pre_login, null);
         this.preLoginViewHolder = new PreLoginViewHolder(view);
@@ -54,6 +51,7 @@ public class PreLoginActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        colorStatusBar();
         setupListeners();
     }
 
@@ -121,7 +119,7 @@ public class PreLoginActivity extends AppCompatActivity {
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
                     } else if (responseModel.getRegistrationStatus().equals(getString(R.string.pending))) {
-                        Intent intent = new Intent(PreLoginActivity.this, TokenValidationActivity.class);
+                        Intent intent = new Intent(PreLoginActivity.this, FinishYourRegistrationActivity.class);
                         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
@@ -144,7 +142,6 @@ public class PreLoginActivity extends AppCompatActivity {
         }
 
     };
-
 
     private TextWatcher editTextEmailTextChangedListener = new TextWatcher() {
         @Override

@@ -121,18 +121,6 @@ public class InformTokenAndNewPasswordViewModel extends ViewModel {
         return (!confirmNewPassword.isEmpty() && validateMatchNewPassword(newPassword, confirmNewPassword));
     }
 
-    public boolean isEmptyTokenInput(String token){
-        return token.isEmpty();
-    }
-
-    public boolean isEmptyPasswordInput(String password){
-        return password.isEmpty();
-    }
-
-    public boolean isEmptyConfirmPasswordInput(String confirmNewPassword){
-        return confirmNewPassword.isEmpty();
-    }
-
     public void serviceStarting(){
         isLoading.postValue(true);
     }
