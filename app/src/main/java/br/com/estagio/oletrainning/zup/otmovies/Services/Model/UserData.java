@@ -1,4 +1,4 @@
-package br.com.estagio.oletrainning.zup.otmovies.Services;
+package br.com.estagio.oletrainning.zup.otmovies.Services.Model;
 
 import android.content.Intent;
 import android.widget.Toast;

@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
 public class LoginViewModel extends ViewModel {
 

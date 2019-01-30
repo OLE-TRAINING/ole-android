@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.BodyChangePassword;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 

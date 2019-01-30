@@ -17,7 +17,7 @@ import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivit
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
+import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 
 
 public class LoginActivity extends AppCompatActivity {

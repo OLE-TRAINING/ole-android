@@ -8,12 +8,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.BodyChangePassword;
-import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.ValidationServices;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
