@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OTmovies</string>
+    <string name="app_name">OTmovies2</string>
     <string name="textView_EmailHeadHint">INFORME SUA CONTA DE\n E-MAIL</string>
     <string name="textButton_next">AVANÇAR</string>
     <string name="emailHint">E-mail (exemplo@mail.com)</string>
@@ -63,4 +63,15 @@
     <string name="unauthorized_token_key">error.unauthorized.token</string>
     <string name="invalid_token_key">error.invalid.token</string>
     <string name="success_message_validate_token">Código confirmado com sucesso!</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_search">Search</string>
+    <string name="title_activity_home_drawer">HomeDrawerActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">User Name</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>
