@@ -1,9 +1,7 @@
 package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
-
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText;

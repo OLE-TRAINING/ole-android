@@ -9,15 +9,16 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
+import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 
 public class TokenValidationActivity extends AppCompatActivity {
 
@@ -41,9 +42,19 @@ public class TokenValidationActivity extends AppCompatActivity {
         setupObservers();
     }
 
+    private void colorStatusBar(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getColor(R.color.colorBackground));
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        colorStatusBar();
         setupListeners();
     }
 
@@ -180,7 +191,6 @@ public class TokenValidationActivity extends AppCompatActivity {
                 Intent intent = new Intent(TokenValidationActivity.this, PreLoginActivity.class);
                 startActivity(intent);
             }
-
         }
     };
 

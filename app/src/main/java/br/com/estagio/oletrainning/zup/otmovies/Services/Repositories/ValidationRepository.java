@@ -8,12 +8,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.BodyChangePassword;
-import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.ValidationServices;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,10 +31,9 @@ public class ValidationRepository {
         validationServices = RetrofitServiceBuilder.buildService(ValidationServices.class);
     }
 
-    public LiveData<ResponseModel> resendToken (String email,
-                                                String gwkey) {
+    public LiveData<ResponseModel> resendToken (String email) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        validationServices.resendToken(email,gwkey)
+        validationServices.resendToken(email)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -56,10 +55,9 @@ public class ValidationRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> confirmToken (String email, String code,
-                                                 String gwkey) {
+    public LiveData<ResponseModel> confirmToken (String email, String code) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        validationServices.confirmToken(email, code, gwkey)
+        validationServices.confirmToken(email, code)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -81,10 +79,9 @@ public class ValidationRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> validateTokenAndChangePass (BodyChangePassword bodyChangePassword,
-                                                               String gwkey) {
+    public LiveData<ResponseModel> validateTokenAndChangePass (BodyChangePassword bodyChangePassword) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        validationServices.validateTokenAndChangePass(bodyChangePassword, gwkey)
+        validationServices.validateTokenAndChangePass(bodyChangePassword)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -106,10 +103,9 @@ public class ValidationRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> passwordValidate (UserDates userDates,
-                                                     String gwkey) {
+    public LiveData<ResponseModel> passwordValidate (UserData userData) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        validationServices.passwordValidate(userDates,gwkey)
+        validationServices.passwordValidate(userData)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

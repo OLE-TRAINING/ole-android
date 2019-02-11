@@ -2,16 +2,12 @@ package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-
 import android.arch.lifecycle.ViewModel;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 
-
 public class PreLoginViewModel extends ViewModel {
-
-    private String KEY_AUTENTICATION_SERVICE = "593c3280aedd01364c73000d3ac06d76";
 
     private UserRepository repository = new UserRepository();
 
@@ -22,7 +18,7 @@ public class PreLoginViewModel extends ViewModel {
     private LiveData<ResponseModel> userResponseObservable;
 
     public LiveData<ResponseModel> getUserResponse(String email) {
-        userResponseObservable = repository.getUserDate(email,KEY_AUTENTICATION_SERVICE);
+        userResponseObservable = repository.getUserDate(email);
         return userResponseObservable;
     }
 

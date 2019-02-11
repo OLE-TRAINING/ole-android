@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
 public class LoginViewModel extends ViewModel {
 
@@ -14,7 +14,6 @@ public class LoginViewModel extends ViewModel {
     private final Integer MAX_SIZE_PASS = 10;
 
     private String REGEX_ONLY_NUMBER_AND_LETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
-    private String KEY_AUTENTICATION_SERVICE = "593c3280aedd01364c73000d3ac06d76";
     private String KEY_INVALID_PASSWORD = "error.invalid.password";
     private String KEY_UNAUTHORIZED_LOGIN =  "error.unauthorized.login";
     private String KEY_UNAUTHORIZED_PASSWORD = "error.unauthorized.password";
@@ -30,10 +29,10 @@ public class LoginViewModel extends ViewModel {
     private LiveData<ResponseModel> tokenresendResponseObservable;
 
     public LiveData<ResponseModel> passwordValidation(String email, String password) {
-        UserDates userDates = new UserDates();
-        userDates.setEmail(email);
-        userDates.setPassword(password);
-        passValidationResponseObservable = repository.passwordValidate(userDates,KEY_AUTENTICATION_SERVICE);
+        UserData userData = new UserData();
+        userData.setEmail(email);
+        userData.setPassword(password);
+        passValidationResponseObservable = repository.passwordValidate(userData);
         return passValidationResponseObservable;
     }
 
@@ -78,7 +77,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public LiveData<ResponseModel> resendToken(String email) {
-        tokenresendResponseObservable = repository.resendToken(email,KEY_AUTENTICATION_SERVICE);
+        tokenresendResponseObservable = repository.resendToken(email);
         return tokenresendResponseObservable;
     }
 

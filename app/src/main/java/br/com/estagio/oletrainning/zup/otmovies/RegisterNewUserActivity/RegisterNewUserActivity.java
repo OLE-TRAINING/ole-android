@@ -9,16 +9,16 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 
@@ -44,18 +44,28 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         setupObservers();
     }
 
+    private void colorStatusBar(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getColor(R.color.colorBackground));
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        colorStatusBar();
         setupListeners();
     }
 
 
     private void setupObservers() {
         registerNewUserViewModel.getIsLoading().observe(this, progressBarObserver);
-        registerNewUserViewModel.getNameContainsErrorStatus().observe(this,nameContainsErrorObserver);
-        registerNewUserViewModel.getUserNameContainsErrorStatus().observe(this,usernameContainsErrorObserver);
-        registerNewUserViewModel.getPasswordContainsErrorStatus().observe(this,passwordContainsErrorObserver);
+        registerNewUserViewModel.getNameContainsErrorStatus().observe(this, nameContainsErrorObserver);
+        registerNewUserViewModel.getUserNameContainsErrorStatus().observe(this, usernameContainsErrorObserver);
+        registerNewUserViewModel.getPasswordContainsErrorStatus().observe(this, passwordContainsErrorObserver);
 
     }
 
@@ -95,7 +105,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                     && registerNewUserViewModel.isValidUserName(username)
                     && registerNewUserViewModel.isValidPassword(password)) {
                 registerNewUserViewModel.serviceStarting();
-                registerNewUserViewModel.postUserRegister(email,name,username,password)
+                registerNewUserViewModel.postUserRegister(email, name, username, password)
                         .observe(RegisterNewUserActivity.this, serviceCallObserver);
             }
 
@@ -153,7 +163,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
             registerNewUserViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
-                    Toast.makeText(RegisterNewUserActivity.this,getString(R.string.registerOk), Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterNewUserActivity.this, getString(R.string.registerOk), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
                     String emailInput = registerNewUserViewHolder.textViewEmailEntered.getText().toString().trim();
                     intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
@@ -239,7 +249,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         }
     };
 
-  @Override
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(RegisterNewUserActivity.this, PreLoginActivity.class);

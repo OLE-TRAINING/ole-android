@@ -19,7 +19,7 @@
             android:id="@+id/textView_headerPreLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginLayout"
+            android:layout_marginTop="@dimen/margin_top_header"
             android:fontFamily="@font/dosisbold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
             android:text="@string/textView_EmailHeadHint"
@@ -79,7 +79,6 @@
                 android:visibility="invisible"
                 style= "?android:attr/progressBarStyleHorizontal"
                 android:background="@color/colorTransparent"
-                android:theme="@style/MyAppTheme"
                 android:max="@string/progressBar_fullPercentage" />
 
         </FrameLayout>

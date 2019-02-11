@@ -6,8 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
-
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
 public class RegisterNewUserViewModel extends ViewModel {
 
@@ -19,7 +18,6 @@ public class RegisterNewUserViewModel extends ViewModel {
     private String REGEX_FOR_NAME = "^[\\p{L} .'-]+$";
     private String REGEX_ONLY_NUMBER_OR_LETTER = "[a-zA-Z0-9]+";
     private String REGEX_ONLY_NUMBER_AND_LETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
-    private String KEY_AUTENTICATION_SERVICE = "593c3280aedd01364c73000d3ac06d76";
 
     private UserRepository repository = new UserRepository();
 
@@ -50,12 +48,12 @@ public class RegisterNewUserViewModel extends ViewModel {
     }
 
     public LiveData<ResponseModel> postUserRegister(String email,String name,String username, String password) {
-        UserDates userDates = new UserDates();
-        userDates.setEmail(email);
-        userDates.setCompleteName(name);
-        userDates.setUsername(username);
-        userDates.setPassword(password);
-        registerResponseObservable = repository.postUserRegister(userDates,KEY_AUTENTICATION_SERVICE);
+        UserData userData = new UserData();
+        userData.setEmail(email);
+        userData.setCompleteName(name);
+        userData.setUsername(username);
+        userData.setPassword(password);
+        registerResponseObservable = repository.postUserRegister(userData);
         return registerResponseObservable;
     }
 

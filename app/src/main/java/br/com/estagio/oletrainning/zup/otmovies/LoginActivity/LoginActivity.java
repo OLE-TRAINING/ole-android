@@ -1,22 +1,23 @@
 package br.com.estagio.oletrainning.zup.otmovies.LoginActivity;
 
-        import android.arch.lifecycle.Observer;
-        import android.arch.lifecycle.ViewModelProviders;
-        import android.content.Intent;
-        import android.support.annotation.Nullable;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.text.Editable;
-        import android.text.TextWatcher;
-        import android.view.View;
-        import android.view.WindowManager;
-        import android.widget.Toast;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Toast;
 
-        import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
-        import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
-        import br.com.estagio.oletrainning.zup.otmovies.R;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-        import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
+import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
+import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,9 +41,28 @@ public class LoginActivity extends AppCompatActivity {
         setupObservers();
     }
 
+    private void colorStatusBarBackground(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getColor(R.color.colorBackground));
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
+    private void colorStatusBarRed(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.GONE);
+        window.setStatusBarColor(getColor(R.color.colorRed));
+    }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        colorStatusBarBackground();
         setupListeners();
     }
 
@@ -65,11 +85,13 @@ public class LoginActivity extends AppCompatActivity {
             if (containsErrorStatus != null) {
                 loginViewHolder.errorEditTextPassword.setErrorVisibility(containsErrorStatus);
                 loginViewHolder.errorEditTextPassword.setMessageError("");
-                if(loginViewModel.getPasswordContainsErrorStatus().getValue() != null){
-                    if(loginViewModel.getPasswordContainsErrorStatus().getValue()){
+                if (loginViewModel.getPasswordContainsErrorStatus().getValue() != null) {
+                    if (loginViewModel.getPasswordContainsErrorStatus().getValue()) {
                         loginViewHolder.linearLayout.setVisibility(View.VISIBLE);
+                        colorStatusBarRed();
                     } else {
                         loginViewHolder.linearLayout.setVisibility(View.GONE);
+                        colorStatusBarBackground();
                     }
                 }
             }
@@ -97,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String email =getIntent().getStringExtra(getString(R.string.EmailPreLogin));
+            String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
             String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
             loginViewModel.passwordEntered(password);
             if (loginViewModel.isValidPassword(password)) {
@@ -115,14 +137,14 @@ public class LoginActivity extends AppCompatActivity {
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     loginViewModel.setPasswordContainsErrorStatus(false);
-                    Toast.makeText(LoginActivity.this,getString(R.string.success_message_login), Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.success_message_login), Toast.LENGTH_LONG).show();
                 } else {
                     String key = responseModel.getKey();
                     String message = responseModel.getMessage();
                     if (loginViewModel.isMessageToPutInTopToast(key)) {
                         loginViewHolder.textViewRedToast.setText(message);
                         loginViewModel.setPasswordContainsErrorStatus(true);
-                    }  else {
+                    } else {
                         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -139,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
             loginViewModel.serviceEnding();
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
-                    Toast.makeText(LoginActivity.this,getString(R.string.success_message_email), Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.success_message_email), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
                     String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
                     intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
@@ -173,13 +195,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
-        startActivity(intent);
-    }
-
     private TextWatcher editTextPasswordTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -197,10 +212,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private void callTokenResend(){
+    private void callTokenResend() {
         String email = loginViewHolder.textViewEmailEntered.getText().toString().trim();
         loginViewModel.serviceStarting();
         loginViewModel.resendToken(email)
                 .observe(LoginActivity.this, serviceCallResendObserver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
+        startActivity(intent);
     }
 }

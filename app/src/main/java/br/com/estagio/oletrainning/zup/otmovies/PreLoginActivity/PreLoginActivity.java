@@ -9,16 +9,17 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 
+import br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity.FinishYourRegistrationActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
-import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
+import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 
 public class PreLoginActivity extends AppCompatActivity {
 
@@ -38,9 +39,19 @@ public class PreLoginActivity extends AppCompatActivity {
         setupObservers();
     }
 
+    private void colorStatusBar(){
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getColor(R.color.colorBackground));
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        colorStatusBar();
         setupListeners();
     }
 
@@ -108,7 +119,7 @@ public class PreLoginActivity extends AppCompatActivity {
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
                     } else if (responseModel.getRegistrationStatus().equals(getString(R.string.pending))) {
-                        Intent intent = new Intent(PreLoginActivity.this, TokenValidationActivity.class);
+                        Intent intent = new Intent(PreLoginActivity.this, FinishYourRegistrationActivity.class);
                         String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                         intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                         startActivity(intent);
@@ -132,7 +143,6 @@ public class PreLoginActivity extends AppCompatActivity {
 
     };
 
-
     private TextWatcher editTextEmailTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -150,4 +160,3 @@ public class PreLoginActivity extends AppCompatActivity {
         }
     };
 }
-
