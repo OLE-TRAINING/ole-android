@@ -8,11 +8,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.UserServices;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
-import br.com.estagio.oletrainning.zup.otmovies.Services.UserDates;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,10 +30,9 @@ public class UserRepository {
         userServices= RetrofitServiceBuilder.buildService(UserServices.class);
     }
 
-    public LiveData<ResponseModel> getUserDate(String email,
-                                               String gwkey) {
+    public LiveData<ResponseModel> getUserDate(String email) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        userServices.getUsersDate(email, gwkey)
+        userServices.getUsersDate(email)
                 .enqueue(new Callback<ResponseModel>() {
                     @Override
                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
@@ -56,35 +55,9 @@ public class UserRepository {
         return data;
     }
 
-    public LiveData<ResponseModel> postUserRegister (UserDates userDates,
-                                                     String gwkey) {
+    public LiveData<ResponseModel> postUserRegister (UserData userData) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        userServices.userRegister(userDates,gwkey)
-                .enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if((response.code() == SUCCESS_CODE)) {
-                            data.setValue(setCode(response.code()));
-                        } else{
-                            if(response.errorBody() != null){
-                                data.setValue(serializeErrorBody(response));
-                            } else {
-                                data.setValue(setMessage(UNEXPECTED_ERROR_KEY,UNEXPECTED_ERROR_MESSAGE));
-                            }
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        data.setValue(null);
-                    }
-                });
-        return data;
-    }
-
-    public LiveData<ResponseModel> confirmUserName (UserDates userDates,
-                                                    String gwkey) {
-        final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
-        userServices.confirmUserName(userDates,gwkey)
+        userServices.userRegister(userData)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

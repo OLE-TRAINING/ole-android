@@ -12,12 +12,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.SyncProgressBar;
 
 
 public class LoginActivity extends AppCompatActivity {

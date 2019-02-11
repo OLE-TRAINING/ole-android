@@ -1,4 +1,4 @@
-package br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity;
+package br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 
-public class TokenValidationViewModel extends ViewModel {
+public class FinishYourRegistrationViewModel extends ViewModel {
 
     private ValidationRepository repository = new ValidationRepository();
 
@@ -30,7 +30,7 @@ public class TokenValidationViewModel extends ViewModel {
     }
 
     public LiveData<ResponseModel> tokenValidation(String email, String code) {
-        tokenResponseObservable = repository.confirmToken(email,code);
+        tokenResponseObservable = repository.confirmToken(email, code);
         return tokenResponseObservable;
     }
 
@@ -43,23 +43,24 @@ public class TokenValidationViewModel extends ViewModel {
         return (tokenEntered.length() == MAX_SIZE_TOKEN);
     }
 
-    public void serviceStarting(){
+    public void serviceStarting() {
         isLoading.postValue(true);
     }
 
-    public void serviceEnding(){
+    public void serviceEnding() {
         isLoading.postValue(false);
     }
 
-    public void tokenTextChanged(){
+    public void tokenTextChanged() {
         tokenContainsErrorStatus.postValue(false);
     }
 
-    public void tokenEntered(String code){
+    public void tokenEntered(String code) {
         tokenContainsErrorStatus.postValue(!validateTokenSize(code));
     }
 
-    public boolean isValidToken(String code){
+    public boolean isValidToken(String code) {
         return validateTokenSize(code);
     }
 }
+

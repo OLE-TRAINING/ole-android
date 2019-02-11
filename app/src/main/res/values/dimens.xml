@@ -40,6 +40,8 @@
     <dimen name="marginStart_textView">8dp</dimen>
     <dimen name="marginTop_ErrorEditText">16dp</dimen>
     <dimen name="smallMargin">8dp</dimen>
+    <dimen name="margin_top_header">40dp</dimen>
+    <dimen name="margin_top_arrow">40dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
