@@ -142,7 +142,7 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
                     Toast.makeText(InformTokenAndNewPasswordActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.service_or_connection_error_tokenresend), Toast.LENGTH_LONG).show();
+                Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.service_or_connection_error_resend_token), Toast.LENGTH_LONG).show();
             }
         }
     };

@@ -48,6 +48,8 @@
     <string name="connectionErrorMessage">Ocorreu um erro na conexão</string>
     <string name="NoValidateUserMessage">Falha ao validar usuário</string>
     <string name="success_message_login">Senha confirmada, login autorizado!</string>
+    <string name="success_message_change_pass">Senha alterada com sucesso!</string>
+    <string name="service_or_connection_error_change_password">Falha ao validar alterar a senha. Verifique a conexão e tente novamente.</string>
     <string name="service_or_connection_error_login">Falha ao validar sua senha. Verifique a conexão e tente novamente.</string>
     <string name="success_message_email">Foi enviado um código para seu e-mail!</string>
     <string name="service_or_connection_error_token">Falha ao enviar código para o e-mail. Verifique a conexão e tente novamente.</string>
