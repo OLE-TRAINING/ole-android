@@ -57,7 +57,6 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         setupListeners();
     }
 
-
     private void setupObservers() {
         registerNewUserViewModel.getIsLoading().observe(this, progressBarObserver);
         registerNewUserViewModel.getNameContainsErrorStatus().observe(this, nameContainsErrorObserver);
@@ -95,22 +94,11 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
             String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
             String name = registerNewUserViewHolder.errorEditTextName.getText().toString().trim();
             String username = registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim();
             String password = registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim();
-            registerNewUserViewModel.nameEntered(name);
-            registerNewUserViewModel.userNameEntered(username);
-            registerNewUserViewModel.passwordEntered(password);
-            if (registerNewUserViewModel.isValidName(name)
-                    && registerNewUserViewModel.isValidUserName(username)
-                    && registerNewUserViewModel.isValidPassword(password)) {
-                registerNewUserViewModel.serviceStarting();
-                registerNewUserViewModel.postUserRegister(email, name, username, password)
-                        .observe(RegisterNewUserActivity.this, registerNewUserViewModel.getServiceCallObserver());
-            }
-
+            registerNewUserViewModel.completedForm(email, name,username,password);
         }
     };
 
@@ -270,5 +258,11 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(RegisterNewUserActivity.this, PreLoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        registerNewUserViewModel.removeObserver();
     }
 }

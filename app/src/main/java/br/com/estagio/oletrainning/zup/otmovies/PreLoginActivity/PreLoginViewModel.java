@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
+
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
@@ -19,21 +20,17 @@ public class PreLoginViewModel extends ViewModel {
 
     private UserRepository repository = new UserRepository();
 
+    private LiveData<ResponseModel> userData;
+
     private MutableLiveData<Boolean> emailContainsErrorStatus = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
-    private LiveData<ResponseModel> userResponseObservable;
-
-    private MutableLiveData<Boolean> isRegisteredUser = new MutableLiveData<>();
-
-    private MutableLiveData<Boolean> isPendingUser = new MutableLiveData<>();
-
-    private MutableLiveData<Boolean> isInexistentUser = new MutableLiveData<>();
+    private MutableLiveData<String> registrationStatus = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> isInvalidEmail = new MutableLiveData<>();
 
-    private MutableLiveData<String>  hasUnknownError = new MutableLiveData<>();
+    private MutableLiveData<String> hasUnknownError = new MutableLiveData<>();
 
     public MutableLiveData<String> getHasUnknownError() {
         return hasUnknownError;
@@ -43,22 +40,10 @@ public class PreLoginViewModel extends ViewModel {
         return isInvalidEmail;
     }
 
-    public MutableLiveData<Boolean> getIsRegisteredUser() {
-        return isRegisteredUser;
+    public MutableLiveData<String> getRegistrationStatus() {
+        return registrationStatus;
     }
 
-    public MutableLiveData<Boolean> getIsPendingUser() {
-        return isPendingUser;
-    }
-
-    public MutableLiveData<Boolean> getIsInexistentUser() {
-        return isInexistentUser;
-    }
-
-    public LiveData<ResponseModel> getUserResponse(String email) {
-        userResponseObservable = repository.getUserDate(email);
-        return userResponseObservable;
-    }
 
     public MutableLiveData<Boolean> getEmailContainsErrorStatus() {
         return emailContainsErrorStatus;
@@ -68,7 +53,7 @@ public class PreLoginViewModel extends ViewModel {
         return isLoading;
     }
 
-    private boolean validateEmail( String email) {
+    private boolean validateEmail(String email) {
         return (!email.isEmpty() && validateEmailFormat(email));
     }
 
@@ -76,38 +61,33 @@ public class PreLoginViewModel extends ViewModel {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    public void textChanged(){
+    public void textChanged() {
         emailContainsErrorStatus.postValue(false);
     }
 
-    public void emailEntered(String email){
+    public void emailEntered(String email) {
         emailContainsErrorStatus.postValue(!validateEmail(email));
+        if (isValidEmail(email)) {
+            executeServiceCallGetUserData(email);
+        }
     }
 
-    public void serviceStarting(){
-        isLoading.postValue(true);
-    }
-
-    public void serviceEnding(){
-        isLoading.postValue(false);
-    }
-
-    public boolean isValidEmail(String email){
+    private boolean isValidEmail(String email) {
         return validateEmail(email);
     }
 
-    private Observer<ResponseModel> serviceCallObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel> getUserResponseObserver = new Observer<ResponseModel>() {
         @Override
         public void onChanged(@Nullable ResponseModel responseModel) {
-            serviceEnding();
+            isLoading.postValue(false);
             if (responseModel != null) {
                 if (responseModel.getRegistrationStatus() != null) {
                     if (responseModel.getRegistrationStatus().equals(REGISTERED)) {
-                        getIsRegisteredUser().setValue(true);
+                        getRegistrationStatus().setValue(REGISTERED);
                     } else if (responseModel.getRegistrationStatus().equals(PENDING)) {
-                        getIsPendingUser().setValue(true);
+                        getRegistrationStatus().setValue(PENDING);
                     } else if (responseModel.getRegistrationStatus().equals(INEXISTENT)) {
-                        getIsInexistentUser().setValue(true);
+                        getRegistrationStatus().setValue(INEXISTENT);
                     }
                 } else {
                     if (responseModel.getKey().equals(ERROR_INVALID_EMAIL)) {
@@ -123,7 +103,15 @@ public class PreLoginViewModel extends ViewModel {
 
     };
 
-    public Observer<ResponseModel> getServiceCallObserver() {
-        return serviceCallObserver;
+    private void executeServiceCallGetUserData(String email) {
+        isLoading.postValue(true);
+        userData = repository.getUserData(email);
+        userData.observeForever(getUserResponseObserver);
+    }
+
+    public void removeObserver() {
+        if (userData != null) {
+            userData.removeObserver(getUserResponseObserver);
+        }
     }
 }

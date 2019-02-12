@@ -32,6 +32,10 @@ public class UserData {
         return registrationStatus;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void setRegistrationStatus(String registrationStatus) {
         this.registrationStatus = registrationStatus;
     }

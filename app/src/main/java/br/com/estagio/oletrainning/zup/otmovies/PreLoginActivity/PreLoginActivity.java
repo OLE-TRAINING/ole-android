@@ -22,6 +22,7 @@ public class PreLoginActivity extends AppCompatActivity {
 
     private PreLoginViewHolder preLoginViewHolder;
     private PreLoginViewModel preLoginViewModel;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class PreLoginActivity extends AppCompatActivity {
         setupObservers();
     }
 
-    private void colorStatusBar(){
+    private void colorStatusBar() {
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -54,12 +55,10 @@ public class PreLoginActivity extends AppCompatActivity {
 
     private void setupObservers() {
         preLoginViewModel.getEmailContainsErrorStatus().observe(this, errorStatusObserver);
+        preLoginViewModel.getRegistrationStatus().observe(this,registrationStatusObserver);
         preLoginViewModel.getIsLoading().observe(this, progressBarObserver);
-        preLoginViewModel.getIsRegisteredUser().observe(this,isRegisteredUserObserver);
-        preLoginViewModel.getIsPendingUser().observe(this,isPendingUserObserver);
-        preLoginViewModel.getIsInexistentUser().observe(this,isInexistentUserObserver);
-        preLoginViewModel.getIsInvalidEmail().observe(this,isInvalidEmailObserver);
-        preLoginViewModel.getHasUnknownError().observe(this,hasUnknownErrorObserver);
+        preLoginViewModel.getIsInvalidEmail().observe(this, isInvalidEmailObserver);
+        preLoginViewModel.getHasUnknownError().observe(this, hasUnknownErrorObserver);
     }
 
     private void setupListeners() {
@@ -70,46 +69,25 @@ public class PreLoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextPreLoginOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String email = preLoginViewHolder.errorEditTextEmail.getEditText().getText().toString().trim();
+            email = preLoginViewHolder.errorEditTextEmail.getEditText().getText().toString().trim();
             preLoginViewModel.emailEntered(email);
-            if (preLoginViewModel.isValidEmail(email)) {
-                preLoginViewModel.serviceStarting();
-                preLoginViewModel.getUserResponse(
-                        preLoginViewHolder.errorEditTextEmail.getText().toString().trim())
-                        .observe(PreLoginActivity.this, preLoginViewModel.getServiceCallObserver());
-            }
         }
     };
 
-    private Observer<Boolean> isRegisteredUserObserver = new Observer<Boolean>() {
+    private Observer<String> registrationStatusObserver = new Observer<String>() {
         @Override
-        public void onChanged(Boolean isRegistered) {
-            if(isRegistered){
+        public void onChanged(String status) {
+            if (status.equals(getString(R.string.registered))) {
                 Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
                 String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                 intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                 startActivity(intent);
-            }
-        }
-    };
-
-    private Observer<Boolean> isPendingUserObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean isPending) {
-            if(isPending){
+            } else if (status.equals(getString(R.string.pending))) {
                 Intent intent = new Intent(PreLoginActivity.this, FinishYourRegistrationActivity.class);
                 String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                 intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                 startActivity(intent);
-            }
-
-        }
-    };
-
-    private Observer<Boolean> isInexistentUserObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean isInexistent) {
-            if(isInexistent){
+            } else if (status.equals(getString(R.string.inexistent))) {
                 Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
                 String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
                 intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
@@ -121,10 +99,7 @@ public class PreLoginActivity extends AppCompatActivity {
     private Observer<Boolean> isInvalidEmailObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isInvalidEmail) {
-            if(isInvalidEmail){
-                preLoginViewHolder.errorEditTextEmail.setErrorVisibility(true);
-            }
-
+            preLoginViewHolder.errorEditTextEmail.setErrorVisibility(true);
         }
     };
 
@@ -179,4 +154,10 @@ public class PreLoginActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        preLoginViewModel.removeObserver();
+    }
 }
