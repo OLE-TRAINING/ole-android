@@ -2,11 +2,18 @@ package br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
+import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.widget.Toast;
 
+import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 public class RegisterNewUserViewModel extends ViewModel {
 
@@ -18,6 +25,8 @@ public class RegisterNewUserViewModel extends ViewModel {
     private String REGEX_FOR_NAME = "^[\\p{L} .'-]+$";
     private String REGEX_ONLY_NUMBER_OR_LETTER = "[a-zA-Z0-9]+";
     private String REGEX_ONLY_NUMBER_AND_LETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
+    private String SUCCESSFULLY_REGISTERED = "Usuário cadastrado com sucesso!";
+    private String SERVICE_OR_CONNECTION_ERROR_REGISTER = "Falha ao registrar seu cadastro. Verifique a conexão e tente novamente.";
 
     private UserRepository repository = new UserRepository();
 
@@ -29,7 +38,47 @@ public class RegisterNewUserViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> passwordContainsErrorStatus = new MutableLiveData<>();
 
+    private MutableLiveData<String> isRegistered = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> isInvalidName = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> isInvalidUsername = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> isInvalidPassword = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> isUsernameDuplicated = new MutableLiveData<>();
+
+    private MutableLiveData<String>  hasUnknownError = new MutableLiveData<>();
+
     private LiveData<ResponseModel> registerResponseObservable;
+
+    public Observer<ResponseModel> getServiceCallObserver() {
+        return serviceCallObserver;
+    }
+
+    public MutableLiveData<String> getHasUnknownError() {
+        return hasUnknownError;
+    }
+
+    public MutableLiveData<Boolean> getIsUsernameDuplicated() {
+        return isUsernameDuplicated;
+    }
+
+    public MutableLiveData<Boolean> getIsInvalidPassword() {
+        return isInvalidPassword;
+    }
+
+    public MutableLiveData<Boolean> getIsInvalidUsername() {
+        return isInvalidUsername;
+    }
+
+    public MutableLiveData<Boolean> getIsInvalidName() {
+        return isInvalidName;
+    }
+
+    public MutableLiveData<String> getIsRegistered() {
+        return isRegistered;
+    }
 
     public MutableLiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -124,4 +173,40 @@ public class RegisterNewUserViewModel extends ViewModel {
     public void passwordTextChanged(){
         passwordContainsErrorStatus.postValue(false);
     }
+
+    Observer<ResponseModel> serviceCallObserver = new Observer<ResponseModel>() {
+        @Override
+        public void onChanged(@Nullable ResponseModel responseModel) {
+            serviceEnding();
+            if (responseModel != null) {
+                if (responseModel.getCode() == 200) {
+                    getIsRegistered().setValue(SUCCESSFULLY_REGISTERED);
+                } else {
+                    ErrorMessage errorMessage = new ErrorMessage();
+                    errorMessage.setKey(responseModel.getKey());
+                    errorMessage.setMessage(responseModel.getMessage());
+                    switch (errorMessage.getKey()) {
+                        case "error.invalid.name":
+                            getIsInvalidName().setValue(true);
+                            break;
+                        case "error.invalid.username":
+                            getIsInvalidUsername().setValue(true);
+                            break;
+                        case "error.invalid.password":
+                            getIsInvalidPassword().setValue(true);
+                            break;
+                        case "error.resource.username.duplicated":
+                            getIsUsernameDuplicated().setValue(true);
+                            break;
+                        default:
+                             getHasUnknownError().setValue(errorMessage.getMessage());
+                            break;
+                    }
+                }
+            } else {
+                getHasUnknownError().setValue(SERVICE_OR_CONNECTION_ERROR_REGISTER);
+            }
+        }
+
+    };
 }

@@ -3,7 +3,6 @@ package br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,8 +14,6 @@ import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
@@ -66,7 +63,12 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         registerNewUserViewModel.getNameContainsErrorStatus().observe(this, nameContainsErrorObserver);
         registerNewUserViewModel.getUserNameContainsErrorStatus().observe(this, usernameContainsErrorObserver);
         registerNewUserViewModel.getPasswordContainsErrorStatus().observe(this, passwordContainsErrorObserver);
-
+        registerNewUserViewModel.getIsRegistered().observe(this,isRegisteredObserver);
+        registerNewUserViewModel.getIsInvalidName().observe(this, isInvalidNameObserver);
+        registerNewUserViewModel.getIsInvalidUsername().observe(this,isInvalidUsernameObserver);
+        registerNewUserViewModel.getIsInvalidPassword().observe(this, isInvalidPasswordObserver);
+        registerNewUserViewModel.getIsUsernameDuplicated().observe(this,isUsernameDuplicated);
+        registerNewUserViewModel.getHasUnknownError().observe(this,hasUnknownError);
     }
 
 
@@ -106,15 +108,70 @@ public class RegisterNewUserActivity extends AppCompatActivity {
                     && registerNewUserViewModel.isValidPassword(password)) {
                 registerNewUserViewModel.serviceStarting();
                 registerNewUserViewModel.postUserRegister(email, name, username, password)
-                        .observe(RegisterNewUserActivity.this, serviceCallObserver);
+                        .observe(RegisterNewUserActivity.this, registerNewUserViewModel.getServiceCallObserver());
             }
 
         }
     };
 
+    private Observer<Boolean> isUsernameDuplicated = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isUsernameDuplicated) {
+            if(isUsernameDuplicated){
+                registerNewUserViewHolder.errorEditTextUserName.setMessageError(getString(R.string.duplicate_username));
+                registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(true);
+            }
+        }
+    };
+
+    private Observer<String> hasUnknownError = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(RegisterNewUserActivity.this, message, Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private Observer<Boolean> isInvalidPasswordObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isInvalidPassword) {
+            if(isInvalidPassword){
+                registerNewUserViewHolder.errorEditTextPassword.setErrorVisibility(true);
+            }
+        }
+    };
+
+    private Observer<Boolean> isInvalidUsernameObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isInvalidUsername) {
+            if(isInvalidUsername){
+                registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(true);
+            }
+        }
+    };
+
+    private Observer<Boolean> isInvalidNameObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isInvalidName) {
+            if(isInvalidName){
+                registerNewUserViewHolder.errorEditTextName.setErrorVisibility(true);
+            }
+        }
+    };
+
+    private Observer<String> isRegisteredObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(RegisterNewUserActivity.this, message, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
+            String emailInput = registerNewUserViewHolder.textViewEmailEntered.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
+
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean isLoading) {
+        public void onChanged(Boolean isLoading) {
             if (isLoading != null) {
                 if (isLoading) {
                     registerNewUserViewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -132,7 +189,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
     private Observer<Boolean> nameContainsErrorObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean containsErrorStatus) {
+        public void onChanged(Boolean containsErrorStatus) {
             if (containsErrorStatus != null) {
                 registerNewUserViewHolder.errorEditTextName.setErrorVisibility(containsErrorStatus);
             }
@@ -141,7 +198,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
     private Observer<Boolean> usernameContainsErrorObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean containsErrorStatus) {
+        public void onChanged(Boolean containsErrorStatus) {
             if (containsErrorStatus != null) {
                 registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(containsErrorStatus);
             }
@@ -150,52 +207,11 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
     private Observer<Boolean> passwordContainsErrorObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean containsErrorStatus) {
+        public void onChanged(Boolean containsErrorStatus) {
             if (containsErrorStatus != null) {
                 registerNewUserViewHolder.errorEditTextPassword.setErrorVisibility(containsErrorStatus);
             }
         }
-    };
-
-    Observer<ResponseModel> serviceCallObserver = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            registerNewUserViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(RegisterNewUserActivity.this, getString(R.string.registerOk), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
-                    String emailInput = registerNewUserViewHolder.textViewEmailEntered.getText().toString().trim();
-                    intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                    startActivity(intent);
-                } else {
-                    ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
-                    switch (errorMessage.getKey()) {
-                        case "error.invalid.name":
-                            registerNewUserViewHolder.errorEditTextName.setErrorVisibility(true);
-                            break;
-                        case "error.invalid.username":
-                            registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(true);
-                            break;
-                        case "error.invalid.password":
-                            registerNewUserViewHolder.errorEditTextPassword.setErrorVisibility(true);
-                            break;
-                        case "error.resource.username.duplicated":
-                            registerNewUserViewHolder.errorEditTextUserName.setMessageError(getString(R.string.duplicate_username));
-                            registerNewUserViewHolder.errorEditTextUserName.setErrorVisibility(true);
-                            break;
-                        default:
-                            Toast.makeText(RegisterNewUserActivity.this, errorMessage.getMessage(), Toast.LENGTH_LONG).show();
-                            break;
-                    }
-                }
-            } else {
-                Toast.makeText(RegisterNewUserActivity.this, getString(R.string.service_or_connection_error_register), Toast.LENGTH_LONG).show();
-            }
-        }
-
     };
 
     private TextWatcher editTextNameTextChangedListener = new TextWatcher() {
