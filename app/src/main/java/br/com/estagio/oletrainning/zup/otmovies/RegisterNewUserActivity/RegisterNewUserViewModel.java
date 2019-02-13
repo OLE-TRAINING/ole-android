@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
@@ -23,8 +24,11 @@ public class RegisterNewUserViewModel extends ViewModel {
     private String REGEX_ONLY_NUMBER_AND_LETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
     private String SUCCESSFULLY_REGISTERED = "Usuário cadastrado com sucesso!";
     private String SERVICE_OR_CONNECTION_ERROR_REGISTER = "Falha ao registrar seu cadastro. Verifique a conexão e tente novamente.";
+    private String EMAIL_BUNDLE_KEY = "EmailPreLogin";
 
     private UserRepository repository = new UserRepository();
+
+    private Bundle bundle;
 
     private LiveData<ResponseModel> registerUser;
 
@@ -46,10 +50,16 @@ public class RegisterNewUserViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> isUsernameDuplicated = new MutableLiveData<>();
 
-    private MutableLiveData<String> hasUnknownError = new MutableLiveData<>();
+    private MutableLiveData<String> isErrorMessageForToast = new MutableLiveData<>();
 
-    public MutableLiveData<String> getHasUnknownError() {
-        return hasUnknownError;
+    private MutableLiveData<String> emailChanged = new MutableLiveData<>();
+
+    public MutableLiveData<String> getEmailChanged() {
+        return emailChanged;
+    }
+
+    public MutableLiveData<String> getIsErrorMessageForToast() {
+        return isErrorMessageForToast;
     }
 
     public MutableLiveData<Boolean> getIsUsernameDuplicated() {
@@ -88,6 +98,11 @@ public class RegisterNewUserViewModel extends ViewModel {
         return passwordContainsErrorStatus;
     }
 
+    public void setBundle(Bundle bundle){
+        this.bundle = bundle;
+        changeEmail(bundle.getString(EMAIL_BUNDLE_KEY));
+    }
+
     private boolean validateName(String name) {
         return (!name.isEmpty() && validateNameFormat(name));
     }
@@ -124,13 +139,13 @@ public class RegisterNewUserViewModel extends ViewModel {
         return validatePassword(password);
     }
 
-    public void completedForm(String email, String name, String username, String password) {
+    public void completedForm(String name, String username, String password) {
         nameContainsErrorStatus.postValue(!validateName(name));
         userNameContainsErrorStatus.postValue(!validateUserName(username));
         passwordContainsErrorStatus.postValue(!validatePassword(password));
         if (isValidName(name) && isValidUserName(username) && isValidPassword(password)) {
             UserData userData = new UserData();
-            userData.setEmail(email);
+            userData.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
             userData.setCompleteName(name);
             userData.setUsername(username);
             userData.setPassword(password);
@@ -175,16 +190,20 @@ public class RegisterNewUserViewModel extends ViewModel {
                             getIsUsernameDuplicated().setValue(true);
                             break;
                         default:
-                            getHasUnknownError().setValue(errorMessage.getMessage());
+                            getIsErrorMessageForToast().setValue(errorMessage.getMessage());
                             break;
                     }
                 }
             } else {
-                getHasUnknownError().setValue(SERVICE_OR_CONNECTION_ERROR_REGISTER);
+                getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_REGISTER);
             }
         }
 
     };
+
+    private void changeEmail(String email){
+        emailChanged.setValue(email);
+    }
 
     private void executeServiceRegisterUser(UserData userData) {
         isLoading.setValue(true);

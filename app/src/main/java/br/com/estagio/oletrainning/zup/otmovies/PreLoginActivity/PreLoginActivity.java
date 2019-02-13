@@ -58,7 +58,7 @@ public class PreLoginActivity extends AppCompatActivity {
         preLoginViewModel.getRegistrationStatus().observe(this,registrationStatusObserver);
         preLoginViewModel.getIsLoading().observe(this, progressBarObserver);
         preLoginViewModel.getIsInvalidEmail().observe(this, isInvalidEmailObserver);
-        preLoginViewModel.getHasUnknownError().observe(this, hasUnknownErrorObserver);
+        preLoginViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
     }
 
     private void setupListeners() {
@@ -103,7 +103,7 @@ public class PreLoginActivity extends AppCompatActivity {
         }
     };
 
-    private Observer<String> hasUnknownErrorObserver = new Observer<String>() {
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
             Toast.makeText(PreLoginActivity.this, message, Toast.LENGTH_LONG).show();

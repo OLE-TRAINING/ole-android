@@ -30,10 +30,10 @@ public class PreLoginViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> isInvalidEmail = new MutableLiveData<>();
 
-    private MutableLiveData<String> hasUnknownError = new MutableLiveData<>();
+    private MutableLiveData<String> isErrorMessageForToast = new MutableLiveData<>();
 
-    public MutableLiveData<String> getHasUnknownError() {
-        return hasUnknownError;
+    public MutableLiveData<String> getIsErrorMessageForToast() {
+        return isErrorMessageForToast;
     }
 
     public MutableLiveData<Boolean> getIsInvalidEmail() {
@@ -93,11 +93,11 @@ public class PreLoginViewModel extends ViewModel {
                     if (responseModel.getKey().equals(ERROR_INVALID_EMAIL)) {
                         getIsInvalidEmail().setValue(true);
                     } else {
-                        getHasUnknownError().setValue(responseModel.getMessage());
+                        getIsErrorMessageForToast().setValue(responseModel.getMessage());
                     }
                 }
             } else {
-                getHasUnknownError().setValue(ERROR_SERVICE_OR_CONNECTION_EMAIL);
+                getIsErrorMessageForToast().setValue(ERROR_SERVICE_OR_CONNECTION_EMAIL);
             }
         }
 

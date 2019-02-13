@@ -18,7 +18,6 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
-
 public class RegisterNewUserActivity extends AppCompatActivity {
 
     private RegisterNewUserViewHolder registerNewUserViewHolder;
@@ -33,12 +32,20 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         this.registerNewUserViewHolder = new RegisterNewUserViewHolder(view);
         setContentView(view);
 
-        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-        registerNewUserViewHolder.textViewEmailEntered.setText(emailAdd);
-
         registerNewUserViewModel = ViewModelProviders.of(this).get(RegisterNewUserViewModel.class);
 
         setupObservers();
+
+        Bundle bundle = getIntent().getExtras();
+
+        registerNewUserViewModel.setBundle(bundle);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        colorStatusBar();
+        setupListeners();
     }
 
     private void colorStatusBar(){
@@ -48,13 +55,6 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         window.setStatusBarColor(getColor(R.color.colorBackground));
         View decor = getWindow().getDecorView();
         decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        colorStatusBar();
-        setupListeners();
     }
 
     private void setupObservers() {
@@ -67,9 +67,9 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         registerNewUserViewModel.getIsInvalidUsername().observe(this,isInvalidUsernameObserver);
         registerNewUserViewModel.getIsInvalidPassword().observe(this, isInvalidPasswordObserver);
         registerNewUserViewModel.getIsUsernameDuplicated().observe(this,isUsernameDuplicated);
-        registerNewUserViewModel.getHasUnknownError().observe(this,hasUnknownError);
+        registerNewUserViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        registerNewUserViewModel.getEmailChanged().observe(this,emailChangedObserver);
     }
-
 
     private void setupListeners() {
         registerNewUserViewHolder.errorEditTextName.getEditText().addTextChangedListener(editTextNameTextChangedListener);
@@ -90,15 +90,20 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         }
     };
 
-
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
             String name = registerNewUserViewHolder.errorEditTextName.getText().toString().trim();
             String username = registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim();
             String password = registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim();
-            registerNewUserViewModel.completedForm(email, name,username,password);
+            registerNewUserViewModel.completedForm(name,username,password);
+        }
+    };
+
+    private Observer<String> emailChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String email) {
+            registerNewUserViewHolder.textViewEmailEntered.setText(email);
         }
     };
 
@@ -112,7 +117,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         }
     };
 
-    private Observer<String> hasUnknownError = new Observer<String>() {
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
             Toast.makeText(RegisterNewUserActivity.this, message, Toast.LENGTH_LONG).show();
