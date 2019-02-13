@@ -17,7 +17,7 @@ import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -35,10 +35,11 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
-        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-        loginViewHolder.textViewEmailEntered.setText(emailAdd);
-
         setupObservers();
+
+        Bundle bundle = getIntent().getExtras();
+
+        loginViewModel.setBundle(bundle);
     }
 
     @Override
@@ -50,6 +51,11 @@ public class LoginActivity extends AppCompatActivity {
     private void setupObservers() {
         loginViewModel.getPasswordContainsErrorStatus().observe(this, passwordContainsErrorObserver);
         loginViewModel.getIsLoading().observe(this, progressBarObserver);
+        loginViewModel.getEmailChanged().observe(this,emailChangedObserver);
+        loginViewModel.getIsValidatedPassword().observe(this,isValidatedPasswordObserver);
+        loginViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
+        loginViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        loginViewModel.getForwardedToken().observe(this,forwardedTokenObserver);
     }
 
     private void setupListeners() {
@@ -59,6 +65,52 @@ public class LoginActivity extends AppCompatActivity {
         loginViewHolder.errorEditTextPassword.getEditText().addTextChangedListener(editTextPasswordTextChangedListener);
         loginViewHolder.textViewForgetPassword.setOnClickListener(textViewForgetPasswordOnClickListener);
     }
+
+    private Observer<String> forwardedTokenObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String message) {
+            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
+            String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
+
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private Observer<String> messageErrorChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            loginViewHolder.textViewRedToast.setText(message);
+            loginViewModel.setPasswordContainsErrorStatus(true);
+        }
+    };
+
+    private Observer<String> isValidatedPasswordObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            loginViewModel.setPasswordContainsErrorStatus(false);
+            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
+
+    private Observer<String> emailChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String email) {
+            loginViewHolder.textViewEmailEntered.setText(email);
+        }
+    };
+
 
     private Observer<Boolean> passwordContainsErrorObserver = new Observer<Boolean>() {
         @Override
@@ -98,68 +150,12 @@ public class LoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
             String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
             loginViewModel.passwordEntered(password);
-            if (loginViewModel.isValidPassword(password)) {
-                loginViewModel.serviceStarting();
-                loginViewModel.passwordValidation(email, password)
-                        .observe(LoginActivity.this, serviceCallPassValidationObserver);
-            }
         }
     };
 
-    Observer<ResponseModel> serviceCallPassValidationObserver = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            loginViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    loginViewModel.setPasswordContainsErrorStatus(false);
-                    Toast.makeText(LoginActivity.this, getString(R.string.success_message_login), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
-                    intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                    startActivity(intent);
-                } else {
-                    String key = responseModel.getKey();
-                    String message = responseModel.getMessage();
-                    if (loginViewModel.isMessageToPutInTopToast(key)) {
-                        loginViewHolder.textViewRedToast.setText(message);
-                        loginViewModel.setPasswordContainsErrorStatus(true);
-                    } else {
-                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(LoginActivity.this, getString(R.string.service_or_connection_error_login), Toast.LENGTH_LONG).show();
-            }
-        }
-
-    };
-
-    Observer<ResponseModel> serviceCallResendObserver = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            loginViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(LoginActivity.this, getString(R.string.success_message_email), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
-                    String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
-                    intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(LoginActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(LoginActivity.this, getString(R.string.service_or_connection_error_token), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-
-    View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -171,19 +167,12 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    View.OnClickListener textViewForgetPasswordOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener textViewForgetPasswordOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            callTokenResend();
+            loginViewModel.tokenForwardingRequested();
         }
     };
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
-        startActivity(intent);
-    }
 
     private TextWatcher editTextPasswordTextChangedListener = new TextWatcher() {
         @Override
@@ -202,10 +191,16 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private void callTokenResend() {
-        String email = loginViewHolder.textViewEmailEntered.getText().toString().trim();
-        loginViewModel.serviceStarting();
-        loginViewModel.resendToken(email)
-                .observe(LoginActivity.this, serviceCallResendObserver);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loginViewModel.removeObserver();
     }
 }

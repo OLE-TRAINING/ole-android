@@ -30,6 +30,8 @@ public class TokenValidationViewModel extends ViewModel {
 
     private LiveData<ResponseModel> tokenValidation;
 
+    private LiveData<ResponseModel> tokenResend;
+
     private MutableLiveData<Boolean> tokenContainsErrorStatus = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
@@ -149,14 +151,14 @@ public class TokenValidationViewModel extends ViewModel {
 
     private void executeServiceTokenResend(String email) {
         isLoading.setValue(true);
-        tokenValidation = repository.resendToken(email);
-        tokenValidation.observeForever(tokenResendObserver);
+        tokenResend = repository.resendToken(email);
+        tokenResend.observeForever(tokenResendObserver);
     }
 
     public void removeObserver() {
-        if (tokenValidation != null) {
+        if (tokenValidation != null && tokenResend != null) {
             tokenValidation.removeObserver(tokenValidationObserver);
-            tokenValidation.removeObserver(tokenResendObserver);
+            tokenResend.removeObserver(tokenResendObserver);
         }
     }
 }
