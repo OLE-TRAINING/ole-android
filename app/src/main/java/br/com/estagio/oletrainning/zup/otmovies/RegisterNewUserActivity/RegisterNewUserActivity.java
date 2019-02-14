@@ -2,6 +2,7 @@ package br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
@@ -39,6 +41,9 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         registerNewUserViewModel.setBundle(bundle);
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
@@ -93,6 +98,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            hideKeyboardFrom(RegisterNewUserActivity.this,registerNewUserViewHolder.errorEditTextName);
             String name = registerNewUserViewHolder.errorEditTextName.getText().toString().trim();
             String username = registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim();
             String password = registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim();
@@ -257,6 +263,11 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
         }
     };
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(PreLoginActivity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     public void onBackPressed() {

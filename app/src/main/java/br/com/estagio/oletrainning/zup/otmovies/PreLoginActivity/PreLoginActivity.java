@@ -2,6 +2,7 @@ package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity.FinishYourRegistrationActivity;
@@ -35,6 +37,9 @@ public class PreLoginActivity extends AppCompatActivity {
         preLoginViewModel = ViewModelProviders.of(this).get(PreLoginViewModel.class);
 
         setupObservers();
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void colorStatusBar() {
@@ -69,6 +74,7 @@ public class PreLoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextPreLoginOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            hideKeyboardFrom(PreLoginActivity.this,preLoginViewHolder.errorEditTextEmail);
             email = preLoginViewHolder.errorEditTextEmail.getEditText().getText().toString().trim();
             preLoginViewModel.emailEntered(email);
         }
@@ -154,6 +160,11 @@ public class PreLoginActivity extends AppCompatActivity {
 
         }
     };
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(PreLoginActivity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     protected void onDestroy() {

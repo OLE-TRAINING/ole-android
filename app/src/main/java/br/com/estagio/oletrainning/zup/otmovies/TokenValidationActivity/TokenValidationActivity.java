@@ -2,6 +2,7 @@ package br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +12,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
+import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 
 public class TokenValidationActivity extends AppCompatActivity {
 
@@ -39,6 +42,9 @@ public class TokenValidationActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         tokenValidationViewModel.setBundle(bundle);
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void colorStatusBar() {
@@ -137,8 +143,9 @@ public class TokenValidationActivity extends AppCompatActivity {
     View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-        String code = tokenValidationViewHolder.errorEditText.getEditText().getText().toString().trim();
-        tokenValidationViewModel.tokenEntered(code);
+            hideKeyboardFrom(TokenValidationActivity.this,tokenValidationViewHolder.errorEditText);
+            String code = tokenValidationViewHolder.errorEditText.getEditText().getText().toString().trim();
+            tokenValidationViewModel.tokenEntered(code);
         }
     };
 
@@ -176,6 +183,11 @@ public class TokenValidationActivity extends AppCompatActivity {
             }
         }
     };
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(PreLoginActivity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     public void onBackPressed() {

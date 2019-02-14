@@ -2,6 +2,7 @@ package br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +12,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
+import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 public class FinishYourRegistrationActivity extends AppCompatActivity {
 
@@ -38,6 +41,9 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         finishYourRegistrationViewModel.setBundle(bundle);
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void colorStatusBar() {
@@ -136,6 +142,7 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
     View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            hideKeyboardFrom(FinishYourRegistrationActivity.this,finishYourRegistrationViewHolder.errorEditText);
             String code = finishYourRegistrationViewHolder.errorEditText.getEditText().getText().toString().trim();
             finishYourRegistrationViewModel.tokenEntered(code);
         }
@@ -175,6 +182,11 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
 
         }
     };
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(PreLoginActivity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     public void onBackPressed() {
