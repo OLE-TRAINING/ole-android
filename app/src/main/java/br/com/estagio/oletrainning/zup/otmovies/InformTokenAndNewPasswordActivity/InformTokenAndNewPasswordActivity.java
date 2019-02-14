@@ -16,7 +16,6 @@ import android.widget.Toast;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 
 
@@ -35,10 +34,11 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
 
         informTokenAndNewPasswordViewModel = ViewModelProviders.of(this).get(InformTokenAndNewPasswordViewModel.class);
 
-        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-        informTokenAndNewPasswordViewHolder.textViewEmail.setText(emailAdd);
-
         setupObservers();
+
+        Bundle bundle = getIntent().getExtras();
+
+        informTokenAndNewPasswordViewModel.setBundle(bundle);
     }
 
     private void colorStatusBar() {
@@ -62,6 +62,12 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
         informTokenAndNewPasswordViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
         informTokenAndNewPasswordViewModel.getPasswordContainsErrorStatus().observe(this, passwordContainsErrorObserver);
         informTokenAndNewPasswordViewModel.getConfirmPasswordContainsErrorStatus().observe(this, confirmPasswordContainsErrorObserver);
+        informTokenAndNewPasswordViewModel.getEmailChanged().observe(this, emailChangedObserver);
+        informTokenAndNewPasswordViewModel.getShowPasswordConfirmationInput().observe(this,showPasswordConfirmationInput);
+        informTokenAndNewPasswordViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        informTokenAndNewPasswordViewModel.getIsErrorMessageToPasswordInput().observe(this,isErrorMessageToPasswordInputObserver);
+        informTokenAndNewPasswordViewModel.getPasswordChanged().observe(this,passwordChangedObserver);
+        informTokenAndNewPasswordViewModel.getIsErrorMessageToTokenInput().observe(this,isErrorMessageToTokenInputObserver);
     }
 
     private void setupListeners() {
@@ -82,6 +88,77 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
+        }
+    };
+
+    private View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            informTokenAndNewPasswordViewModel.tokenForwardingRequested();
+        }
+    };
+
+    View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String code = informTokenAndNewPasswordViewHolder.errorEditTextToken.getText().toString().trim();
+            String password = informTokenAndNewPasswordViewHolder.errorEditTextPassword.getText().toString().trim();
+            String confirmPassword = informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.getText().toString().trim();
+            informTokenAndNewPasswordViewModel.completedForm(code,password,confirmPassword);
+        }
+    };
+
+    private Observer<String> isErrorMessageToTokenInputObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String message) {
+            informTokenAndNewPasswordViewHolder.errorEditTextToken.setMessageError(message);
+            informTokenAndNewPasswordViewHolder.errorEditTextToken.setErrorVisibility(true);
+        }
+    };
+
+    private Observer<String> passwordChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String s) {
+            Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.success_message_change_pass), Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(InformTokenAndNewPasswordActivity.this, LoginActivity.class);
+            String emailInput = informTokenAndNewPasswordViewHolder.textViewEmail.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
+
+    private Observer<String> isErrorMessageToPasswordInputObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String message) {
+            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError("");
+            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError(message);
+            informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(true);
+            informTokenAndNewPasswordViewHolder.errorEditTextPassword.setErrorVisibility(true);
+        }
+    };
+
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(InformTokenAndNewPasswordActivity.this, message, Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private Observer<Boolean> showPasswordConfirmationInput = new Observer<Boolean>() {
+        @Override
+        public void onChanged(@Nullable Boolean show) {
+            if(show){
+                informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(false);
+                informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setVisibility(View.VISIBLE);
+            } else {
+                informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setVisibility(View.INVISIBLE);
+            }
+        }
+    };
+    private Observer<String> emailChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String email) {
+            informTokenAndNewPasswordViewHolder.textViewEmail.setText(email);
         }
     };
 
@@ -131,22 +208,6 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
         }
     };
 
-    Observer<ResponseModel> serviceCallResendObserver = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            informTokenAndNewPasswordViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.success_resend_token), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(InformTokenAndNewPasswordActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.service_or_connection_error_resend_token), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
     private TextWatcher errorEditTextTextWatcherToken = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -173,15 +234,9 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String password = informTokenAndNewPasswordViewHolder.errorEditTextPassword.getText().toString().trim();
+            informTokenAndNewPasswordViewModel.showPasswordConfirmationInput(password);
             informTokenAndNewPasswordViewModel.passwordTextChanged();
             informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.getEditText().setText("");
-            if(informTokenAndNewPasswordViewModel.isValidPassword(password)){
-                informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(false);
-                informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setVisibility(View.VISIBLE);
-            } else {
-                informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setVisibility(View.INVISIBLE);
-            }
-
         }
 
         @Override
@@ -207,78 +262,16 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
         }
     };
 
-    private View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            callTokenResend();
-        }
-    };
-
-    View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-            String token = informTokenAndNewPasswordViewHolder.errorEditTextToken.getText().toString().trim();
-            String password = informTokenAndNewPasswordViewHolder.errorEditTextPassword.getText().toString().trim();
-            String confirmPassword = informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.getText().toString().trim();
-            informTokenAndNewPasswordViewModel.tokenEntered(token);
-            informTokenAndNewPasswordViewModel.passwordEntered(password);
-            informTokenAndNewPasswordViewModel.confirmPasswordEntered(confirmPassword);
-            if (informTokenAndNewPasswordViewModel.isValidToken(token)
-                    && informTokenAndNewPasswordViewModel.isValidPassword(password)
-                    && informTokenAndNewPasswordViewModel.isValidConfirmPassword(password, confirmPassword)) {
-                informTokenAndNewPasswordViewModel.serviceStarting();
-                informTokenAndNewPasswordViewModel.validateTokenAndChangePass(email, token, password, confirmPassword)
-                        .observe(InformTokenAndNewPasswordActivity.this, serviceCallObserver);
-            }
-        }
-    };
-
-    Observer<ResponseModel> serviceCallObserver = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            informTokenAndNewPasswordViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.success_message_change_pass), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(InformTokenAndNewPasswordActivity.this, LoginActivity.class);
-                    String emailInput = informTokenAndNewPasswordViewHolder.textViewEmail.getText().toString().trim();
-                    intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                    startActivity(intent);
-                } else {
-                    String key = responseModel.getKey();
-                    String message = responseModel.getMessage();
-                    if (informTokenAndNewPasswordViewModel.isErrorMessageKeyToPasswordInput(key)) {
-                        informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setMessageError("");
-                        informTokenAndNewPasswordViewHolder.errorEditTextPassword.setMessageError(message);
-                        informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setErrorVisibility(true);
-                        informTokenAndNewPasswordViewHolder.errorEditTextPassword.setErrorVisibility(true);
-                    } else if (informTokenAndNewPasswordViewModel.isErrorMessageKeyToTokenInput(key)) {
-                        informTokenAndNewPasswordViewHolder.errorEditTextToken.setMessageError(message);
-                        informTokenAndNewPasswordViewHolder.errorEditTextToken.setErrorVisibility(true);
-                    } else {
-                        Toast.makeText(InformTokenAndNewPasswordActivity.this, message, Toast.LENGTH_LONG).show();
-
-                    }
-                }
-            } else {
-                Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.service_or_connection_error_change_password), Toast.LENGTH_LONG).show();
-            }
-        }
-
-    };
-
-    private void callTokenResend() {
-        String email = informTokenAndNewPasswordViewHolder.textViewEmail.getText().toString().trim();
-        informTokenAndNewPasswordViewModel.serviceStarting();
-        informTokenAndNewPasswordViewModel.resendToken(email)
-                .observe(InformTokenAndNewPasswordActivity.this, serviceCallResendObserver);
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(InformTokenAndNewPasswordActivity.this, PreLoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        informTokenAndNewPasswordViewModel.removeObserver();
     }
 }
