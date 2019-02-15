@@ -2,7 +2,6 @@ package br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,22 +9,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
-import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 
 public class TokenValidationActivity extends AppCompatActivity {
 
     private TokenValidationViewHolder tokenValidationViewHolder;
-
     private TokenValidationViewModel tokenValidationViewModel;
+    private CommonMethodsActivities commonMethodsActivities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,23 +38,16 @@ public class TokenValidationActivity extends AppCompatActivity {
 
         tokenValidationViewModel.setBundle(bundle);
 
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    }
+        commonMethodsActivities = new CommonMethodsActivities();
 
-    private void colorStatusBar() {
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(getColor(R.color.colorBackground));
-        View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        commonMethodsActivities.hideKeyword(getWindow());
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        colorStatusBar();
+        commonMethodsActivities.colorStatusBar(this.getWindow(),
+                this,R.color.colorBackground,true);
         setupListeners();
     }
 
@@ -126,16 +114,11 @@ public class TokenValidationActivity extends AppCompatActivity {
         @Override
         public void onChanged(@Nullable Boolean isLoading) {
             if (isLoading != null) {
-                if (isLoading) {
-                    tokenValidationViewHolder.progressBar.setVisibility(View.VISIBLE);
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    new SyncProgressBar(TokenValidationActivity.this, tokenValidationViewHolder.progressBar).execute();
-                } else {
-                    tokenValidationViewHolder.progressBar.setProgress(100);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                }
+                commonMethodsActivities.loadingExecutor(
+                        isLoading,
+                        tokenValidationViewHolder.progressBar,
+                        getWindow(),
+                        TokenValidationActivity.this);
             }
         }
     };
@@ -143,7 +126,8 @@ public class TokenValidationActivity extends AppCompatActivity {
     View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            hideKeyboardFrom(TokenValidationActivity.this,tokenValidationViewHolder.errorEditText);
+            commonMethodsActivities.hideKeyboardFrom(TokenValidationActivity.this,
+                    tokenValidationViewHolder.errorEditText);
             String code = tokenValidationViewHolder.errorEditText.getEditText().getText().toString().trim();
             tokenValidationViewModel.tokenEntered(code);
         }
@@ -184,11 +168,6 @@ public class TokenValidationActivity extends AppCompatActivity {
         }
     };
 
-    public static void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(PreLoginActivity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -200,5 +179,6 @@ public class TokenValidationActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         tokenValidationViewModel.removeObserver();
+        tokenValidationViewModel.removeTokenResendObserver();
     }
 }

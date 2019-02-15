@@ -2,7 +2,6 @@ package br.com.estagio.oletrainning.zup.otmovies.LoginActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +9,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
@@ -26,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewHolder loginViewHolder;
     private LoginViewModel loginViewModel;
+    private CommonMethodsActivities commonMethodsActivities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +40,9 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel.setBundle(bundle);
 
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        commonMethodsActivities = new CommonMethodsActivities();
+
+        commonMethodsActivities.hideKeyword(getWindow());
     }
 
     @Override
@@ -55,21 +53,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void colorStatusBarBackground(){
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(getColor(R.color.colorBackground));
-        View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        commonMethodsActivities.colorStatusBar(this.getWindow(),
+                this,R.color.colorBackground,true);
     }
 
     private void colorStatusBarRed(){
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.GONE);
-        window.setStatusBarColor(getColor(R.color.colorRed));
+        commonMethodsActivities.colorStatusBar(this.getWindow(),
+                this,R.color.colorRed,false);
     }
 
     private void setupObservers() {
@@ -159,16 +149,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onChanged(@Nullable Boolean isLoading) {
             if (isLoading != null) {
-                if (isLoading) {
-                    loginViewHolder.progressBar.setVisibility(View.VISIBLE);
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    new SyncProgressBar(LoginActivity.this, loginViewHolder.progressBar).execute();
-                } else {
-                    loginViewHolder.progressBar.setProgress(100);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                }
+                commonMethodsActivities.loadingExecutor(
+                        isLoading,
+                        loginViewHolder.progressBar,
+                        getWindow(),
+                        LoginActivity.this);
             }
         }
     };
@@ -176,7 +161,8 @@ public class LoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            hideKeyboardFrom(LoginActivity.this,loginViewHolder.errorEditTextPassword);
+            commonMethodsActivities.hideKeyboardFrom(LoginActivity.this,
+                    loginViewHolder.errorEditTextPassword);
             String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
             loginViewModel.passwordEntered(password);
         }
@@ -218,11 +204,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    public static void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(PreLoginActivity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -234,5 +215,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         loginViewModel.removeObserver();
+        loginViewModel.removeTokenResendObserver();
     }
 }

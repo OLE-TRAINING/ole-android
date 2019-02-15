@@ -3,36 +3,22 @@ package br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
-public class RegisterNewUserViewModel extends ViewModel {
+public class RegisterNewUserViewModel extends CommonViewModel {
 
-    private final Integer MAX_SIZE_NAME = 50;
-    private final Integer MIN_SIZE_PASS = 6;
-    private final Integer MAX_SIZE_PASS = 10;
-    private final Integer MAX_SIZE_USERNAME = 15;
-
-    private String REGEX_FOR_NAME = "^[\\p{L} .'-]+$";
-    private String REGEX_ONLY_NUMBER_OR_LETTER = "[a-zA-Z0-9]+";
-    private String REGEX_ONLY_NUMBER_AND_LETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
     private String SUCCESSFULLY_REGISTERED = "Usuário cadastrado com sucesso!";
     private String SERVICE_OR_CONNECTION_ERROR_REGISTER = "Falha ao registrar seu cadastro. Verifique a conexão e tente novamente.";
-    private String EMAIL_BUNDLE_KEY = "EmailPreLogin";
 
     private UserRepository repository = new UserRepository();
 
-    private Bundle bundle;
-
     private LiveData<ResponseModel> registerUser;
-
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> nameContainsErrorStatus = new MutableLiveData<>();
 
@@ -49,18 +35,6 @@ public class RegisterNewUserViewModel extends ViewModel {
     private MutableLiveData<Boolean> isInvalidPassword = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> isUsernameDuplicated = new MutableLiveData<>();
-
-    private MutableLiveData<String> isErrorMessageForToast = new MutableLiveData<>();
-
-    private MutableLiveData<String> emailChanged = new MutableLiveData<>();
-
-    public MutableLiveData<String> getEmailChanged() {
-        return emailChanged;
-    }
-
-    public MutableLiveData<String> getIsErrorMessageForToast() {
-        return isErrorMessageForToast;
-    }
 
     public MutableLiveData<Boolean> getIsUsernameDuplicated() {
         return isUsernameDuplicated;
@@ -82,10 +56,6 @@ public class RegisterNewUserViewModel extends ViewModel {
         return isRegistered;
     }
 
-    public MutableLiveData<Boolean> getIsLoading() {
-        return isLoading;
-    }
-
     public MutableLiveData<Boolean> getNameContainsErrorStatus() {
         return nameContainsErrorStatus;
     }
@@ -96,47 +66,6 @@ public class RegisterNewUserViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> getPasswordContainsErrorStatus() {
         return passwordContainsErrorStatus;
-    }
-
-    public void setBundle(Bundle bundle){
-        this.bundle = bundle;
-        changeEmail(bundle.getString(EMAIL_BUNDLE_KEY));
-    }
-
-    private boolean validateName(String name) {
-        return (!name.isEmpty() && validateNameFormat(name));
-    }
-
-    private boolean validateUserName(String userName) {
-        return (!userName.isEmpty() && validateUserNameFormat(userName));
-    }
-
-    private boolean validatePassword(String password) {
-        return (!password.isEmpty() && validatePasswordFormat(password));
-    }
-
-    private boolean validateNameFormat(String name) {
-        return name.length() <= MAX_SIZE_NAME && name.matches(REGEX_FOR_NAME);
-    }
-
-    private boolean validateUserNameFormat(String userName) {
-        return userName.length() <= MAX_SIZE_USERNAME && userName.matches(REGEX_ONLY_NUMBER_OR_LETTER);
-    }
-
-    private boolean validatePasswordFormat(String password) {
-        return password.length() >= MIN_SIZE_PASS && password.length() <= MAX_SIZE_PASS && password.matches(REGEX_ONLY_NUMBER_AND_LETTER);
-    }
-
-    private boolean isValidName(String name) {
-        return validateName(name);
-    }
-
-    private boolean isValidUserName(String username) {
-        return validateUserName(username);
-    }
-
-    private boolean isValidPassword(String password) {
-        return validatePassword(password);
     }
 
     public void completedForm(String name, String username, String password) {
@@ -200,10 +129,6 @@ public class RegisterNewUserViewModel extends ViewModel {
         }
 
     };
-
-    private void changeEmail(String email){
-        emailChanged.setValue(email);
-    }
 
     private void executeServiceRegisterUser(UserData userData) {
         isLoading.setValue(true);

@@ -3,14 +3,14 @@ package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 
 import android.support.annotation.Nullable;
 
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 
-public class PreLoginViewModel extends ViewModel {
+public class PreLoginViewModel extends CommonViewModel {
 
     private String REGISTERED = "REGISTERED";
     private String PENDING = "PENDING";
@@ -24,17 +24,9 @@ public class PreLoginViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> emailContainsErrorStatus = new MutableLiveData<>();
 
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-
     private MutableLiveData<String> registrationStatus = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> isInvalidEmail = new MutableLiveData<>();
-
-    private MutableLiveData<String> isErrorMessageForToast = new MutableLiveData<>();
-
-    public MutableLiveData<String> getIsErrorMessageForToast() {
-        return isErrorMessageForToast;
-    }
 
     public MutableLiveData<Boolean> getIsInvalidEmail() {
         return isInvalidEmail;
@@ -44,21 +36,8 @@ public class PreLoginViewModel extends ViewModel {
         return registrationStatus;
     }
 
-
     public MutableLiveData<Boolean> getEmailContainsErrorStatus() {
         return emailContainsErrorStatus;
-    }
-
-    public MutableLiveData<Boolean> getIsLoading() {
-        return isLoading;
-    }
-
-    private boolean validateEmail(String email) {
-        return (!email.isEmpty() && validateEmailFormat(email));
-    }
-
-    private boolean validateEmailFormat(final String email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     public void textChanged() {
@@ -70,10 +49,6 @@ public class PreLoginViewModel extends ViewModel {
         if (isValidEmail(email)) {
             executeServiceCallGetUserData(email);
         }
-    }
-
-    private boolean isValidEmail(String email) {
-        return validateEmail(email);
     }
 
     private Observer<ResponseModel> getUserResponseObserver = new Observer<ResponseModel>() {
