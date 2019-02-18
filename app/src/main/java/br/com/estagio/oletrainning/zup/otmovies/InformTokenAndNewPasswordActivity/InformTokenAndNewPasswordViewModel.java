@@ -6,12 +6,18 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.ConfirmPassword;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Password;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Token;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 
 
 public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
 
+    private Password password;
+    private ConfirmPassword confirmPassword;
+    private Token token;
     private String INVALID_PASSWORD_MISMATCH_KEY = "error.invalid.password.mismatch";
     private String INVALID_PASSWORD_KEY = "error.invalid.password";
     private String UNAUTHORIZED_TOKEN_KEY = "error.unauthorized.token";
@@ -64,24 +70,28 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
     }
 
 
-    public void showPasswordConfirmationInput (String password){
-        if(isValidPassword(password)){
+    public void showPasswordConfirmationInput (String passwordEntered){
+        password = new Password(passwordEntered);
+        if(password.isValidPassword()){
             getShowPasswordConfirmationInput().setValue(true);
         } else {
             getShowPasswordConfirmationInput().setValue(false);
         }
     }
 
-    public void completedForm(String code, String password, String confirmPassword){
-        tokenContainsErrorStatus.postValue(!validateTokenSize(code));
-        passwordContainsErrorStatus.postValue(!validatePassword(password));
-        confirmPasswordContainsErrorStatus.postValue(!validatePassword(confirmPassword));
-        if(isValidToken(code)&& isValidPassword(password) && isValidConfirmPassword(password,confirmPassword)){
+    public void completedForm(String code, String passwordEntered, String confirmPasswordEntered){
+        token = new Token(code);
+        password = new Password(passwordEntered);
+        confirmPassword = new ConfirmPassword(passwordEntered,confirmPasswordEntered);
+        tokenContainsErrorStatus.postValue(!token.validateTokenSize());
+        passwordContainsErrorStatus.postValue(!password.validatePassword());
+        confirmPasswordContainsErrorStatus.postValue(!confirmPassword.validatePassword(confirmPasswordEntered));
+        if(token.isValidToken()&& password.isValidPassword() && confirmPassword.isValidConfirmPassword()){
             BodyChangePassword bodyChangePassword = new BodyChangePassword();
             bodyChangePassword.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
             bodyChangePassword.setConfirmationToken(code);
-            bodyChangePassword.setNewPassword(password);
-            bodyChangePassword.setNewPasswordConfirmation(confirmPassword);
+            bodyChangePassword.setNewPassword(passwordEntered);
+            bodyChangePassword.setNewPasswordConfirmation(confirmPasswordEntered);
             executeServiceValidateTokenAndChangePass(bodyChangePassword);
         }
     }

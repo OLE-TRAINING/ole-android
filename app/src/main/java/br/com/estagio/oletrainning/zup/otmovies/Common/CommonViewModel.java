@@ -16,14 +16,6 @@ public class CommonViewModel extends ViewModel {
 
     protected Bundle bundle;
     protected String EMAIL_BUNDLE_KEY = "EmailPreLogin";
-    protected final int MAX_SIZE_TOKEN = 6;
-    protected final Integer MAX_SIZE_NAME = 50;
-    protected final Integer MIN_SIZE_PASS = 6;
-    protected final Integer MAX_SIZE_PASS = 10;
-    protected final Integer MAX_SIZE_USERNAME = 15;
-    protected String REGEX_FOR_NAME = "^[\\p{L} .'-]+$";
-    protected String REGEX_ONLY_NUMBER_OR_LETTER = "[a-zA-Z0-9]+";
-    protected String REGEX_ONLY_NUMBER_AND_LETTER = "(?:\\d+[a-z]|[a-z]+\\d)[a-z\\d]*";
 
     protected String SUCCESS_RESEND_TOKEN = "Código reenviado com sucesso!";
     protected String SERVICE_OR_CONNECTION_ERROR_RESEND_TOKEN = "Falha ao reenviar o código. Verifique a conexão e tente novamente.";
@@ -66,74 +58,6 @@ public class CommonViewModel extends ViewModel {
     protected void changeEmail(String email){
         emailChanged.setValue(email);
     }
-    
-    protected boolean isValidName(String name) {
-        return validateName(name);
-    }
-
-    protected boolean validateName(String name) {
-        return (!name.isEmpty() && validateNameFormat(name));
-    }
-
-    protected boolean validateNameFormat(String name) {
-        return name.length() <= MAX_SIZE_NAME && name.matches(REGEX_FOR_NAME);
-    }
-
-    protected boolean isValidEmail(String email) {
-        return validateEmail(email);
-    }
-
-    protected boolean validateEmail(String email) {
-        return (!email.isEmpty() && validateEmailFormat(email));
-    }
-
-    protected boolean validateEmailFormat(final String email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    protected boolean isValidUserName(String username) {
-        return validateUserName(username);
-    }
-    protected boolean validateUserNameFormat(String userName) {
-        return userName.length() <= MAX_SIZE_USERNAME && userName.matches(REGEX_ONLY_NUMBER_OR_LETTER);
-    }
-
-    protected boolean validateUserName(String userName) {
-        return (!userName.isEmpty() && validateUserNameFormat(userName));
-    }
-
-    protected boolean isValidPassword(String password) {
-        return validatePassword(password);
-    }
-
-    protected boolean validatePassword(String password) {
-        return (!password.isEmpty() && validatePasswordFormat(password));
-    }
-
-
-    protected boolean isValidConfirmPassword(String newPassword,String confirmNewPassword){
-        return validateConfirmPassword(newPassword,confirmNewPassword);
-    }
-    
-    protected boolean validatePasswordFormat(String password) {
-        return password.length() >= MIN_SIZE_PASS && password.length() <= MAX_SIZE_PASS && password.matches(REGEX_ONLY_NUMBER_AND_LETTER);
-    }
-
-    protected boolean validateMatchNewPassword(String newPassword,String confirmNewPassword) {
-        return (newPassword.equals(confirmNewPassword));
-    }
-
-    protected boolean validateConfirmPassword(String newPassword,String confirmNewPassword) {
-        return (!confirmNewPassword.isEmpty() && validateMatchNewPassword(newPassword, confirmNewPassword));
-    }
-
-    protected boolean isValidToken(String code){
-        return validateTokenSize(code);
-    }
-
-    protected boolean validateTokenSize(String tokenEntered) {
-        return (tokenEntered.length() == MAX_SIZE_TOKEN);
-    }
 
     protected Observer<ResponseModel> tokenResendObserver = new Observer<ResponseModel>() {
         @Override
@@ -169,6 +93,3 @@ public class CommonViewModel extends ViewModel {
         }
     }
 }
-
-   
-

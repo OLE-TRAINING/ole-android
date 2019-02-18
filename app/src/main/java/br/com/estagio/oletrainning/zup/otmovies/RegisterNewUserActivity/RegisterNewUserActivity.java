@@ -3,24 +3,23 @@ package br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
-import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
-public class RegisterNewUserActivity extends AppCompatActivity {
+public class RegisterNewUserActivity extends CommonActivity {
 
     private RegisterNewUserViewHolder registerNewUserViewHolder;
     private RegisterNewUserViewModel registerNewUserViewModel;
-    private CommonMethodsActivities commonMethodsActivities;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +37,13 @@ public class RegisterNewUserActivity extends AppCompatActivity {
 
         registerNewUserViewModel.setBundle(bundle);
 
-        commonMethodsActivities = new CommonMethodsActivities();
-
-        commonMethodsActivities.hideKeyword(getWindow());
+        hideKeyword(getWindow());
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        commonMethodsActivities.colorStatusBar(this.getWindow(),
-                this,R.color.colorBackground,true);
+        colorStatusBar(this.getWindow(),R.color.colorBackground,true);
         setupListeners();
     }
 
@@ -87,7 +83,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            commonMethodsActivities.hideKeyboardFrom(RegisterNewUserActivity.this,
+            hideKeyboardFrom(RegisterNewUserActivity.this,
                     registerNewUserViewHolder.errorEditTextName);
             String name = registerNewUserViewHolder.errorEditTextName.getText().toString().trim();
             String username = registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim();
@@ -162,7 +158,7 @@ public class RegisterNewUserActivity extends AppCompatActivity {
         @Override
         public void onChanged(Boolean isLoading) {
             if (isLoading != null) {
-                commonMethodsActivities.loadingExecutor(
+                loadingExecutor(
                         isLoading,
                         registerNewUserViewHolder.progressBar,
                         getWindow(),

@@ -4,23 +4,21 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
-import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
-public class TokenValidationActivity extends AppCompatActivity {
+public class TokenValidationActivity extends CommonActivity {
 
     private TokenValidationViewHolder tokenValidationViewHolder;
     private TokenValidationViewModel tokenValidationViewModel;
-    private CommonMethodsActivities commonMethodsActivities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +36,13 @@ public class TokenValidationActivity extends AppCompatActivity {
 
         tokenValidationViewModel.setBundle(bundle);
 
-        commonMethodsActivities = new CommonMethodsActivities();
-
-        commonMethodsActivities.hideKeyword(getWindow());
+        hideKeyword(getWindow());
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        commonMethodsActivities.colorStatusBar(this.getWindow(),
-                this,R.color.colorBackground,true);
+        colorStatusBar(this.getWindow(),R.color.colorBackground,true);
         setupListeners();
     }
 
@@ -114,7 +109,7 @@ public class TokenValidationActivity extends AppCompatActivity {
         @Override
         public void onChanged(@Nullable Boolean isLoading) {
             if (isLoading != null) {
-                commonMethodsActivities.loadingExecutor(
+                loadingExecutor(
                         isLoading,
                         tokenValidationViewHolder.progressBar,
                         getWindow(),
@@ -126,7 +121,7 @@ public class TokenValidationActivity extends AppCompatActivity {
     View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            commonMethodsActivities.hideKeyboardFrom(TokenValidationActivity.this,
+            hideKeyboardFrom(TokenValidationActivity.this,
                     tokenValidationViewHolder.errorEditText);
             String code = tokenValidationViewHolder.errorEditText.getEditText().getText().toString().trim();
             tokenValidationViewModel.tokenEntered(code);

@@ -7,16 +7,19 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Email;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 
 public class PreLoginViewModel extends CommonViewModel {
 
+    private Email email;
     private String REGISTERED = "REGISTERED";
     private String PENDING = "PENDING";
     private String INEXISTENT = "INEXISTENT";
     private String ERROR_INVALID_EMAIL = "error.invalid.email";
     private String ERROR_SERVICE_OR_CONNECTION_EMAIL = "Falha ao validar seu email. Verifique a conexão e tente novamente.";
+
 
     private UserRepository repository = new UserRepository();
 
@@ -44,10 +47,11 @@ public class PreLoginViewModel extends CommonViewModel {
         emailContainsErrorStatus.postValue(false);
     }
 
-    public void emailEntered(String email) {
-        emailContainsErrorStatus.postValue(!validateEmail(email));
-        if (isValidEmail(email)) {
-            executeServiceCallGetUserData(email);
+    public void emailEntered(String emailEntered) {
+        email = new Email(emailEntered);
+        emailContainsErrorStatus.postValue(!email.validateEmail());
+        if (email.isValidEmail()) {
+            executeServiceCallGetUserData(emailEntered);
         }
     }
 
