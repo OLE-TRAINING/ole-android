@@ -79,9 +79,12 @@ public class TokenValidationViewModel extends CommonViewModel {
         tokenValidation.observeForever(tokenValidationObserver);
     }
 
+    @Override
     public void removeObserver() {
-        if (tokenValidation != null) {
+        super.removeObserver();
+        if (tokenValidation != null && tokenResend != null) {
             tokenValidation.removeObserver(tokenValidationObserver);
+            tokenResend.removeObserver(tokenResendObserver);
         }
     }
 }

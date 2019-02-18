@@ -180,6 +180,5 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         finishYourRegistrationViewModel.removeObserver();
-        finishYourRegistrationViewModel.removeTokenResendObserver();
     }
 }

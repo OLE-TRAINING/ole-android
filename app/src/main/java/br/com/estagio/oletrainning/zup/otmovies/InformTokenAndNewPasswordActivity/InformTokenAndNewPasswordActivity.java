@@ -265,6 +265,5 @@ public class InformTokenAndNewPasswordActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         informTokenAndNewPasswordViewModel.removeObserver();
-        informTokenAndNewPasswordViewModel.removeTokenResendObserver();
     }
 }

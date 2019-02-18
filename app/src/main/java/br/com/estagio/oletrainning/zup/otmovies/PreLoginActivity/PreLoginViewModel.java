@@ -84,7 +84,9 @@ public class PreLoginViewModel extends CommonViewModel {
         userData.observeForever(getUserResponseObserver);
     }
 
+    @Override
     public void removeObserver() {
+        super.removeObserver();
         if (userData != null) {
             userData.removeObserver(getUserResponseObserver);
         }

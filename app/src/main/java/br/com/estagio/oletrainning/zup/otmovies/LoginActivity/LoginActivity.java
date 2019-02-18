@@ -215,6 +215,5 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         loginViewModel.removeObserver();
-        loginViewModel.removeTokenResendObserver();
     }
 }

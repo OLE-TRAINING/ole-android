@@ -139,9 +139,11 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
         validateTokenAndChangePass.observeForever(serviceValidateTokenAndChangePassObserver);
     }
 
+    @Override
     public void removeObserver() {
-        if (validateTokenAndChangePass != null) {
+        if (validateTokenAndChangePass != null && tokenResend != null) {
             validateTokenAndChangePass.removeObserver(serviceValidateTokenAndChangePassObserver);
+            tokenResend.removeObserver(tokenResendObserver);
         }
     }
 }

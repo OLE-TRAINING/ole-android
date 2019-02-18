@@ -163,7 +163,7 @@ public class CommonViewModel extends ViewModel {
         executeServiceTokenResend(email);
     }
 
-    public void removeTokenResendObserver() {
+    public void removeObserver() {
         if (tokenResend != null) {
             tokenResend.removeObserver(tokenResendObserver);
         }

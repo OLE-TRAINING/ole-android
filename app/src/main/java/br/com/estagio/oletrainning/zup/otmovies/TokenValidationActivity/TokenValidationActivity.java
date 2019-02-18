@@ -179,6 +179,5 @@ public class TokenValidationActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         tokenValidationViewModel.removeObserver();
-        tokenValidationViewModel.removeTokenResendObserver();
     }
 }

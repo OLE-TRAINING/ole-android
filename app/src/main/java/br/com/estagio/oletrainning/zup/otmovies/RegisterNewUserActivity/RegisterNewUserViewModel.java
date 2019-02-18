@@ -136,7 +136,9 @@ public class RegisterNewUserViewModel extends CommonViewModel {
         registerUser.observeForever(responseRegisterUserObserver);
     }
 
+    @Override
     public void removeObserver() {
+        super.removeObserver();
         if (registerUser != null) {
             registerUser.removeObserver(responseRegisterUserObserver);
         }

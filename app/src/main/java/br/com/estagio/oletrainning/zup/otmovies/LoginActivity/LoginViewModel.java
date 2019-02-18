@@ -104,7 +104,9 @@ public class LoginViewModel extends CommonViewModel {
         passwordValidation.observeForever(passwordValidationObserver);
     }
 
+    @Override
     public void removeObserver() {
+        super.removeObserver();
         if (passwordValidation != null) {
             passwordValidation.removeObserver(passwordValidationObserver);
         }
