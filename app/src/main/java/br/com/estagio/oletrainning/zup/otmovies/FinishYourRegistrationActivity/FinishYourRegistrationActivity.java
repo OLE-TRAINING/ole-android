@@ -9,21 +9,19 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
+
 
 public class FinishYourRegistrationActivity extends AppCompatActivity {
 
     private FinishYourRegistrationViewHolder finishYourRegistrationViewHolder;
     private FinishYourRegistrationViewModel finishYourRegistrationViewModel;
+    private CommonMethodsActivities commonMethodsActivities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,28 +31,25 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
         this.finishYourRegistrationViewHolder = new FinishYourRegistrationViewHolder(view);
         setContentView(view);
 
-        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-        finishYourRegistrationViewHolder.textViewEmail.setText(emailAdd);
-
         finishYourRegistrationViewModel = ViewModelProviders.of(this).get(FinishYourRegistrationViewModel.class);
 
         setupObservers();
-    }
 
-    private void colorStatusBar() {
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(getColor(R.color.colorBackground));
-        View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        Bundle bundle = getIntent().getExtras();
+
+        finishYourRegistrationViewModel.setBundle(bundle);
+
+        commonMethodsActivities = new CommonMethodsActivities();
+
+        commonMethodsActivities.hideKeyword(getWindow());
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        commonMethodsActivities.colorStatusBar(this.getWindow(),
+                this,R.color.colorBackground,true);
         setupListeners();
-        colorStatusBar();
     }
 
     private void setupListeners() {
@@ -67,7 +62,44 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
     private void setupObservers() {
         finishYourRegistrationViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
         finishYourRegistrationViewModel.getIsLoading().observe(this, progressBarObserver);
+        finishYourRegistrationViewModel.getEmailChanged().observe(this, emailChangedObserver);
+        finishYourRegistrationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        finishYourRegistrationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
+        finishYourRegistrationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
     }
+
+    private Observer<String> messageErrorChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String message) {
+            finishYourRegistrationViewHolder.errorEditText.setMessageError(message);
+            finishYourRegistrationViewHolder.errorEditText.setErrorVisibility(true);
+        }
+    };
+
+    private Observer<String> isValidatedTokenObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(FinishYourRegistrationActivity.this, message, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(FinishYourRegistrationActivity.this, LoginActivity.class);
+            String emailInput = finishYourRegistrationViewHolder.textViewEmail.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
+
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(FinishYourRegistrationActivity.this, message, Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private Observer<String> emailChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String email) {
+            finishYourRegistrationViewHolder.textViewEmail.setText(email);
+        }
+    };
 
     private Observer<Boolean> tokenErrorStatusObserver = new Observer<Boolean>() {
         @Override
@@ -83,67 +115,31 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
         @Override
         public void onChanged(@Nullable Boolean isLoading) {
             if (isLoading != null) {
-                if (isLoading) {
-                    finishYourRegistrationViewHolder.progressBar.setVisibility(View.VISIBLE);
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    new SyncProgressBar(FinishYourRegistrationActivity.this, finishYourRegistrationViewHolder.progressBar).execute();
-                } else {
-                    finishYourRegistrationViewHolder.progressBar.setProgress(100);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    finishYourRegistrationViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                }
+                commonMethodsActivities.loadingExecutor(
+                        isLoading,
+                        finishYourRegistrationViewHolder.progressBar,
+                        getWindow(),
+                        FinishYourRegistrationActivity.this);
             }
         }
     };
 
-    Observer<ResponseModel> serviceCallTokenValidation = new Observer<ResponseModel>() {
+    View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            finishYourRegistrationViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(FinishYourRegistrationActivity.this, getString(R.string.success_message_validate_token), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(FinishYourRegistrationActivity.this, LoginActivity.class);
-                    String emailInput = finishYourRegistrationViewHolder.textViewEmail.getText().toString().trim();
-                    intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                    startActivity(intent);
-                } else {
-                    ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
-                    if (errorMessage.getKey().equals(getString(R.string.unauthorized_token_key))) {
-                        finishYourRegistrationViewHolder.errorEditText.setMessageError(errorMessage.getMessage());
-                        finishYourRegistrationViewHolder.errorEditText.setErrorVisibility(true);
-                    } else if (errorMessage.getKey().equals(getString(R.string.invalid_token_key))) {
-                        finishYourRegistrationViewHolder.errorEditText.setMessageError(errorMessage.getMessage());
-                        finishYourRegistrationViewHolder.errorEditText.setErrorVisibility(true);
-                    } else {
-                        Toast.makeText(FinishYourRegistrationActivity.this, errorMessage.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(FinishYourRegistrationActivity.this, getString(R.string.service_or_connection_error_validate_token), Toast.LENGTH_LONG).show();
-            }
+        public void onClick(View v) {
+            commonMethodsActivities.hideKeyboardFrom(FinishYourRegistrationActivity.this,
+                    finishYourRegistrationViewHolder.errorEditText);
+            String code = finishYourRegistrationViewHolder.errorEditText.getEditText().getText().toString().trim();
+            finishYourRegistrationViewModel.tokenEntered(code);
         }
     };
 
-    Observer<ResponseModel> serviceCallResendObserver = new Observer<ResponseModel>() {
+    View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            finishYourRegistrationViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(FinishYourRegistrationActivity.this, getString(R.string.success_resend_token), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(FinishYourRegistrationActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(FinishYourRegistrationActivity.this, getString(R.string.service_or_connection_error_resend_token), Toast.LENGTH_LONG).show();
-            }
+        public void onClick(View v) {
+            finishYourRegistrationViewModel.tokenForwardingRequested();
         }
     };
-
 
     View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
         @Override
@@ -152,28 +148,6 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
             if (id == R.id.imageView_backArrow) {
                 Intent intent = new Intent(FinishYourRegistrationActivity.this, PreLoginActivity.class);
                 startActivity(intent);
-            }
-
-        }
-    };
-
-    View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            callTokenResend();
-        }
-    };
-
-    View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            String email = finishYourRegistrationViewHolder.textViewEmail.getText().toString().trim();
-            String code = finishYourRegistrationViewHolder.errorEditText.getEditText().getText().toString().trim();
-            finishYourRegistrationViewModel.tokenEntered(code);
-            if (finishYourRegistrationViewModel.isValidToken(code)) {
-                finishYourRegistrationViewModel.serviceStarting();
-                finishYourRegistrationViewModel.tokenValidation(email, code)
-                        .observe(FinishYourRegistrationActivity.this, serviceCallTokenValidation);
             }
         }
     };
@@ -195,17 +169,16 @@ public class FinishYourRegistrationActivity extends AppCompatActivity {
         }
     };
 
-    private void callTokenResend() {
-        String email = finishYourRegistrationViewHolder.textViewEmail.getText().toString().trim();
-        finishYourRegistrationViewModel.serviceStarting();
-        finishYourRegistrationViewModel.resendToken(email)
-                .observe(FinishYourRegistrationActivity.this, serviceCallResendObserver);
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(FinishYourRegistrationActivity.this, PreLoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finishYourRegistrationViewModel.removeObserver();
     }
 }

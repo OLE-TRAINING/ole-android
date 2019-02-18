@@ -9,21 +9,20 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewHolder loginViewHolder;
     private LoginViewModel loginViewModel;
+    private CommonMethodsActivities commonMethodsActivities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,28 +34,15 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
-        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-        loginViewHolder.textViewEmailEntered.setText(emailAdd);
-
         setupObservers();
-    }
 
-    private void colorStatusBarBackground(){
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(getColor(R.color.colorBackground));
-        View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-    }
+        Bundle bundle = getIntent().getExtras();
 
-    private void colorStatusBarRed(){
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.GONE);
-        window.setStatusBarColor(getColor(R.color.colorRed));
+        loginViewModel.setBundle(bundle);
+
+        commonMethodsActivities = new CommonMethodsActivities();
+
+        commonMethodsActivities.hideKeyword(getWindow());
     }
 
     @Override
@@ -66,9 +52,24 @@ public class LoginActivity extends AppCompatActivity {
         setupListeners();
     }
 
+    private void colorStatusBarBackground(){
+        commonMethodsActivities.colorStatusBar(this.getWindow(),
+                this,R.color.colorBackground,true);
+    }
+
+    private void colorStatusBarRed(){
+        commonMethodsActivities.colorStatusBar(this.getWindow(),
+                this,R.color.colorRed,false);
+    }
+
     private void setupObservers() {
         loginViewModel.getPasswordContainsErrorStatus().observe(this, passwordContainsErrorObserver);
         loginViewModel.getIsLoading().observe(this, progressBarObserver);
+        loginViewModel.getEmailChanged().observe(this,emailChangedObserver);
+        loginViewModel.getIsValidatedPassword().observe(this,isValidatedPasswordObserver);
+        loginViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
+        loginViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        loginViewModel.getForwardedToken().observe(this,forwardedTokenObserver);
     }
 
     private void setupListeners() {
@@ -78,6 +79,52 @@ public class LoginActivity extends AppCompatActivity {
         loginViewHolder.errorEditTextPassword.getEditText().addTextChangedListener(editTextPasswordTextChangedListener);
         loginViewHolder.textViewForgetPassword.setOnClickListener(textViewForgetPasswordOnClickListener);
     }
+
+    private Observer<String> forwardedTokenObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String message) {
+            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
+            String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
+
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private Observer<String> messageErrorChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            loginViewHolder.textViewRedToast.setText(message);
+            loginViewModel.setPasswordContainsErrorStatus(true);
+        }
+    };
+
+    private Observer<String> isValidatedPasswordObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            loginViewModel.setPasswordContainsErrorStatus(false);
+            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
+
+    private Observer<String> emailChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String email) {
+            loginViewHolder.textViewEmailEntered.setText(email);
+        }
+    };
+
 
     private Observer<Boolean> passwordContainsErrorObserver = new Observer<Boolean>() {
         @Override
@@ -102,16 +149,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onChanged(@Nullable Boolean isLoading) {
             if (isLoading != null) {
-                if (isLoading) {
-                    loginViewHolder.progressBar.setVisibility(View.VISIBLE);
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    new SyncProgressBar(LoginActivity.this, loginViewHolder.progressBar).execute();
-                } else {
-                    loginViewHolder.progressBar.setProgress(100);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    loginViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                }
+                commonMethodsActivities.loadingExecutor(
+                        isLoading,
+                        loginViewHolder.progressBar,
+                        getWindow(),
+                        LoginActivity.this);
             }
         }
     };
@@ -119,64 +161,14 @@ public class LoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String email = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
+            commonMethodsActivities.hideKeyboardFrom(LoginActivity.this,
+                    loginViewHolder.errorEditTextPassword);
             String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
             loginViewModel.passwordEntered(password);
-            if (loginViewModel.isValidPassword(password)) {
-                loginViewModel.serviceStarting();
-                loginViewModel.passwordValidation(email, password)
-                        .observe(LoginActivity.this, serviceCallPassValidationObserver);
-            }
         }
     };
 
-    Observer<ResponseModel> serviceCallPassValidationObserver = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            loginViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    loginViewModel.setPasswordContainsErrorStatus(false);
-                    Toast.makeText(LoginActivity.this, getString(R.string.success_message_login), Toast.LENGTH_LONG).show();
-                } else {
-                    String key = responseModel.getKey();
-                    String message = responseModel.getMessage();
-                    if (loginViewModel.isMessageToPutInTopToast(key)) {
-                        loginViewHolder.textViewRedToast.setText(message);
-                        loginViewModel.setPasswordContainsErrorStatus(true);
-                    } else {
-                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(LoginActivity.this, getString(R.string.service_or_connection_error_login), Toast.LENGTH_LONG).show();
-            }
-        }
-
-    };
-
-    Observer<ResponseModel> serviceCallResendObserver = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            loginViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(LoginActivity.this, getString(R.string.success_message_email), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
-                    String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
-                    intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(LoginActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(LoginActivity.this, getString(R.string.service_or_connection_error_token), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-
-    View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener backArrowOnClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -188,10 +180,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    View.OnClickListener textViewForgetPasswordOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener textViewForgetPasswordOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            callTokenResend();
+            loginViewModel.tokenForwardingRequested();
         }
     };
 
@@ -212,17 +204,16 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private void callTokenResend() {
-        String email = loginViewHolder.textViewEmailEntered.getText().toString().trim();
-        loginViewModel.serviceStarting();
-        loginViewModel.resendToken(email)
-                .observe(LoginActivity.this, serviceCallResendObserver);
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loginViewModel.removeObserver();
     }
 }

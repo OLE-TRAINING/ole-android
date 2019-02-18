@@ -30,7 +30,7 @@ public class UserRepository {
         userServices= RetrofitServiceBuilder.buildService(UserServices.class);
     }
 
-    public LiveData<ResponseModel> getUserDate(String email) {
+    public LiveData<ResponseModel> getUserData(String email) {
         final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
         userServices.getUsersDate(email)
                 .enqueue(new Callback<ResponseModel>() {

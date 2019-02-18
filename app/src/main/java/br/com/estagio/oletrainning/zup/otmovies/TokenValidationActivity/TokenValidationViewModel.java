@@ -2,53 +2,38 @@ package br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
 
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 
-public class TokenValidationViewModel extends ViewModel {
+public class TokenValidationViewModel extends CommonViewModel {
 
-    private ValidationRepository repository = new ValidationRepository();
+    private String SUCCESS_MESSAGE_VALIDATE_TOKEN = "Código confirmado com sucesso!";
+    private String UNAUTHORIZED_TOKEN_KEY = "error.unauthorized.token";
+    private String INVALID_TOKEN_KEY = "error.invalid.token";
+    private String SERVICE_OR_CONNECTION_ERROR_VALIDATE_TOKEN = "Falha ao validar o código. Verifique a conexão e tente novamente.";
 
-    private final int MAX_SIZE_TOKEN = 6;
+    private LiveData<ResponseModel> tokenValidation;
 
     private MutableLiveData<Boolean> tokenContainsErrorStatus = new MutableLiveData<>();
 
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private MutableLiveData<String> messageErrorChanged = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> getIsLoading() {
-        return isLoading;
+    private MutableLiveData<String> isValidatedToken = new MutableLiveData<>();
+
+    public MutableLiveData<String> getIsValidatedToken() {
+        return isValidatedToken;
     }
 
-    private LiveData<ResponseModel> tokenResponseObservable;
-
-    private LiveData<ResponseModel> tokenresendResponseObservable;
+    public MutableLiveData<String> getMessageErrorChanged() {
+        return messageErrorChanged;
+    }
 
     public MutableLiveData<Boolean> getTokenContainsErrorStatus() {
         return tokenContainsErrorStatus;
-    }
-
-    public LiveData<ResponseModel> tokenValidation(String email, String code) {
-        tokenResponseObservable = repository.confirmToken(email,code);
-        return tokenResponseObservable;
-    }
-
-    public LiveData<ResponseModel> resendToken(String email) {
-        tokenresendResponseObservable = repository.resendToken(email);
-        return tokenresendResponseObservable;
-    }
-
-    private boolean validateTokenSize(String tokenEntered) {
-        return (tokenEntered.length() == MAX_SIZE_TOKEN);
-    }
-
-    public void serviceStarting(){
-        isLoading.postValue(true);
-    }
-
-    public void serviceEnding(){
-        isLoading.postValue(false);
     }
 
     public void tokenTextChanged(){
@@ -57,9 +42,49 @@ public class TokenValidationViewModel extends ViewModel {
 
     public void tokenEntered(String code){
         tokenContainsErrorStatus.postValue(!validateTokenSize(code));
+        if (isValidToken(code)) {
+            String email = bundle.getString(EMAIL_BUNDLE_KEY);
+            executeServiceTokenValidation(email,code);
+        }
     }
 
-    public boolean isValidToken(String code){
-        return validateTokenSize(code);
+    private Observer<ResponseModel> tokenValidationObserver = new Observer<ResponseModel>() {
+        @Override
+        public void onChanged(@Nullable ResponseModel responseModel) {
+            isLoading.setValue(false);
+            if (responseModel != null) {
+                if (responseModel.getCode() == 200) {
+                    getIsValidatedToken().setValue(SUCCESS_MESSAGE_VALIDATE_TOKEN);
+                } else {
+                    ErrorMessage errorMessage = new ErrorMessage();
+                    errorMessage.setKey(responseModel.getKey());
+                    errorMessage.setMessage(responseModel.getMessage());
+                    if(errorMessage.getKey().equals(UNAUTHORIZED_TOKEN_KEY)){
+                        getMessageErrorChanged().setValue(errorMessage.getMessage());
+                    } else if (errorMessage.getKey().equals(INVALID_TOKEN_KEY)) {
+                        getMessageErrorChanged().setValue(errorMessage.getMessage());
+                    } else{
+                        getIsErrorMessageForToast().setValue(errorMessage.getMessage());
+                    }
+                }
+            } else {
+                getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_VALIDATE_TOKEN);
+            }
+        }
+    };
+
+    private void executeServiceTokenValidation(String email,String code) {
+        isLoading.setValue(true);
+        tokenValidation = validationRepository.confirmToken(email,code);
+        tokenValidation.observeForever(tokenValidationObserver);
+    }
+
+    @Override
+    public void removeObserver() {
+        super.removeObserver();
+        if (tokenValidation != null && tokenResend != null) {
+            tokenValidation.removeObserver(tokenValidationObserver);
+            tokenResend.removeObserver(tokenResendObserver);
+        }
     }
 }

@@ -1,13 +1,5 @@
 package br.com.estagio.oletrainning.zup.otmovies.Services.Model;
 
-import android.content.Intent;
-import android.widget.Toast;
-
-import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
-import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-
 public class UserData {
 
     private String email;
@@ -30,6 +22,10 @@ public class UserData {
 
     public String getRegistrationStatus() {
         return registrationStatus;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setRegistrationStatus(String registrationStatus) {

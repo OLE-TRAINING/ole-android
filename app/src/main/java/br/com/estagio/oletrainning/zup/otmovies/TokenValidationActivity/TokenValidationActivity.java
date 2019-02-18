@@ -9,22 +9,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 
 public class TokenValidationActivity extends AppCompatActivity {
 
     private TokenValidationViewHolder tokenValidationViewHolder;
-
     private TokenValidationViewModel tokenValidationViewModel;
+    private CommonMethodsActivities commonMethodsActivities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,27 +30,24 @@ public class TokenValidationActivity extends AppCompatActivity {
         this.tokenValidationViewHolder = new TokenValidationViewHolder(view);
         setContentView(view);
 
-        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
-        tokenValidationViewHolder.textViewEmail.setText(emailAdd);
-
         tokenValidationViewModel = ViewModelProviders.of(this).get(TokenValidationViewModel.class);
 
         setupObservers();
-    }
 
-    private void colorStatusBar(){
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(getColor(R.color.colorBackground));
-        View decor = getWindow().getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        Bundle bundle = getIntent().getExtras();
+
+        tokenValidationViewModel.setBundle(bundle);
+
+        commonMethodsActivities = new CommonMethodsActivities();
+
+        commonMethodsActivities.hideKeyword(getWindow());
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        colorStatusBar();
+        commonMethodsActivities.colorStatusBar(this.getWindow(),
+                this,R.color.colorBackground,true);
         setupListeners();
     }
 
@@ -68,7 +61,44 @@ public class TokenValidationActivity extends AppCompatActivity {
     private void setupObservers() {
         tokenValidationViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
         tokenValidationViewModel.getIsLoading().observe(this, progressBarObserver);
+        tokenValidationViewModel.getEmailChanged().observe(this, emailChangedObserver);
+        tokenValidationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        tokenValidationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
+        tokenValidationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
     }
+
+    private Observer<String> messageErrorChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String message) {
+            tokenValidationViewHolder.errorEditText.setMessageError(message);
+            tokenValidationViewHolder.errorEditText.setErrorVisibility(true);
+        }
+    };
+
+    private Observer<String> isValidatedTokenObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(TokenValidationActivity.this, message, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(TokenValidationActivity.this, LoginActivity.class);
+            String emailInput = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
+            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
+            startActivity(intent);
+        }
+    };
+
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            Toast.makeText(TokenValidationActivity.this, message, Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private Observer<String> emailChangedObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String email) {
+            tokenValidationViewHolder.textViewEmail.setText(email);
+        }
+    };
 
     private Observer<Boolean> tokenErrorStatusObserver = new Observer<Boolean>() {
         @Override
@@ -84,63 +114,11 @@ public class TokenValidationActivity extends AppCompatActivity {
         @Override
         public void onChanged(@Nullable Boolean isLoading) {
             if (isLoading != null) {
-                if (isLoading) {
-                    tokenValidationViewHolder.progressBar.setVisibility(View.VISIBLE);
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    new SyncProgressBar(TokenValidationActivity.this, tokenValidationViewHolder.progressBar).execute();
-                } else {
-                    tokenValidationViewHolder.progressBar.setProgress(100);
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    tokenValidationViewHolder.progressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-        }
-    };
-
-    Observer<ResponseModel> serviceCallTokenValidation = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            tokenValidationViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(TokenValidationActivity.this,getString(R.string.success_message_validate_token), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(TokenValidationActivity.this, LoginActivity.class);
-                    String emailInput = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
-                    intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
-                    startActivity(intent);
-                } else {
-                    ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
-                    if(errorMessage.getKey().equals(getString(R.string.unauthorized_token_key))){
-                        tokenValidationViewHolder.errorEditText.setMessageError(errorMessage.getMessage());
-                        tokenValidationViewHolder.errorEditText.setErrorVisibility(true);
-                    } else if (errorMessage.getKey().equals(getString(R.string.invalid_token_key))) {
-                        tokenValidationViewHolder.errorEditText.setMessageError(errorMessage.getMessage());
-                        tokenValidationViewHolder.errorEditText.setErrorVisibility(true);
-                    } else{
-                        Toast.makeText(TokenValidationActivity.this, errorMessage.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(TokenValidationActivity.this, getString(R.string.service_or_connection_error_validate_token), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    Observer<ResponseModel> serviceCallResendObserver = new Observer<ResponseModel>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
-            tokenValidationViewModel.serviceEnding();
-            if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    Toast.makeText(TokenValidationActivity.this,getString(R.string.success_resend_token), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(TokenValidationActivity.this, responseModel.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(TokenValidationActivity.this, getString(R.string.service_or_connection_error_resend_token), Toast.LENGTH_LONG).show();
+                commonMethodsActivities.loadingExecutor(
+                        isLoading,
+                        tokenValidationViewHolder.progressBar,
+                        getWindow(),
+                        TokenValidationActivity.this);
             }
         }
     };
@@ -148,21 +126,17 @@ public class TokenValidationActivity extends AppCompatActivity {
     View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String email = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
+            commonMethodsActivities.hideKeyboardFrom(TokenValidationActivity.this,
+                    tokenValidationViewHolder.errorEditText);
             String code = tokenValidationViewHolder.errorEditText.getEditText().getText().toString().trim();
             tokenValidationViewModel.tokenEntered(code);
-            if(tokenValidationViewModel.isValidToken(code)) {
-                tokenValidationViewModel.serviceStarting();
-                tokenValidationViewModel.tokenValidation(email,code)
-                        .observe(TokenValidationActivity.this, serviceCallTokenValidation);
-            }
         }
     };
 
     View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            callTokenResend();
+            tokenValidationViewModel.tokenForwardingRequested();
         }
     };
 
@@ -194,17 +168,16 @@ public class TokenValidationActivity extends AppCompatActivity {
         }
     };
 
-    private void callTokenResend(){
-        String email = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
-        tokenValidationViewModel.serviceStarting();
-        tokenValidationViewModel.resendToken(email)
-                .observe(TokenValidationActivity.this, serviceCallResendObserver);
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(TokenValidationActivity.this, PreLoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tokenValidationViewModel.removeObserver();
     }
 }
