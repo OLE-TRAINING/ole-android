@@ -9,6 +9,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Token;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
 public class TokenValidationViewModel extends CommonViewModel {
 
@@ -18,7 +19,7 @@ public class TokenValidationViewModel extends CommonViewModel {
     private String INVALID_TOKEN_KEY = "error.invalid.token";
     private String SERVICE_OR_CONNECTION_ERROR_VALIDATE_TOKEN = "Falha ao validar o código. Verifique a conexão e tente novamente.";
 
-    private LiveData<ResponseModel> tokenValidation;
+    private LiveData<ResponseModel<UserData>> tokenValidation;
 
     private MutableLiveData<Boolean> tokenContainsErrorStatus = new MutableLiveData<>();
 
@@ -51,17 +52,17 @@ public class TokenValidationViewModel extends CommonViewModel {
         }
     }
 
-    private Observer<ResponseModel> tokenValidationObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel<UserData>> tokenValidationObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsValidatedToken().setValue(SUCCESS_MESSAGE_VALIDATE_TOKEN);
                 } else {
                     ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
+                    errorMessage.setKey(responseModel.getErrorMessage().getKey());
+                    errorMessage.setMessage(responseModel.getErrorMessage().getMessage());
                     if(errorMessage.getKey().equals(UNAUTHORIZED_TOKEN_KEY)){
                         getMessageErrorChanged().setValue(errorMessage.getMessage());
                     } else if (errorMessage.getKey().equals(INVALID_TOKEN_KEY)) {

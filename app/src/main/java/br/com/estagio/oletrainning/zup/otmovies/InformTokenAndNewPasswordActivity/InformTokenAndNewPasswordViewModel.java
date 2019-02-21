@@ -11,6 +11,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Password;
 import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Token;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
 
 public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
@@ -39,7 +40,7 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
 
     private MutableLiveData<Boolean> showPasswordConfirmationInput = new MutableLiveData<>();
 
-    private LiveData<ResponseModel> validateTokenAndChangePass;
+    private LiveData<ResponseModel<UserData>> validateTokenAndChangePass;
 
     public MutableLiveData<Boolean> getShowPasswordConfirmationInput() {
         return showPasswordConfirmationInput;
@@ -118,16 +119,16 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
                 || key.equals(ERROR_RESOURCE_TOKEN_KEY));
     }
 
-    private Observer<ResponseModel> serviceValidateTokenAndChangePassObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel<UserData>> serviceValidateTokenAndChangePassObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getPasswordChanged().setValue(SUCCESS_MESSAGE_CHANGE_PASS);
                 } else {
-                    String key = responseModel.getKey();
-                    String message = responseModel.getMessage();
+                    String key = responseModel.getErrorMessage().getKey();
+                    String message = responseModel.getErrorMessage().getMessage();
                     if (isErrorMessageKeyToPasswordInput(key)) {
                         getIsErrorMessageToPasswordInput().setValue(message);
                     } else if (isErrorMessageKeyToTokenInput(key)) {

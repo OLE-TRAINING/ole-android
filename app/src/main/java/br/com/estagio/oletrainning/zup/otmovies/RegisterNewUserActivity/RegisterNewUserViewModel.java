@@ -24,7 +24,7 @@ public class RegisterNewUserViewModel extends CommonViewModel {
 
     private UserRepository repository = new UserRepository();
 
-    private LiveData<ResponseModel> registerUser;
+    private LiveData<ResponseModel<UserData>> registerUser;
 
     private MutableLiveData<Boolean> nameContainsErrorStatus = new MutableLiveData<>();
 
@@ -103,17 +103,17 @@ public class RegisterNewUserViewModel extends CommonViewModel {
         passwordContainsErrorStatus.postValue(false);
     }
 
-    private Observer<ResponseModel> responseRegisterUserObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel<UserData>> responseRegisterUserObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsRegistered().setValue(SUCCESSFULLY_REGISTERED);
                 } else {
                     ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
+                    errorMessage.setKey(responseModel.getErrorMessage().getKey());
+                    errorMessage.setMessage(responseModel.getErrorMessage().getMessage());
                     switch (errorMessage.getKey()) {
                         case "error.invalid.name":
                             getIsInvalidName().setValue(true);

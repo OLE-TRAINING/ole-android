@@ -11,7 +11,7 @@ import retrofit2.http.Path;
 public interface UserServices {
 
     @GET("users/{email}")
-    Call<ResponseModel> getUsersDate(@Path("email") String email);
+    Call<ResponseModel<UserData>> getUsersDate(@Path("email") String email);
 
     @POST("users")
     Call <Void> userRegister(@Body UserData newUser);
