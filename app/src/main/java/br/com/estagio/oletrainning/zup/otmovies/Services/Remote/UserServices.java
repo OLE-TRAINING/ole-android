@@ -1,6 +1,5 @@
 package br.com.estagio.oletrainning.zup.otmovies.Services.Remote;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import retrofit2.Call;
 import retrofit2.http.Body;

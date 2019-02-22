@@ -15,24 +15,12 @@ public class BodyChangePassword {
         this.email = email;
     }
 
-    public String getConfirmationToken() {
-        return confirmationToken;
-    }
-
     public void setConfirmationToken(String confirmationToken) {
         this.confirmationToken = confirmationToken;
     }
 
-    public String getNewPassword() {
-        return newPassword;
-    }
-
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
-    }
-
-    public String getNewPasswordConfirmation() {
-        return newPasswordConfirmation;
     }
 
     public void setNewPasswordConfirmation(String newPasswordConfirmation) {

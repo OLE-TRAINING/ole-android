@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.ValidationServices;

@@ -59,6 +59,7 @@ public class LoginViewModel extends CommonViewModel {
     @Override
     public void tokenForwardingRequested() {
         super.tokenForwardingRequested();
+        passwordContainsErrorStatus.setValue(false);
         changeSuccessMessageResendToken();
         String email = bundle.getString(EMAIL_BUNDLE_KEY);
         executeServiceTokenResend(email);
