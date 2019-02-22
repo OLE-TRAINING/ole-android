@@ -13,6 +13,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.UserServices;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,46 +31,56 @@ public class UserRepository {
         userServices= RetrofitServiceBuilder.buildService(UserServices.class);
     }
 
-    public LiveData<ResponseModel> getUserData(String email) {
-        final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
+    public LiveData<ResponseModel<UserData>> getUserData(String email) {
+        final MutableLiveData<ResponseModel<UserData>> data = new MutableLiveData<>();
         userServices.getUsersDate(email)
-                .enqueue(new Callback<ResponseModel>() {
+                .enqueue(new Callback<UserData>() {
                     @Override
-                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                    public void onResponse(Call<UserData> call, Response<UserData> response) {
+                        ResponseModel<UserData> responseModel = new ResponseModel<>();
                         if(response.code() == SUCCESS_CODE){
-                            data.setValue(response.body());
+                            responseModel.setResponse(response.body());
                         } else {
                             if(response.errorBody() != null){
-                                data.setValue(serializeErrorBody(response));
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
                             } else {
-                                data.setValue(setMessage(UNEXPECTED_ERROR_KEY,UNEXPECTED_ERROR_MESSAGE));
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
                             }
                         }
+                        data.setValue(responseModel);
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                    public void onFailure(Call<UserData> call, Throwable t) {
                         data.setValue(null);
                     }
                 });
         return data;
     }
 
-    public LiveData<ResponseModel> postUserRegister (UserData userData) {
-        final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
+    public LiveData<ResponseModel<UserData>> postUserRegister (UserData userData) {
+        final MutableLiveData<ResponseModel<UserData>> data = new MutableLiveData<>();
         userServices.userRegister(userData)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
+                        ResponseModel<UserData> responseModel = new ResponseModel<>();
                         if((response.code() == SUCCESS_CODE)) {
-                            data.setValue(setCode(response.code()));
+                            responseModel.setCode(response.code());
                         } else{
                             if(response.errorBody() != null){
-                                data.setValue(serializeErrorBody(response));
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
                             } else {
-                                data.setValue(setMessage(UNEXPECTED_ERROR_KEY,UNEXPECTED_ERROR_MESSAGE));
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
                             }
                         }
+                        data.setValue(responseModel);
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
@@ -79,27 +90,10 @@ public class UserRepository {
         return data;
     }
 
-    private ResponseModel setMessage(String key, String message){
-        ResponseModel responseModel = new ResponseModel();
-        responseModel.setKey(key);
-        responseModel.setMessage(message);
-        return responseModel;
-    }
-
-    private ResponseModel serializeErrorBody(Response response){
+    protected ErrorMessage serializeErrorBody(ResponseBody response){
         Gson gson = new Gson();
         Type type = new TypeToken<ErrorMessage>() {
         }.getType();
-        ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(), type);
-        ResponseModel responseModel = new ResponseModel();
-        responseModel.setKey(errorMessage.getKey());
-        responseModel.setMessage(errorMessage.getMessage());
-        return responseModel;
-    }
-
-    private ResponseModel setCode(int code){
-        ResponseModel responseModel = new ResponseModel();
-        responseModel.setCode(code);
-        return responseModel;
+        return gson.fromJson(response.charStream(), type);
     }
 }

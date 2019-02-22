@@ -30,4 +30,16 @@ public class Password {
     public String getPassword() {
         return password;
     }
+
+    public boolean isValidConfirmPassword(String confirmPassword){
+        return validateConfirmPassword(confirmPassword);
+    }
+
+    public boolean validateMatchNewPassword(String confirmPassword) {
+        return (password.equals(confirmPassword));
+    }
+
+    public boolean validateConfirmPassword(String confirmPassword) {
+        return (!confirmPassword.isEmpty() && validateMatchNewPassword(confirmPassword));
+    }
 }

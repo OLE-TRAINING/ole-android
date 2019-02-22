@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 
 public class CommonViewModel extends ViewModel {
@@ -24,7 +25,7 @@ public class CommonViewModel extends ViewModel {
 
     protected MutableLiveData<String> emailChanged = new MutableLiveData<>();
 
-    protected LiveData<ResponseModel> tokenResend;
+    protected LiveData<ResponseModel<UserData>> tokenResend;
 
     protected MutableLiveData<String> isErrorMessageForToast = new MutableLiveData<>();
 
@@ -34,7 +35,7 @@ public class CommonViewModel extends ViewModel {
         return isErrorMessageForToast;
     }
 
-    public LiveData<ResponseModel> getTokenResend() {
+    public LiveData<ResponseModel<UserData>> getTokenResend() {
         return tokenResend;
     }
 
@@ -59,16 +60,16 @@ public class CommonViewModel extends ViewModel {
         emailChanged.setValue(email);
     }
 
-    protected Observer<ResponseModel> tokenResendObserver = new Observer<ResponseModel>() {
+    protected Observer<ResponseModel<UserData>> tokenResendObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsErrorMessageForToast().setValue(SUCCESS_RESEND_TOKEN);
                     getForwardedToken().setValue(SUCCESS_RESEND_TOKEN);
                 } else {
-                    getIsErrorMessageForToast().setValue(responseModel.getMessage());
+                    getIsErrorMessageForToast().setValue(responseModel.getErrorMessage().getMessage());
                 }
             } else {
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_RESEND_TOKEN);

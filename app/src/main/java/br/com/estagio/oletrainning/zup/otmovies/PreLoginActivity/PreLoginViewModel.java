@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Email;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 
 public class PreLoginViewModel extends CommonViewModel {
@@ -23,7 +24,7 @@ public class PreLoginViewModel extends CommonViewModel {
 
     private UserRepository repository = new UserRepository();
 
-    private LiveData<ResponseModel> userData;
+    private LiveData<ResponseModel<UserData>> userData;
 
     private MutableLiveData<Boolean> emailContainsErrorStatus = new MutableLiveData<>();
 
@@ -55,24 +56,24 @@ public class PreLoginViewModel extends CommonViewModel {
         }
     }
 
-    private Observer<ResponseModel> getUserResponseObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel<UserData>> getUserResponseObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.postValue(false);
             if (responseModel != null) {
-                if (responseModel.getRegistrationStatus() != null) {
-                    if (responseModel.getRegistrationStatus().equals(REGISTERED)) {
+                if (responseModel.getResponse().getRegistrationStatus() != null) {
+                    if (responseModel.getResponse().getRegistrationStatus().equals(REGISTERED)) {
                         getRegistrationStatus().setValue(REGISTERED);
-                    } else if (responseModel.getRegistrationStatus().equals(PENDING)) {
+                    } else if (responseModel.getResponse().getRegistrationStatus().equals(PENDING)) {
                         getRegistrationStatus().setValue(PENDING);
-                    } else if (responseModel.getRegistrationStatus().equals(INEXISTENT)) {
+                    } else if (responseModel.getResponse().getRegistrationStatus().equals(INEXISTENT)) {
                         getRegistrationStatus().setValue(INEXISTENT);
                     }
                 } else {
-                    if (responseModel.getKey().equals(ERROR_INVALID_EMAIL)) {
+                    if (responseModel.getErrorMessage().getKey().equals(ERROR_INVALID_EMAIL)) {
                         getIsInvalidEmail().setValue(true);
                     } else {
-                        getIsErrorMessageForToast().setValue(responseModel.getMessage());
+                        getIsErrorMessageForToast().setValue(responseModel.getErrorMessage().getMessage());
                     }
                 }
             } else {
