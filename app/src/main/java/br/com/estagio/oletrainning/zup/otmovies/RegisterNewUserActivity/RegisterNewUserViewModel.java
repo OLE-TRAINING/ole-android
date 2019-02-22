@@ -6,6 +6,9 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Name;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Password;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Username;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
@@ -13,12 +16,15 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
 public class RegisterNewUserViewModel extends CommonViewModel {
 
+    private Name name;
+    private Password password;
+    private Username username;
     private String SUCCESSFULLY_REGISTERED = "Usuário cadastrado com sucesso!";
     private String SERVICE_OR_CONNECTION_ERROR_REGISTER = "Falha ao registrar seu cadastro. Verifique a conexão e tente novamente.";
 
     private UserRepository repository = new UserRepository();
 
-    private LiveData<ResponseModel> registerUser;
+    private LiveData<ResponseModel<UserData>> registerUser;
 
     private MutableLiveData<Boolean> nameContainsErrorStatus = new MutableLiveData<>();
 
@@ -68,16 +74,19 @@ public class RegisterNewUserViewModel extends CommonViewModel {
         return passwordContainsErrorStatus;
     }
 
-    public void completedForm(String name, String username, String password) {
-        nameContainsErrorStatus.postValue(!validateName(name));
-        userNameContainsErrorStatus.postValue(!validateUserName(username));
-        passwordContainsErrorStatus.postValue(!validatePassword(password));
-        if (isValidName(name) && isValidUserName(username) && isValidPassword(password)) {
+    public void completedForm(String nameEntered, String usernameEntered, String passwordEntered) {
+        name = new Name(nameEntered);
+        password = new Password(passwordEntered);
+        username = new Username(usernameEntered);
+        nameContainsErrorStatus.postValue(!name.validateName());
+        userNameContainsErrorStatus.postValue(!username.validateUserName());
+        passwordContainsErrorStatus.postValue(!password.validatePassword());
+        if (name.isValidName() && username.isValidUserName() && password.isValidPassword()) {
             UserData userData = new UserData();
             userData.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
-            userData.setCompleteName(name);
-            userData.setUsername(username);
-            userData.setPassword(password);
+            userData.setCompleteName(nameEntered);
+            userData.setUsername(usernameEntered);
+            userData.setPassword(passwordEntered);
             executeServiceRegisterUser(userData);
         }
     }
@@ -94,17 +103,17 @@ public class RegisterNewUserViewModel extends CommonViewModel {
         passwordContainsErrorStatus.postValue(false);
     }
 
-    private Observer<ResponseModel> responseRegisterUserObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel<UserData>> responseRegisterUserObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsRegistered().setValue(SUCCESSFULLY_REGISTERED);
                 } else {
                     ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
+                    errorMessage.setKey(responseModel.getErrorMessage().getKey());
+                    errorMessage.setMessage(responseModel.getErrorMessage().getMessage());
                     switch (errorMessage.getKey()) {
                         case "error.invalid.name":
                             getIsInvalidName().setValue(true);

@@ -30,14 +30,18 @@ public class UserRepository {
         userServices= RetrofitServiceBuilder.buildService(UserServices.class);
     }
 
-    public LiveData<ResponseModel> getUserData(String email) {
-        final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
+    public LiveData<ResponseModel<UserData>> getUserData(String email) {
+        final MutableLiveData<ResponseModel<UserData>> data = new MutableLiveData<>();
         userServices.getUsersDate(email)
-                .enqueue(new Callback<ResponseModel>() {
+                .enqueue(new Callback<ResponseModel<UserData>>() {
                     @Override
-                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                        if(response.code() == SUCCESS_CODE){
-                            data.setValue(response.body());
+                    public void onResponse(Call<ResponseModel<UserData>> call, Response<ResponseModel<UserData>> response) {
+                        if(response.code() == SUCCESS_CODE && response.body().getResponse().getRegistrationStatus()!= null){
+                            UserData userData = new UserData();
+                            userData.setRegistrationStatus(response.body().getResponse().getRegistrationStatus());
+                            ResponseModel<UserData> responseModel = new ResponseModel<>();
+                            responseModel.setResponse(userData);
+                            data.setValue(responseModel);
                         } else {
                             if(response.errorBody() != null){
                                 data.setValue(serializeErrorBody(response));
@@ -48,15 +52,15 @@ public class UserRepository {
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                    public void onFailure(Call<ResponseModel<UserData>> call, Throwable t) {
                         data.setValue(null);
                     }
                 });
         return data;
     }
 
-    public LiveData<ResponseModel> postUserRegister (UserData userData) {
-        final MutableLiveData<ResponseModel> data = new MutableLiveData<>();
+    public LiveData<ResponseModel<UserData>> postUserRegister (UserData userData) {
+        final MutableLiveData<ResponseModel<UserData>> data = new MutableLiveData<>();
         userServices.userRegister(userData)
                 .enqueue(new Callback<Void>() {
                     @Override
@@ -79,26 +83,26 @@ public class UserRepository {
         return data;
     }
 
-    private ResponseModel setMessage(String key, String message){
-        ResponseModel responseModel = new ResponseModel();
-        responseModel.setKey(key);
-        responseModel.setMessage(message);
+    protected ResponseModel<UserData> setMessage(String key, String message){
+        ResponseModel<UserData> responseModel = new ResponseModel();
+        responseModel.getErrorMessage().setKey(key);
+        responseModel.getErrorMessage().setMessage(message);
         return responseModel;
     }
 
-    private ResponseModel serializeErrorBody(Response response){
+    protected ResponseModel<UserData> serializeErrorBody(Response response){
         Gson gson = new Gson();
         Type type = new TypeToken<ErrorMessage>() {
         }.getType();
         ErrorMessage errorMessage = gson.fromJson(response.errorBody().charStream(), type);
-        ResponseModel responseModel = new ResponseModel();
-        responseModel.setKey(errorMessage.getKey());
-        responseModel.setMessage(errorMessage.getMessage());
+        ResponseModel<UserData> responseModel = new ResponseModel();
+        responseModel.getErrorMessage().setKey(errorMessage.getKey());
+        responseModel.getErrorMessage().setMessage(errorMessage.getMessage());
         return responseModel;
     }
 
-    private ResponseModel setCode(int code){
-        ResponseModel responseModel = new ResponseModel();
+    protected ResponseModel<UserData> setCode(int code){
+        ResponseModel<UserData> responseModel= new ResponseModel<>();
         responseModel.setCode(code);
         return responseModel;
     }

@@ -1,6 +1,7 @@
 package br.com.estagio.oletrainning.zup.otmovies.Common;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,16 +11,14 @@ import android.widget.ProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 
-import static android.support.v4.content.ContextCompat.getColor;
-
-public class CommonMethodsActivities {
+public class CommonActivity extends AppCompatActivity {
 
     public void hideKeyword(Window window){
         window.setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-    public void colorStatusBar(Window window, Context context, int color, Boolean isClearColor) {
+    public void colorStatusBar(Window window, int color, Boolean isClearColor) {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         View view = window.getDecorView();
@@ -28,7 +27,7 @@ public class CommonMethodsActivities {
         } else {
             view.setSystemUiVisibility(View.GONE);
         }
-        window.setStatusBarColor(getColor(context,color));
+        window.setStatusBarColor(getColor(color));
     }
 
     public void hideKeyboardFrom(Context context, View view) {

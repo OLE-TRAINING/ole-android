@@ -4,25 +4,23 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
-import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends CommonActivity {
 
     private LoginViewHolder loginViewHolder;
     private LoginViewModel loginViewModel;
-    private CommonMethodsActivities commonMethodsActivities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +38,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel.setBundle(bundle);
 
-        commonMethodsActivities = new CommonMethodsActivities();
-
-        commonMethodsActivities.hideKeyword(getWindow());
+        hideKeyword(getWindow());
     }
 
     @Override
@@ -53,13 +49,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void colorStatusBarBackground(){
-        commonMethodsActivities.colorStatusBar(this.getWindow(),
-                this,R.color.colorBackground,true);
+        colorStatusBar(this.getWindow(),R.color.colorBackground,true);
     }
 
     private void colorStatusBarRed(){
-        commonMethodsActivities.colorStatusBar(this.getWindow(),
-                this,R.color.colorRed,false);
+        colorStatusBar(this.getWindow(),R.color.colorRed,false);
     }
 
     private void setupObservers() {
@@ -149,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onChanged(@Nullable Boolean isLoading) {
             if (isLoading != null) {
-                commonMethodsActivities.loadingExecutor(
+                loadingExecutor(
                         isLoading,
                         loginViewHolder.progressBar,
                         getWindow(),
@@ -161,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            commonMethodsActivities.hideKeyboardFrom(LoginActivity.this,
+            hideKeyboardFrom(LoginActivity.this,
                     loginViewHolder.errorEditTextPassword);
             String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
             loginViewModel.passwordEntered(password);

@@ -7,18 +7,20 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Password;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
 public class LoginViewModel extends CommonViewModel {
 
+    private Password password;
     private String KEY_INVALID_PASSWORD = "error.invalid.password";
     private String KEY_UNAUTHORIZED_LOGIN =  "error.unauthorized.login";
     private String KEY_UNAUTHORIZED_PASSWORD = "error.unauthorized.password";
     private String SUCCESS_MESSAGE_LOGIN = "Senha confirmada, login autorizado!";
     private String SERVICE_OR_CONNECTION_ERROR_LOGIN = "Falha ao validar sua senha. Verifique a conexão e tente novamente.";
 
-    private LiveData<ResponseModel> passwordValidation;
+    private LiveData<ResponseModel<UserData>> passwordValidation;
 
     private MutableLiveData<Boolean> passwordContainsErrorStatus = new MutableLiveData<>();
 
@@ -39,12 +41,13 @@ public class LoginViewModel extends CommonViewModel {
         return passwordContainsErrorStatus;
     }
 
-    public void passwordEntered(String password){
-        passwordContainsErrorStatus.postValue(!validatePassword(password));
-        if (isValidPassword(password)) {
+    public void passwordEntered(String passwordEntered){
+        password = new Password(passwordEntered);
+        passwordContainsErrorStatus.postValue(!password.validatePassword());
+        if (password.isValidPassword()) {
             UserData userData = new UserData();
             userData.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
-            userData.setPassword(password);
+            userData.setPassword(passwordEntered);
             executeServicePasswordValidation(userData);
         }
     }
@@ -75,16 +78,16 @@ public class LoginViewModel extends CommonViewModel {
                 || key.equals(KEY_UNAUTHORIZED_PASSWORD));
     }
 
-    private Observer<ResponseModel> passwordValidationObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel<UserData>> passwordValidationObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsValidatedPassword().setValue(SUCCESS_MESSAGE_LOGIN);
                 } else {
-                    String key = responseModel.getKey();
-                    String message = responseModel.getMessage();
+                    String key = responseModel.getErrorMessage().getKey();
+                    String message = responseModel.getErrorMessage().getMessage();
                     if (isMessageErrorTopToast(key)) {
                         getMessageErrorChanged().setValue(message);
                     } else {

@@ -7,20 +7,24 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Email;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 
 public class PreLoginViewModel extends CommonViewModel {
 
+    private Email email;
     private String REGISTERED = "REGISTERED";
     private String PENDING = "PENDING";
     private String INEXISTENT = "INEXISTENT";
     private String ERROR_INVALID_EMAIL = "error.invalid.email";
     private String ERROR_SERVICE_OR_CONNECTION_EMAIL = "Falha ao validar seu email. Verifique a conexão e tente novamente.";
 
+
     private UserRepository repository = new UserRepository();
 
-    private LiveData<ResponseModel> userData;
+    private LiveData<ResponseModel<UserData>> userData;
 
     private MutableLiveData<Boolean> emailContainsErrorStatus = new MutableLiveData<>();
 
@@ -44,31 +48,32 @@ public class PreLoginViewModel extends CommonViewModel {
         emailContainsErrorStatus.postValue(false);
     }
 
-    public void emailEntered(String email) {
-        emailContainsErrorStatus.postValue(!validateEmail(email));
-        if (isValidEmail(email)) {
-            executeServiceCallGetUserData(email);
+    public void emailEntered(String emailEntered) {
+        email = new Email(emailEntered);
+        emailContainsErrorStatus.postValue(!email.validateEmail());
+        if (email.isValidEmail()) {
+            executeServiceCallGetUserData(emailEntered);
         }
     }
 
-    private Observer<ResponseModel> getUserResponseObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel<UserData>> getUserResponseObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(ResponseModel<UserData> responseModel) {
             isLoading.postValue(false);
             if (responseModel != null) {
-                if (responseModel.getRegistrationStatus() != null) {
-                    if (responseModel.getRegistrationStatus().equals(REGISTERED)) {
+                if (responseModel.getResponse().getRegistrationStatus() != null) {
+                    if (responseModel.getResponse().getRegistrationStatus().equals(REGISTERED)) {
                         getRegistrationStatus().setValue(REGISTERED);
-                    } else if (responseModel.getRegistrationStatus().equals(PENDING)) {
+                    } else if (responseModel.getResponse().getRegistrationStatus().equals(PENDING)) {
                         getRegistrationStatus().setValue(PENDING);
-                    } else if (responseModel.getRegistrationStatus().equals(INEXISTENT)) {
+                    } else if (responseModel.getResponse().getRegistrationStatus().equals(INEXISTENT)) {
                         getRegistrationStatus().setValue(INEXISTENT);
                     }
                 } else {
-                    if (responseModel.getKey().equals(ERROR_INVALID_EMAIL)) {
+                    if (responseModel.getErrorMessage().getKey().equals(ERROR_INVALID_EMAIL)) {
                         getIsInvalidEmail().setValue(true);
                     } else {
-                        getIsErrorMessageForToast().setValue(responseModel.getMessage());
+                        getIsErrorMessageForToast().setValue(responseModel.getErrorMessage().getMessage());
                     }
                 }
             } else {

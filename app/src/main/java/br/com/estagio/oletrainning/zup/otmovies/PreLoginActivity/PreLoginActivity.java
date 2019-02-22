@@ -3,7 +3,6 @@ package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,19 +10,20 @@ import android.view.View;
 
 import android.widget.Toast;
 
-import br.com.estagio.oletrainning.zup.otmovies.Common.CommonMethodsActivities;
+
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity.FinishYourRegistrationActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
 
 
-public class PreLoginActivity extends AppCompatActivity {
+public class PreLoginActivity extends CommonActivity {
 
     private PreLoginViewHolder preLoginViewHolder;
     private PreLoginViewModel preLoginViewModel;
     private String email;
-    private CommonMethodsActivities commonMethodsActivities;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +35,7 @@ public class PreLoginActivity extends AppCompatActivity {
 
         preLoginViewModel = ViewModelProviders.of(this).get(PreLoginViewModel.class);
 
-        commonMethodsActivities = new CommonMethodsActivities();
-
-        commonMethodsActivities.hideKeyword(getWindow());
+        hideKeyword(getWindow());
 
         setupObservers();
     }
@@ -46,8 +44,7 @@ public class PreLoginActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        commonMethodsActivities.colorStatusBar(this.getWindow(),
-                this,R.color.colorBackground,true);
+        colorStatusBar(this.getWindow(),R.color.colorBackground,true);
         setupListeners();
     }
 
@@ -67,7 +64,7 @@ public class PreLoginActivity extends AppCompatActivity {
     private View.OnClickListener buttonNextPreLoginOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            commonMethodsActivities.hideKeyboardFrom(PreLoginActivity.this,
+            hideKeyboardFrom(PreLoginActivity.this,
                     preLoginViewHolder.errorEditTextEmail);
             email = preLoginViewHolder.errorEditTextEmail.getEditText().getText().toString().trim();
             preLoginViewModel.emailEntered(email);
@@ -123,7 +120,7 @@ public class PreLoginActivity extends AppCompatActivity {
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isLoading) {
-            commonMethodsActivities.loadingExecutor(
+            loadingExecutor(
                     isLoading,
                     preLoginViewHolder.progressBar,
                     getWindow(),

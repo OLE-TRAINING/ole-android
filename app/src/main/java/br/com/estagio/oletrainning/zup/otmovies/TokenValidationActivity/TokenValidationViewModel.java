@@ -6,17 +6,20 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Token;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
 public class TokenValidationViewModel extends CommonViewModel {
 
+    private Token token;
     private String SUCCESS_MESSAGE_VALIDATE_TOKEN = "Código confirmado com sucesso!";
     private String UNAUTHORIZED_TOKEN_KEY = "error.unauthorized.token";
     private String INVALID_TOKEN_KEY = "error.invalid.token";
     private String SERVICE_OR_CONNECTION_ERROR_VALIDATE_TOKEN = "Falha ao validar o código. Verifique a conexão e tente novamente.";
 
-    private LiveData<ResponseModel> tokenValidation;
+    private LiveData<ResponseModel<UserData>> tokenValidation;
 
     private MutableLiveData<Boolean> tokenContainsErrorStatus = new MutableLiveData<>();
 
@@ -41,24 +44,25 @@ public class TokenValidationViewModel extends CommonViewModel {
     }
 
     public void tokenEntered(String code){
-        tokenContainsErrorStatus.postValue(!validateTokenSize(code));
-        if (isValidToken(code)) {
+        token = new Token(code);
+        tokenContainsErrorStatus.postValue(!token.validateTokenSize());
+        if (token.isValidToken()) {
             String email = bundle.getString(EMAIL_BUNDLE_KEY);
             executeServiceTokenValidation(email,code);
         }
     }
 
-    private Observer<ResponseModel> tokenValidationObserver = new Observer<ResponseModel>() {
+    private Observer<ResponseModel<UserData>> tokenValidationObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel responseModel) {
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsValidatedToken().setValue(SUCCESS_MESSAGE_VALIDATE_TOKEN);
                 } else {
                     ErrorMessage errorMessage = new ErrorMessage();
-                    errorMessage.setKey(responseModel.getKey());
-                    errorMessage.setMessage(responseModel.getMessage());
+                    errorMessage.setKey(responseModel.getErrorMessage().getKey());
+                    errorMessage.setMessage(responseModel.getErrorMessage().getMessage());
                     if(errorMessage.getKey().equals(UNAUTHORIZED_TOKEN_KEY)){
                         getMessageErrorChanged().setValue(errorMessage.getMessage());
                     } else if (errorMessage.getKey().equals(INVALID_TOKEN_KEY)) {
