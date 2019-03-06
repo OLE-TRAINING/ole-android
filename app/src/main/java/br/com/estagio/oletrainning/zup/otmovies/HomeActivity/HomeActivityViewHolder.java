@@ -19,10 +19,12 @@ public class HomeActivityViewHolder {
     TextView textView_navView_name;
 
     HomeActivityViewHolder(View view) {
-        bottomNavigationView = view.findViewById(R.id.bottom_navigation);
+
         toolbar = view.findViewById(R.id.toolbar);
         navigationView = view.findViewById(R.id.nav_view);
         drawerLayout = view.findViewById(R.id.drawer_layout);
+        View homeDrawer = view.findViewById(R.id.home_drawer);
+        bottomNavigationView = homeDrawer.findViewById(R.id.bottom_navigation);
         View headerView = navigationView.getHeaderView(0);
         textView_navView_email = headerView.findViewById(R.id.textview_nav_email);
         textView_navView_name = headerView.findViewById(R.id.textview_nav_name);

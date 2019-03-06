@@ -15,10 +15,11 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:isScrollContainer="true"
             android:layout_gravity="fill"
-            app:tabTextAppearance="@style/CustomTextAppearanceTab"
-            app:tabMode="scrollable">
+            android:background="@color/colorPrimary"
+            android:isScrollContainer="true"
+            app:tabMode="scrollable"
+            app:tabTextAppearance="@style/CustomTextAppearanceTab">
 
         </android.support.design.widget.TabLayout>
 
