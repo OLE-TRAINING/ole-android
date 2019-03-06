@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity.HomeActivity">
+    tools:context=".HomeActivity.HomeActivity"
+    tools:showIn="@layout/activity_home">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -19,6 +20,23 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_home_drawer" />
+    <FrameLayout
+        android:id="@+id/content_home_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </FrameLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="bottom"
+        android:layoutAnimation="@android:anim/fade_out"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        app:menu="@menu/navigation" />
+
 
 </android.support.design.widget.CoordinatorLayout>

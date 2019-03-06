@@ -7,8 +7,8 @@ import java.util.List;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Mapper.FilmMapper;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.APIService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.FilmService;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
 import retrofit2.Call;
@@ -20,7 +20,7 @@ public class FilmRepository {
     private FilmService filmService;
 
     public FilmRepository(){
-        filmService = RetrofitServiceBuilder.buildService(FilmService.class);
+        filmService = APIService.buildService(FilmService.class);
     }
 
     public LiveData<FilmGenres> getGenreList() {

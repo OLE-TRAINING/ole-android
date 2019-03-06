@@ -8,6 +8,7 @@ import retrofit2.http.Query;
 
 public interface FilmService {
 
+
     @GET("discover/movie")
     Call<FilmsResults> getMovieGenre(@Query("language") String language,
                                      @Query("sort_by") String sortBy,

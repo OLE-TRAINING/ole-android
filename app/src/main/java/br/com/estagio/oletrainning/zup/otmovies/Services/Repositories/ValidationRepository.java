@@ -10,6 +10,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceB
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.ValidationServices;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAccessToken;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -120,6 +121,7 @@ public class ValidationRepository  extends UserRepository{
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
+                        SingletonAccessToken.saveAccessToken(response.headers().get("x-access-token"));
                         ResponseModel<UserData> responseModel = new ResponseModel<>();
                         if((response.code() == SUCCESS_CODE)) {
                             responseModel.setCode(response.code());

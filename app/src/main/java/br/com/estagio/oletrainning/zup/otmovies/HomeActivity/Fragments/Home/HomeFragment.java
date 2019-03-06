@@ -25,7 +25,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = this.getLayoutInflater().inflate(R.layout.fragment_home, null);
+        View view = this.getLayoutInflater().inflate(R.layout.fragment_home,container, false);
         this.viewHolder = new HomeFragmentViewHolder(view);
 
         viewModelHome = ViewModelProviders.of(this).get(HomeFragmentViewModel.class);

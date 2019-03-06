@@ -1,8 +1,11 @@
 package br.com.estagio.oletrainning.zup.otmovies.Services.Remote;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAccessToken;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -22,6 +25,7 @@ public class RetrofitServiceBuilder {
     private static HttpLoggingInterceptor logger =
             new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
+
     private static OkHttpClient.Builder okHttp =
             new OkHttpClient.Builder()
                     .addInterceptor(logger)
@@ -31,6 +35,19 @@ public class RetrofitServiceBuilder {
                             Request request = chain.request();
                             HttpUrl url = request.url().newBuilder().addQueryParameter("gw-app-key",KEY_SERVICE_VALIDATION).build();
                             request = request.newBuilder().url(url).build();
+                            return chain.proceed(request);
+                        }
+                    })
+                    .addInterceptor(new Interceptor() {
+                        @Override
+                        public Response intercept(Chain chain) throws IOException {
+                            Request request = chain.request();
+                            SingletonAccessToken accessToken = SingletonAccessToken.INSTANCE;
+                            if (accessToken.getLastestAuth() != null){
+                                request = request.newBuilder()
+                                        .addHeader("x-access-token", "Bearer " + accessToken.getLastestAuth()).build();
+                                Log.d("tokenReceived","Bearer " + accessToken.getLastestAuth());
+                            }
                             return chain.proceed(request);
                         }
                     })

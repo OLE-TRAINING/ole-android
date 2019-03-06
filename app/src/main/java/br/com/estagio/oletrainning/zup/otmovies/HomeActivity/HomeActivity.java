@@ -45,6 +45,8 @@ public class HomeActivity extends AppCompatActivity
 
         toggle.syncState();
 
+        openFragment(new HomeFragment());
+
     }
 
     private void setupListener(){
@@ -97,7 +99,7 @@ public class HomeActivity extends AppCompatActivity
         if(fragment != null){
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content, fragment)
+                    .replace(R.id.content_home_drawer, fragment)
                     .commit();
             return true;
         }
