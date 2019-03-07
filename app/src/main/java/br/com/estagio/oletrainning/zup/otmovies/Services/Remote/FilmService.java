@@ -9,12 +9,12 @@ import retrofit2.http.Query;
 public interface FilmService {
 
 
-    @GET("discover/movie")
-    Call<FilmsResults> getMovieGenre(@Query("language") String language,
-                                     @Query("sort_by") String sortBy,
-                                     @Query("page") String page,
-                                     @Query("with_genres") String genreID);
+    @GET("movies")
+    Call<FilmsResults> getMovieGenre(@Query("filter") String filter,
+                                     @Query("filter_id") String filterID,
+                                     @Query("amount") String amount,
+                                     @Query("page") String page);
 
-    @GET("genre/movie/list")
-    Call<FilmGenres> getGenres(@Query("language") String language);
+    @GET("genres")
+    Call<FilmGenres> getGenres();
 }

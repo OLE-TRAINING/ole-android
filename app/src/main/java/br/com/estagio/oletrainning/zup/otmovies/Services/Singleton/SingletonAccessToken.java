@@ -9,24 +9,24 @@ public enum SingletonAccessToken {
 
     INSTANCE;
 
-    private List <String> accessToken;
+    private String accessToken;
 
-    SingletonAccessToken() {
-        this.accessToken = new ArrayList<>();
-    }
-
-    public boolean isTokenSaved(String token){
-        return accessToken.add(token);
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public static void saveAccessToken(String token){
         SingletonAccessToken singletonAccessToken = SingletonAccessToken.INSTANCE;
-        Log.d("SINGLETON_TOKEN_SAVED", String.valueOf(singletonAccessToken.isTokenSaved(token)));
+        singletonAccessToken.setAccessToken(token);
+        if (singletonAccessToken.accessToken != null){
+            Log.d("SINGLETON_TOKEN_SAVED", singletonAccessToken.accessToken);
+        }
+
     }
 
     public String getLastestAuth(){
-        if(accessToken.size()>0){
-            return accessToken.get(accessToken.size()-1);
+        if(accessToken != null && !accessToken.isEmpty()){
+            return accessToken;
         }
         return null;
     }

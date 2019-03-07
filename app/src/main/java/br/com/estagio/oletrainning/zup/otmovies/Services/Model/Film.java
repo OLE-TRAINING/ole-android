@@ -1,49 +1,90 @@
 package br.com.estagio.oletrainning.zup.otmovies.Services.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Film {
 
+    private final float id;
+    private final String posterId;
+    private final String bannerId;
+    private final float voteAverage;
+    private final float voteCount;
     private final String title;
-    private final String posterPath;
-    private final Double voteAverage;
+    private final int year;
+    private final List<String> genreNames = new ArrayList<>();
+    private final String runtime;
     private final String overview;
-    private final String releaseDate;
-    private final List<Integer> genre_ids;
+    private final boolean favorit;
+    private final float price;
+    private final boolean acquired;
 
-    public Film(String title, String posterPath, Double voteAverage, String overview, String releaseDate, List<Integer> genre_ids) {
-        this.title = title;
-        this.posterPath = posterPath;
+    public Film(float id, String posterId, String bannerId, float voteAverage, float voteCount,
+                String title, int year, String runtime, String overview, boolean favorit,
+                float price, boolean acquired) {
+        this.id = id;
+        this.posterId = posterId;
+        this.bannerId = bannerId;
         this.voteAverage = voteAverage;
+        this.voteCount = voteCount;
+        this.title = title;
+        this.year = year;
+        this.runtime = runtime;
         this.overview = overview;
-        this.releaseDate = releaseDate;
-        this.genre_ids = genre_ids;
+        this.favorit = favorit;
+        this.price = price;
+        this.acquired = acquired;
+    }
+
+    public float getId() {
+        return id;
+    }
+
+    public String getPosterId() {
+        return posterId;
+    }
+
+    public String getBannerId() {
+        return bannerId;
+    }
+
+    public float getVoteAverage() {
+        return voteAverage;
+    }
+
+    public float getVoteCount() {
+        return voteCount;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getPosterPath() {
-        return posterPath;
+    public int getYear() {
+        return year;
     }
 
-    public Double getVoteAverage() {
-        return voteAverage;
+    public List<String> getGenreNames() {
+        return genreNames;
+    }
+
+    public String getRuntime() {
+        return runtime;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public String getReleaseDate() {
-        if (this.releaseDate != null) {
-            return releaseDate.substring(0, 4);
-        }
-        return releaseDate;
+    public boolean isFavorit() {
+        return favorit;
     }
 
-    public List<Integer> getGenre_ids() {
-        return genre_ids;
+    public float getPrice() {
+        return price;
+    }
+
+    public boolean isAcquired() {
+        return acquired;
     }
 }

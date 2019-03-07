@@ -44,8 +44,9 @@ public class RetrofitServiceBuilder {
                             Request request = chain.request();
                             SingletonAccessToken accessToken = SingletonAccessToken.INSTANCE;
                             if (accessToken.getLastestAuth() != null){
+                                String token = "Bearer " + accessToken.getLastestAuth();
                                 request = request.newBuilder()
-                                        .addHeader("x-access-token", "Bearer " + accessToken.getLastestAuth()).build();
+                                        .addHeader("Authorization", token).build();
                                 Log.d("tokenReceived","Bearer " + accessToken.getLastestAuth());
                             }
                             return chain.proceed(request);

@@ -33,30 +33,28 @@ public class ListFilmsAdapter extends RecyclerView.Adapter<ListFilmsAdapter.List
     public ListFilmsAdapter(FilmGenres filmGenres) {
         this.filmGenres = filmGenres;
         films = new ArrayList<>();
-
-
     }
 
     @NonNull
     @Override
     public ListFilmsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_film,viewGroup,false);
+                .inflate(R.layout.item_film, viewGroup, false);
 
         return new ListFilmsViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListFilmsViewHolder listFilmsViewHolder, int position) {
-        listFilmsViewHolder.bind(films.get(position),filmGenres);
+        listFilmsViewHolder.bind(films.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return (films != null && films.size() >0) ? films.size() : 0;
+        return (films != null && films.size() > 0) ? films.size() : 0;
     }
 
-    static class ListFilmsViewHolder extends RecyclerView.ViewHolder{
+    static class ListFilmsViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textTitleFilm;
         private ProgressBar progressBar;
@@ -91,44 +89,41 @@ public class ListFilmsAdapter extends RecyclerView.Adapter<ListFilmsAdapter.List
         }
 
 
-
-        private void bind(Film film, FilmGenres allGenresList){
+        private void bind(Film film) {
             textTitleFilm.setText(film.getTitle());
             Picasso.get()
-                    .load("https://image.tmdb.org/t/p/w342/" + film.getPosterPath())
+                    .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+film.getPosterId()
+                            +"/image/w342?gw-app-key=593c3280aedd01364c73000d3ac06d76")
                     .into(imageView);
-            List<Integer> filmGenreIdsList = film.getGenre_ids();
-            if(filmGenreIdsList != null && allGenresList != null){
-                keywords.setText(keywordPhraseBuilder(filmGenreIdsList,allGenresList));
-            }
+            keywords.setText(keywordPhraseBuilder(film.getGenreNames()));
             movieDescription.setText(film.getOverview());
-            runtime.setText("2h 35min");
-            year.setText(film.getReleaseDate());
+            runtime.setText(film.getRuntime());
+            year.setText(String.valueOf(film.getYear()));
             filmNote.setText(String.valueOf(film.getVoteAverage()));
-            price.setText("R$ 16,90");
+            String priceText = "R$ "+ String.valueOf(film.getPrice());
+            price.setText(priceText);
         }
 
-        private String removeLastComma(String phrase){
-            return phrase.substring(0, phrase.length()-2);
+        private String removeLastComma(String phrase) {
+            if(phrase !=null && !phrase.isEmpty()){
+                phrase.substring(0, phrase.length() - 1);
+            }
+            return phrase;
         }
 
-        private String keywordPhraseBuilder(@NonNull List<Integer> filmGenreIdsList, @NonNull FilmGenres allGenresList){
+        private String keywordPhraseBuilder(@NonNull List<String> filmGenreNamesList) {
             StringBuilder keywordList = new StringBuilder();
-            for(int i= 0; i<filmGenreIdsList.size(); i++){
-                if(i<5){
-                    for(int j=0; j<allGenresList.getGenres().size(); j++){
-                        if(filmGenreIdsList.get(i).equals(allGenresList.getGenres().get(j).getId())){
-                            keywordList.append(allGenresList.getGenres().get(j).getName());
-                            keywordList.append(", ");
-                        }
-                    }
+            for (int i = 0; i < filmGenreNamesList.size(); i++) {
+                if (i < 5) {
+                    keywordList.append(filmGenreNamesList.get(i));
+                    keywordList.append(", ");
                 }
             }
             return removeLastComma(keywordList.toString());
         }
     }
 
-    public void setFilms(List<Film> films){
+    public void setFilms(List<Film> films) {
         this.films = films;
         notifyDataSetChanged();
     }

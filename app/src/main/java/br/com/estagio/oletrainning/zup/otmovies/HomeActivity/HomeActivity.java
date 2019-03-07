@@ -42,7 +42,7 @@ public class HomeActivity extends CommonActivity
 
         toggle.syncState();
 
-        homeFragment = new HomeFragment();
+        homeFragment = HomeFragment.newInstance();
         openFragment(homeFragment);
     }
 
@@ -81,7 +81,7 @@ public class HomeActivity extends CommonActivity
         switch (item.getItemId()){
             case  R.id.navigation_home:
                 if(homeFragment != null && !homeFragment.isVisible()){
-                    homeFragment = new HomeFragment();
+                    homeFragment = HomeFragment.newInstance();
                     openFragment(homeFragment);
                 }
                 break;
@@ -102,6 +102,7 @@ public class HomeActivity extends CommonActivity
         if(fragment != null){
             getSupportFragmentManager()
                     .beginTransaction()
+                    .addToBackStack(null)
                     .replace(R.id.content_home_drawer, fragment)
                     .commit();
             return true;

@@ -1,93 +1,73 @@
 package br.com.estagio.oletrainning.zup.otmovies.Services.Response;
 
-import com.google.gson.annotations.SerializedName;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilmResponse {
 
-    @SerializedName("vote_count")
-    private Integer voteCount;
-    @SerializedName("id")
-    private Integer id;
-    @SerializedName("video")
-    private Boolean video;
-    @SerializedName("vote_average")
-    private Double voteAverage;
-    @SerializedName("title")
+    private float id;
+    private String posterId;
+    private String bannerId;
+    private float voteAverage;
+    private float voteCount;
     private String title;
-    @SerializedName("popularity")
-    private Double popularity;
-    @SerializedName("poster_path")
-    private String posterPath;
-    @SerializedName("original_language")
-    private String originalLanguage;
-    @SerializedName("original_title")
-    private String originalTitle;
-    @SerializedName("genre_ids")
-    private List<Integer> genreIds = null;
-    @SerializedName("backdrop_path")
-    private String backdropPath;
-    @SerializedName("adult")
-    private Boolean adult;
-    @SerializedName("overview")
+    private int year;
+    private List<String> genreNames = new ArrayList<>();
+    private String runtime;
     private String overview;
-    @SerializedName("release_date")
-    private String releaseDate;
+    private boolean favorit;
+    private float price;
+    private boolean acquired;
 
-    public Integer getVoteCount() {
-        return voteCount;
-    }
-
-    public Integer getId() {
+    public float getId() {
         return id;
     }
 
-    public Boolean getVideo() {
-        return video;
+    public String getPosterId() {
+        return posterId;
     }
 
-    public Double getVoteAverage() {
+    public String getBannerId() {
+        return bannerId;
+    }
+
+    public float getVoteAverage() {
         return voteAverage;
+    }
+
+    public float getVoteCount() {
+        return voteCount;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Double getPopularity() {
-        return popularity;
+    public int getYear() {
+        return year;
     }
 
-    public String getPosterPath() {
-        return posterPath;
+    public List<String> getGenreNames() {
+        return genreNames;
     }
 
-    public String getOriginalLanguage() {
-        return originalLanguage;
-    }
-
-    public String getOriginalTitle() {
-        return originalTitle;
-    }
-
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
-
-    public String getBackdropPath() {
-        return backdropPath;
-    }
-
-    public Boolean getAdult() {
-        return adult;
+    public String getRuntime() {
+        return runtime;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public String getReleaseDate() {
-        return releaseDate;
+    public boolean isFavorit() {
+        return favorit;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public boolean isAcquired() {
+        return acquired;
     }
 }
