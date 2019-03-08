@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAccessToken;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -17,6 +18,8 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitServiceBuilder {
+
+    private static RetrofitServiceBuilder mInstance;
 
     private static final String URL = "https://ole.dev.gateway.zup.me/client-training/v1/";
 
@@ -68,5 +71,16 @@ public class RetrofitServiceBuilder {
 
     public static <S> S buildService(Class<S> serviceType){
         return retrofit.create(serviceType);
+    }
+
+    public static synchronized RetrofitServiceBuilder getInsance(){
+        if(mInstance == null){
+            mInstance = new RetrofitServiceBuilder();
+        }
+        return mInstance;
+    }
+
+    public FilmService getApi(){
+        return retrofit.create(FilmService.class);
     }
 }
