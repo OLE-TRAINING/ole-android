@@ -14,7 +14,7 @@ public class FilmMapper {
         for(FilmResponse filmsResponse : listFilmResponse){
             final Film film = new Film(filmsResponse.getId(),filmsResponse.getPosterId(),filmsResponse.getBannerId(),
                     filmsResponse.getVoteAverage(),filmsResponse.getVoteCount(),filmsResponse.getTitle(),
-                    filmsResponse.getYear(),filmsResponse.getRuntime(),filmsResponse.getOverview(),
+                    filmsResponse.getYear(),filmsResponse.getGenreNames(),filmsResponse.getRuntime(),filmsResponse.getOverview(),
                     filmsResponse.isFavorit(),filmsResponse.getPrice(),filmsResponse.isAcquired());
             filmList.add(film);
         }

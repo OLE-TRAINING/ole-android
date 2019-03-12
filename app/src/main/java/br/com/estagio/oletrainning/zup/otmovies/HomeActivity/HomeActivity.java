@@ -1,12 +1,18 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,7 +26,13 @@ public class HomeActivity extends CommonActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private HomeActivityViewHolder homeActivityViewHolder;
-    private HomeFragment homeFragment;
+    private static final String TAG_FRAGMENT_ONE = "fragment_one";
+    private static final String TAG_FRAGMENT_TWO = "fragment_two";
+    private static final String TAG_FRAGMENT_THREE = "fragment_three";
+
+    private FragmentManager fragmentManager;
+    private Fragment currentFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +52,20 @@ public class HomeActivity extends CommonActivity
                 this, homeActivityViewHolder.drawerLayout, homeActivityViewHolder.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         homeActivityViewHolder.drawerLayout.addDrawerListener(toggle);
 
+        SpannableString spannableString = new SpannableString("OT"+"MOVIES");
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
+        homeActivityViewHolder.titleToobar.setText(spannableString);
+
         toggle.syncState();
 
-        homeFragment = HomeFragment.newInstance();
-        openFragment(homeFragment);
+
+        fragmentManager = getSupportFragmentManager();
+
+        Fragment fragment = fragmentManager.findFragmentByTag(TAG_FRAGMENT_ONE);
+        if (fragment == null) {
+            fragment = HomeFragment.newInstance();
+        }
+        replaceFragment(fragment, TAG_FRAGMENT_ONE);
     }
 
     @Override
@@ -78,35 +100,40 @@ public class HomeActivity extends CommonActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case  R.id.navigation_home:
-                if(homeFragment != null && !homeFragment.isVisible()){
-                    homeFragment = HomeFragment.newInstance();
-                    openFragment(homeFragment);
+        Fragment fragment;
+        switch (item.getItemId()) {
+            case R.id.navigation_home:
+                fragment = fragmentManager.findFragmentByTag(TAG_FRAGMENT_ONE);
+                if (fragment == null) {
+                    fragment = HomeFragment.newInstance();
                 }
+                replaceFragment(fragment, TAG_FRAGMENT_ONE);
                 break;
-
             case R.id.navigation_favorite:
-                openFragment(new FavoriteFragment());
+                fragment = fragmentManager.findFragmentByTag(TAG_FRAGMENT_TWO);
+                if (fragment == null) {
+                    fragment = new FavoriteFragment();
+                }
+                replaceFragment(fragment, TAG_FRAGMENT_TWO);
                 break;
-
             case R.id.navigation_search:
-                openFragment(new SearchFragment());
+                fragment = fragmentManager.findFragmentByTag(TAG_FRAGMENT_THREE);
+                if (fragment == null) {
+                    fragment = new SearchFragment();
+                }
+                replaceFragment(fragment, TAG_FRAGMENT_THREE);
                 break;
-
         }
         return true;
     }
 
-    private boolean openFragment(Fragment fragment){
-        if(fragment != null){
-            getSupportFragmentManager()
+    private void replaceFragment(@NonNull Fragment fragment, @NonNull String tag) {
+        if (!fragment.equals(currentFragment)) {
+            fragmentManager
                     .beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.content_home_drawer, fragment)
+                    .replace(R.id.content_home_drawer, fragment, tag)
                     .commit();
-            return true;
+            currentFragment = fragment;
         }
-        return false;
     }
 }

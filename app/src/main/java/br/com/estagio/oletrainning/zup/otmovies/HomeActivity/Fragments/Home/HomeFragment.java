@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +47,10 @@ public class HomeFragment extends Fragment {
         public void onChanged(@Nullable FilmGenres filmGenres) {
             genre = filmGenres;
 
-            viewHolder.viewPager.setAdapter(new FragmentStateAdapter(getFragmentManager(),
-                    genre));
+            FragmentStatePagerAdapter fragmentStatePagerAdapter =
+                    new FragmentStateAdapter(getFragmentManager(),genre);
+
+            viewHolder.viewPager.setAdapter(fragmentStatePagerAdapter);
 
             viewHolder.tabLayout.setupWithViewPager(viewHolder.viewPager);
         }

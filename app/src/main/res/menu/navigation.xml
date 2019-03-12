@@ -5,6 +5,7 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_round_home_24px"
+        android:checked="true"
         tools:ignore="MenuTitle" />
 
     <item

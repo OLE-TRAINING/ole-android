@@ -17,6 +17,7 @@ public class HomeActivityViewHolder {
     DrawerLayout drawerLayout;
     TextView textView_navView_email;
     TextView textView_navView_name;
+    TextView titleToobar;
 
     HomeActivityViewHolder(View view) {
 
@@ -28,5 +29,6 @@ public class HomeActivityViewHolder {
         View headerView = navigationView.getHeaderView(0);
         textView_navView_email = headerView.findViewById(R.id.textview_nav_email);
         textView_navView_name = headerView.findViewById(R.id.textview_nav_name);
+        titleToobar = homeDrawer.findViewById(R.id.textHomeTitle);
     }
 }

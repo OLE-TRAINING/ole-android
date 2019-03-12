@@ -12,16 +12,16 @@ public class Film {
     private final float voteCount;
     private final String title;
     private final int year;
-    private final List<String> genreNames = new ArrayList<>();
+    private List<String> genreNames = new ArrayList<>();
     private final String runtime;
     private final String overview;
     private final boolean favorit;
     private final float price;
     private final boolean acquired;
 
-    public Film(float id, String posterId, String bannerId, float voteAverage, float voteCount,
-                String title, int year, String runtime, String overview, boolean favorit,
-                float price, boolean acquired) {
+
+    public Film(float id, String posterId, String bannerId, float voteAverage, float voteCount, String title, int year,
+                List<String> genreNames,String runtime, String overview, boolean favorit, float price, boolean acquired) {
         this.id = id;
         this.posterId = posterId;
         this.bannerId = bannerId;
@@ -29,6 +29,7 @@ public class Film {
         this.voteCount = voteCount;
         this.title = title;
         this.year = year;
+        this.genreNames = genreNames;
         this.runtime = runtime;
         this.overview = overview;
         this.favorit = favorit;

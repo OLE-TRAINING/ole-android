@@ -2,6 +2,7 @@ package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +96,7 @@ public class ListFilmsAdapter extends RecyclerView.Adapter<ListFilmsAdapter.List
                     .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+film.getPosterId()
                             +"/image/w342?gw-app-key=593c3280aedd01364c73000d3ac06d76")
                     .into(imageView);
+            film.getGenreNames();
             keywords.setText(keywordPhraseBuilder(film.getGenreNames()));
             movieDescription.setText(film.getOverview());
             runtime.setText(film.getRuntime());
@@ -104,22 +106,17 @@ public class ListFilmsAdapter extends RecyclerView.Adapter<ListFilmsAdapter.List
             price.setText(priceText);
         }
 
-        private String removeLastComma(String phrase) {
-            if(phrase !=null && !phrase.isEmpty()){
-                phrase.substring(0, phrase.length() - 1);
-            }
-            return phrase;
-        }
-
         private String keywordPhraseBuilder(@NonNull List<String> filmGenreNamesList) {
             StringBuilder keywordList = new StringBuilder();
             for (int i = 0; i < filmGenreNamesList.size(); i++) {
-                if (i < 5) {
                     keywordList.append(filmGenreNamesList.get(i));
-                    keywordList.append(", ");
-                }
+                    if(i<filmGenreNamesList.size()-1){
+                        keywordList.append(", ");
+                    }
+
             }
-            return removeLastComma(keywordList.toString());
+            Log.d("KEYWORDS",keywordList.toString());
+            return keywordList.toString();
         }
     }
 
