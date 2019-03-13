@@ -12,7 +12,6 @@ import static java.lang.String.valueOf;
 
 public class FragmentStateAdapter extends FragmentStatePagerAdapter {
 
-
     private FilmGenres genre;
 
     public FragmentStateAdapter(FragmentManager fm, FilmGenres genre) {

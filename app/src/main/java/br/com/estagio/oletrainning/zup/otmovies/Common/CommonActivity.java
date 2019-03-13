@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 
-public class CommonActivity extends AppCompatActivity {
+public abstract class CommonActivity extends AppCompatActivity {
 
     public void hideKeyword(Window window){
         window.setSoftInputMode(

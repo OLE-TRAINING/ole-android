@@ -1,38 +1,57 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.text.Html;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.io.File;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Favorite.FavoriteFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Search.SearchFragment;
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 public class HomeActivity extends CommonActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private HomeActivityViewHolder homeActivityViewHolder;
-    private static final String TAG_FRAGMENT_ONE = "fragment_one";
-    private static final String TAG_FRAGMENT_TWO = "fragment_two";
-    private static final String TAG_FRAGMENT_THREE = "fragment_three";
+    private static final String TAG_FRAGMENT_HOME = "fragment_home";
+    private static final String TAG_FRAGMENT_FAVORITE = "fragment_favorite";
+    private static final String TAG_FRAGMENT_SEARCH = "fragment_search";
 
-    private FragmentManager fragmentManager;
-    private Fragment currentFragment;
+    private Fragment home = new HomeFragment();
+    private Fragment favorite = new FavoriteFragment();
+    private Fragment search = new SearchFragment();
 
+    public Fragment getHome() {
+        return home;
+    }
+
+    public Fragment getFavorite() {
+        return favorite;
+    }
+
+    public Fragment getSearch() {
+        return search;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,33 +71,48 @@ public class HomeActivity extends CommonActivity
                 this, homeActivityViewHolder.drawerLayout, homeActivityViewHolder.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         homeActivityViewHolder.drawerLayout.addDrawerListener(toggle);
 
-        SpannableString spannableString = new SpannableString("OT"+"MOVIES");
+        SpannableString spannableString = new SpannableString("OT" + "MOVIES");
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
         homeActivityViewHolder.titleToobar.setText(spannableString);
 
         toggle.syncState();
 
-
-        fragmentManager = getSupportFragmentManager();
-
-        Fragment fragment = fragmentManager.findFragmentByTag(TAG_FRAGMENT_ONE);
-        if (fragment == null) {
-            fragment = HomeFragment.newInstance();
-        }
-        replaceFragment(fragment, TAG_FRAGMENT_ONE);
+        getSearch().setRetainInstance(true);
+        getHome().setRetainInstance(true);
+        getFavorite().setRetainInstance(true);
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        colorStatusBar(this.getWindow(),R.color.colorPrimary,false);
+        colorStatusBar(this.getWindow(), R.color.colorPrimary, false);
+        pushFragments(TAG_FRAGMENT_HOME,getHome());
     }
 
-    private void setupListener(){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void setupListener() {
         homeActivityViewHolder.bottomNavigationView
                 .setOnNavigationItemSelectedListener(this);
         homeActivityViewHolder.navigationView.setNavigationItemSelectedListener(navigationViewListener);
+
     }
+
+    private View.OnClickListener logoutOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(HomeActivity.this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+    };
 
     NavigationView.OnNavigationItemSelectedListener navigationViewListener =
             new NavigationView.OnNavigationItemSelectedListener() {
@@ -100,40 +134,58 @@ public class HomeActivity extends CommonActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Fragment fragment;
         switch (item.getItemId()) {
             case R.id.navigation_home:
-                fragment = fragmentManager.findFragmentByTag(TAG_FRAGMENT_ONE);
-                if (fragment == null) {
-                    fragment = HomeFragment.newInstance();
-                }
-                replaceFragment(fragment, TAG_FRAGMENT_ONE);
+                pushFragments(TAG_FRAGMENT_HOME, getHome());
                 break;
             case R.id.navigation_favorite:
-                fragment = fragmentManager.findFragmentByTag(TAG_FRAGMENT_TWO);
-                if (fragment == null) {
-                    fragment = new FavoriteFragment();
-                }
-                replaceFragment(fragment, TAG_FRAGMENT_TWO);
+                pushFragments(TAG_FRAGMENT_FAVORITE, getFavorite());
                 break;
             case R.id.navigation_search:
-                fragment = fragmentManager.findFragmentByTag(TAG_FRAGMENT_THREE);
-                if (fragment == null) {
-                    fragment = new SearchFragment();
-                }
-                replaceFragment(fragment, TAG_FRAGMENT_THREE);
+                pushFragments(TAG_FRAGMENT_SEARCH, getSearch());
                 break;
         }
         return true;
     }
 
-    private void replaceFragment(@NonNull Fragment fragment, @NonNull String tag) {
-        if (!fragment.equals(currentFragment)) {
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.content_home_drawer, fragment, tag)
-                    .commit();
-            currentFragment = fragment;
+    private void pushFragments(String tag, Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+
+        if (manager.findFragmentByTag(tag) == null) {
+            ft.add(R.id.content_home_drawer, fragment, tag);
         }
+
+        Fragment fragmentHome = manager.findFragmentByTag(TAG_FRAGMENT_HOME);
+        Fragment fragmentFavorite = manager.findFragmentByTag(TAG_FRAGMENT_FAVORITE);
+        Fragment fragmentSearch = manager.findFragmentByTag(TAG_FRAGMENT_SEARCH);
+
+        if (fragmentHome != null) {
+            ft.hide(fragmentHome);
+        }
+        if (fragmentFavorite != null) {
+            ft.hide(fragmentFavorite);
+        }
+        if (fragmentSearch != null) {
+            ft.hide(fragmentSearch);
+        }
+
+        if (tag == TAG_FRAGMENT_HOME) {
+            if (fragmentHome != null) {
+                ft.show(fragmentHome);
+            }
+        }
+        if (tag == TAG_FRAGMENT_FAVORITE) {
+            if (fragmentFavorite != null) {
+                ft.show(fragmentFavorite);
+            }
+        }
+
+        if (tag == TAG_FRAGMENT_SEARCH) {
+            if (fragmentSearch != null) {
+                ft.show(fragmentSearch);
+            }
+        }
+        ft.commitAllowingStateLoss();
     }
 }

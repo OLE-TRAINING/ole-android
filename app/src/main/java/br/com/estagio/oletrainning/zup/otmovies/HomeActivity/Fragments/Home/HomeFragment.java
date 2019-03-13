@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FragmentStateAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Response.GenresResponse;
 
 public class HomeFragment extends Fragment {
 
@@ -45,7 +46,12 @@ public class HomeFragment extends Fragment {
     private Observer<FilmGenres> genresObserver = new Observer<FilmGenres>() {
         @Override
         public void onChanged(@Nullable FilmGenres filmGenres) {
+            GenresResponse genresResponse = new GenresResponse(-1,"Lançamentos");
+
             genre = filmGenres;
+
+            genre.getGenres().add(0,genresResponse);
+            genre.getGenres().remove(genre.getGenres().size()-1);
 
             FragmentStatePagerAdapter fragmentStatePagerAdapter =
                     new FragmentStateAdapter(getFragmentManager(),genre);
