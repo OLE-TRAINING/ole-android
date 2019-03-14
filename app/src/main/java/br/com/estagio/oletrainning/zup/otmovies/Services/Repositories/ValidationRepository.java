@@ -15,14 +15,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ValidationRepository  extends UserRepository{
+public class ValidationRepository  extends CommonRepository{
 
     private ValidationServices validationServices;
-
-    private String UNEXPECTED_ERROR_KEY = "erro.inesperado";
-    private String UNEXPECTED_ERROR_MESSAGE = "Erro inesperado, tente novamente mais tarde!";
-    private int SUCCESS_CODE = 200;
-
 
     public ValidationRepository(){
         validationServices = RetrofitServiceBuilder.buildService(ValidationServices.class);

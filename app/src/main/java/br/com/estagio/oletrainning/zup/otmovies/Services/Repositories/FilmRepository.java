@@ -5,8 +5,11 @@ import android.arch.lifecycle.MutableLiveData;
 
 import java.util.List;
 
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Mapper.FilmMapper;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
+
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.FilmService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
@@ -16,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FilmRepository {
+public class FilmRepository extends CommonRepository{
 
     private FilmService filmService;
 
@@ -24,19 +27,30 @@ public class FilmRepository {
         filmService = RetrofitServiceBuilder.buildService(FilmService.class);
     }
 
-    public LiveData<FilmGenres> getGenreList() {
-        final MutableLiveData<FilmGenres> data = new MutableLiveData<>();
+    public LiveData<ResponseModel<FilmGenres>> getGenreList() {
+        final MutableLiveData<ResponseModel<FilmGenres>> data = new MutableLiveData<>();
         filmService.getGenres()
                 .enqueue(new Callback<FilmGenres>() {
                     @Override
                     public void onResponse(Call<FilmGenres> call, Response<FilmGenres> response) {
                         SingletonAccessToken.saveAccessToken(response.headers().get("x-access-token"));
-                        if(response.body() !=null){
-                            if(response.isSuccessful()){
-                                data.setValue(response.body());
-
+                        ResponseModel<FilmGenres> responseModel = new ResponseModel<>();
+                        if(response.code() == SUCCESS_CODE){
+                            responseModel.setCode(SUCCESS_CODE);
+                            responseModel.setResponse(response.body());
+                        } else if (response.code() == SESSION_EXPIRED_CODE){
+                            responseModel.setCode(SESSION_EXPIRED_CODE);
+                        } else {
+                            if(response.errorBody() != null){
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
+                            } else {
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
                             }
                         }
+                        data.setValue(responseModel);
                     }
 
                     @Override

@@ -3,29 +3,19 @@ package br.com.estagio.oletrainning.zup.otmovies.Services.Repositories;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.UserServices;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
-import okhttp3.ResponseBody;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserRepository {
+public class UserRepository  extends CommonRepository{
 
     private UserServices userServices;
-
-    private String UNEXPECTED_ERROR_KEY = "erro.inesperado";
-    private String UNEXPECTED_ERROR_MESSAGE = "Erro inesperado, tente novamente mais tarde!";
-    private int SUCCESS_CODE = 200;
-
 
     public UserRepository(){
         userServices= RetrofitServiceBuilder.buildService(UserServices.class);
@@ -88,12 +78,5 @@ public class UserRepository {
                     }
                 });
         return data;
-    }
-
-    protected ErrorMessage serializeErrorBody(ResponseBody response){
-        Gson gson = new Gson();
-        Type type = new TypeToken<ErrorMessage>() {
-        }.getType();
-        return gson.fromJson(response.charStream(), type);
     }
 }
