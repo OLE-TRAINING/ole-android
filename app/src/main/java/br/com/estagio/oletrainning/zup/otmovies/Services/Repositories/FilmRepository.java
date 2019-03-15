@@ -33,7 +33,7 @@ public class FilmRepository extends CommonRepository{
                 .enqueue(new Callback<FilmGenres>() {
                     @Override
                     public void onResponse(Call<FilmGenres> call, Response<FilmGenres> response) {
-                        SingletonAccessToken.saveAccessToken(response.headers().get("x-access-token"));
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         ResponseModel<FilmGenres> responseModel = new ResponseModel<>();
                         if(response.code() == SUCCESS_CODE){
                             responseModel.setCode(SUCCESS_CODE);
@@ -67,7 +67,7 @@ public class FilmRepository extends CommonRepository{
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
-                        SingletonAccessToken.saveAccessToken(response.headers().get("x-access-token"));
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         ResponseModel<List<Film>> responseModel = new ResponseModel<>();
                         if(response.code() == SUCCESS_CODE){
                             responseModel.setCode(SUCCESS_CODE);

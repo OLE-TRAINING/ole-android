@@ -19,15 +19,18 @@ public class DialogSessionExpired extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Sessão Expirada!")
-                .setTitle("Aviso!")
+                .setTitle("Aviso:")
                 .setCancelable(false)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
                     }
                 });
+
+        getDialog().setCanceledOnTouchOutside(false);
+
         return builder.create();
     }
 }

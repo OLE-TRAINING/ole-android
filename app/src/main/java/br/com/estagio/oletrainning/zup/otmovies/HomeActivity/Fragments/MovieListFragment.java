@@ -1,12 +1,14 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,10 +19,12 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.ListFilmsAdapter;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.DialogSessionExpired;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragmentViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAccessToken;
 
 public class MovieListFragment extends Fragment {
 
@@ -39,8 +43,6 @@ public class MovieListFragment extends Fragment {
         this.filmGenres = filmGenres;
         this.genreID = genreID;
     }
-
-
 
     @Nullable
     @Override
@@ -61,6 +63,7 @@ public class MovieListFragment extends Fragment {
 
     private void setupObservers() {
         viewModelHome.getThereIsAMovieGenre().observe(this, filmGenreObserver);
+        viewModelHome.isSessionExpired.observe(this, sessionObserver);
     }
 
     private void setsUpAdapter() {
@@ -89,4 +92,19 @@ public class MovieListFragment extends Fragment {
     private void showError() {
         Toast.makeText(getContext(), "Erro ao obter lista de filmes", Toast.LENGTH_SHORT).show();
     }
+
+    private Observer<Boolean> sessionObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isSessionExpired) {
+            if (isSessionExpired) {
+                SingletonAccessToken.setAccessTokenReceived(null);
+                DialogSessionExpired dialogSessionExpired = new DialogSessionExpired();
+                FragmentManager fragmentManager = getChildFragmentManager();
+                dialogSessionExpired.show(fragmentManager, "SessionExpired");
+
+                Dialog dialog = dialogSessionExpired.getDialog();
+                dialog.setCanceledOnTouchOutside(false);
+            }
+        }
+    };
 }

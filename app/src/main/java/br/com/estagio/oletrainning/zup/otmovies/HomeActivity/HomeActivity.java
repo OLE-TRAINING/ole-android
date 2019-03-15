@@ -22,12 +22,10 @@ import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Favorite.
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Search.SearchFragment;
-
-import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName;
-import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
+
 
 public class HomeActivity extends CommonActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -77,10 +75,6 @@ public class HomeActivity extends CommonActivity
         homeActivityViewHolder.titleToobar.setText(spannableString);
 
         toggle.syncState();
-
-        getSearch().setRetainInstance(true);
-        getHome().setRetainInstance(true);
-        getFavorite().setRetainInstance(true);
     }
 
     @Override

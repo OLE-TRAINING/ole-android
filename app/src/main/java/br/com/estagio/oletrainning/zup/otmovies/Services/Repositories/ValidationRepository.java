@@ -116,7 +116,7 @@ public class ValidationRepository  extends CommonRepository{
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        SingletonAccessToken.saveAccessToken(response.headers().get("x-access-token"));
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         ResponseModel<UserData> responseModel = new ResponseModel<>();
                         if((response.code() == SUCCESS_CODE)) {
                             responseModel.setCode(response.code());

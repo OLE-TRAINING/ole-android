@@ -12,7 +12,7 @@ public enum SingletonAccessToken {
         this.accessToken = accessToken;
     }
 
-    public static void saveAccessToken(String token){
+    public static void setAccessTokenReceived(String token){
         SingletonAccessToken singletonAccessToken = SingletonAccessToken.INSTANCE;
         singletonAccessToken.setAccessToken(token);
         if (singletonAccessToken.accessToken != null){
