@@ -4,26 +4,21 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 public class CommonViewModel extends ViewModel {
 
     protected ValidationRepository validationRepository = new ValidationRepository();
 
-    protected Bundle bundle;
-    protected String EMAIL_BUNDLE_KEY = "EmailPreLogin";
-
     protected String SUCCESS_RESEND_TOKEN = "Código reenviado com sucesso!";
     protected String SERVICE_OR_CONNECTION_ERROR_RESEND_TOKEN = "Falha ao reenviar o código. Verifique a conexão e tente novamente.";
 
     protected MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-
-    protected MutableLiveData<String> emailChanged = new MutableLiveData<>();
 
     protected LiveData<ResponseModel<UserData>> tokenResend;
 
@@ -39,25 +34,12 @@ public class CommonViewModel extends ViewModel {
         return tokenResend;
     }
 
-    public MutableLiveData<String> getEmailChanged() {
-        return emailChanged;
-    }
-
     public MutableLiveData<Boolean> getIsLoading() {
         return isLoading;
     }
 
     public MutableLiveData<String> getForwardedToken() {
         return forwardedToken;
-    }
-
-    public void setBundle(Bundle bundle) {
-        this.bundle = bundle;
-        changeEmail(bundle.getString(EMAIL_BUNDLE_KEY));
-    }
-
-    protected void changeEmail(String email){
-        emailChanged.setValue(email);
     }
 
     protected Observer<ResponseModel<UserData>> tokenResendObserver = new Observer<ResponseModel<UserData>>() {
@@ -84,7 +66,7 @@ public class CommonViewModel extends ViewModel {
     }
 
     public void tokenForwardingRequested(){
-        String email = bundle.getString(EMAIL_BUNDLE_KEY);
+        String email = SingletonEmail.INSTANCE.getEmail();
         executeServiceTokenResend(email);
     }
 

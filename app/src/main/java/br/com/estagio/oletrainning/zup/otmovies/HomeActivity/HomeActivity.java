@@ -1,6 +1,5 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
-
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -24,7 +23,11 @@ import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.Dial
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Search.SearchFragment;
 
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName;
+import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 public class HomeActivity extends CommonActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -60,8 +63,9 @@ public class HomeActivity extends CommonActivity
 
         setSupportActionBar(homeActivityViewHolder.toolbar);
 
-        String emailAdd = getIntent().getStringExtra(getString(R.string.EmailPreLogin));
+        String emailAdd = SingletonEmail.INSTANCE.getEmail();
         homeActivityViewHolder.textView_navView_email.setText(emailAdd);
+        homeActivityViewHolder.textView_navView_name.setText(SingletonName.INSTANCE.getUsername());
 
         setupListener();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -99,9 +103,7 @@ public class HomeActivity extends CommonActivity
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.nav_logout:
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            DialogConfirmLogout dialogConfirmLogout = new DialogConfirmLogout();
-                            dialogConfirmLogout.show(fragmentManager,"LogoutConfirmation");
+                            logoutConfirmation();
                             return true;
                     }
                     return false;
@@ -113,7 +115,7 @@ public class HomeActivity extends CommonActivity
         if (homeActivityViewHolder.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             homeActivityViewHolder.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            logoutConfirmation();
         }
     }
 
@@ -173,5 +175,11 @@ public class HomeActivity extends CommonActivity
             }
         }
         ft.commitAllowingStateLoss();
+    }
+
+    private void logoutConfirmation() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        DialogConfirmLogout dialogConfirmLogout = new DialogConfirmLogout();
+        dialogConfirmLogout.show(fragmentManager, "LogoutConfirmation");
     }
 }

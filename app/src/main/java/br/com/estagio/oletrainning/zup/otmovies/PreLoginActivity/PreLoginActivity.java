@@ -16,6 +16,7 @@ import br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity.F
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 
 public class PreLoginActivity extends CommonActivity {
@@ -76,18 +77,12 @@ public class PreLoginActivity extends CommonActivity {
         public void onChanged(String status) {
             if (status.equals(getString(R.string.registered))) {
                 Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
-                String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
-                intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                 startActivity(intent);
             } else if (status.equals(getString(R.string.pending))) {
                 Intent intent = new Intent(PreLoginActivity.this, FinishYourRegistrationActivity.class);
-                String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
-                intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                 startActivity(intent);
             } else if (status.equals(getString(R.string.inexistent))) {
                 Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
-                String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
-                intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                 startActivity(intent);
             }
         }

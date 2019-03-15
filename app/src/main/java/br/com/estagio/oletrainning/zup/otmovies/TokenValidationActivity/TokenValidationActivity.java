@@ -14,6 +14,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 public class TokenValidationActivity extends CommonActivity {
 
@@ -30,11 +31,9 @@ public class TokenValidationActivity extends CommonActivity {
 
         tokenValidationViewModel = ViewModelProviders.of(this).get(TokenValidationViewModel.class);
 
+        tokenValidationViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
+
         setupObservers();
-
-        Bundle bundle = getIntent().getExtras();
-
-        tokenValidationViewModel.setBundle(bundle);
 
         hideKeyword(getWindow());
     }
@@ -56,7 +55,6 @@ public class TokenValidationActivity extends CommonActivity {
     private void setupObservers() {
         tokenValidationViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
         tokenValidationViewModel.getIsLoading().observe(this, progressBarObserver);
-        tokenValidationViewModel.getEmailChanged().observe(this, emailChangedObserver);
         tokenValidationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
         tokenValidationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
         tokenValidationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
@@ -75,8 +73,6 @@ public class TokenValidationActivity extends CommonActivity {
         public void onChanged(String message) {
             Toast.makeText(TokenValidationActivity.this, message, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(TokenValidationActivity.this, LoginActivity.class);
-            String emailInput = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
@@ -85,13 +81,6 @@ public class TokenValidationActivity extends CommonActivity {
         @Override
         public void onChanged(String message) {
             Toast.makeText(TokenValidationActivity.this, message, Toast.LENGTH_LONG).show();
-        }
-    };
-
-    private Observer<String> emailChangedObserver = new Observer<String>() {
-        @Override
-        public void onChanged(String email) {
-            tokenValidationViewHolder.textViewEmail.setText(email);
         }
     };
 

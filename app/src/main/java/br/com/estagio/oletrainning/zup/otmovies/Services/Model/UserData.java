@@ -52,4 +52,8 @@ public class UserData {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getCompleteName() {
+        return completeName;
+    }
 }

@@ -14,6 +14,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 
 public class FinishYourRegistrationActivity extends CommonActivity {
@@ -31,11 +32,9 @@ public class FinishYourRegistrationActivity extends CommonActivity {
 
         finishYourRegistrationViewModel = ViewModelProviders.of(this).get(FinishYourRegistrationViewModel.class);
 
+        finishYourRegistrationViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
+
         setupObservers();
-
-        Bundle bundle = getIntent().getExtras();
-
-        finishYourRegistrationViewModel.setBundle(bundle);
 
         hideKeyword(getWindow());
     }
@@ -57,7 +56,6 @@ public class FinishYourRegistrationActivity extends CommonActivity {
     private void setupObservers() {
         finishYourRegistrationViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
         finishYourRegistrationViewModel.getIsLoading().observe(this, progressBarObserver);
-        finishYourRegistrationViewModel.getEmailChanged().observe(this, emailChangedObserver);
         finishYourRegistrationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
         finishYourRegistrationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
         finishYourRegistrationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
@@ -76,8 +74,6 @@ public class FinishYourRegistrationActivity extends CommonActivity {
         public void onChanged(String message) {
             Toast.makeText(FinishYourRegistrationActivity.this, message, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(FinishYourRegistrationActivity.this, LoginActivity.class);
-            String emailInput = finishYourRegistrationViewHolder.textViewEmail.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
@@ -86,13 +82,6 @@ public class FinishYourRegistrationActivity extends CommonActivity {
         @Override
         public void onChanged(String message) {
             Toast.makeText(FinishYourRegistrationActivity.this, message, Toast.LENGTH_LONG).show();
-        }
-    };
-
-    private Observer<String> emailChangedObserver = new Observer<String>() {
-        @Override
-        public void onChanged(String email) {
-            finishYourRegistrationViewHolder.textViewEmail.setText(email);
         }
     };
 

@@ -10,6 +10,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Password;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 public class LoginViewModel extends CommonViewModel {
 
@@ -46,7 +47,7 @@ public class LoginViewModel extends CommonViewModel {
         passwordContainsErrorStatus.postValue(!password.validatePassword());
         if (password.isValidPassword()) {
             UserData userData = new UserData();
-            userData.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
+            userData.setEmail(SingletonEmail.INSTANCE.getEmail());
             userData.setPassword(passwordEntered);
             executeServicePasswordValidation(userData);
         }
@@ -61,7 +62,7 @@ public class LoginViewModel extends CommonViewModel {
         super.tokenForwardingRequested();
         passwordContainsErrorStatus.setValue(false);
         changeSuccessMessageResendToken();
-        String email = bundle.getString(EMAIL_BUNDLE_KEY);
+        String email = SingletonEmail.INSTANCE.getEmail();
         executeServiceTokenResend(email);
     }
 

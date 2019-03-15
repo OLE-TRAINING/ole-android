@@ -1,11 +1,13 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home;
 
+
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,7 @@ public class HomeFragment extends Fragment {
 
     private void setupObservers(){
         viewModelHome.getThereIsAGenreList().observe(this,genresObserver);
+        viewModelHome.getIsSessionExpired().observe(this,sessionObserver);
     }
 
     private Observer<FilmGenres> genresObserver = new Observer<FilmGenres>() {
@@ -62,7 +65,16 @@ public class HomeFragment extends Fragment {
         }
     };
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
-    }
+    private Observer<Boolean> sessionObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isSessionExpired) {
+            if(isSessionExpired){
+                DialogSessionExpired dialogSessionExpired = new DialogSessionExpired();
+                FragmentManager fragmentManager = getChildFragmentManager();
+                dialogSessionExpired.show(fragmentManager,"SessionExpired");
+            }
+        }
+    };
+
+
 }

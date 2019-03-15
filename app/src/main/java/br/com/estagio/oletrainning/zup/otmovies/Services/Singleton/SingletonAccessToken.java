@@ -2,16 +2,13 @@ package br.com.estagio.oletrainning.zup.otmovies.Services.Singleton;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum SingletonAccessToken {
 
     INSTANCE;
 
     private String accessToken;
 
-    public void setAccessToken(String accessToken) {
+    private void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
 

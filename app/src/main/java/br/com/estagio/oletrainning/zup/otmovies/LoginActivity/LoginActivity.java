@@ -15,6 +15,7 @@ import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivity.InformTokenAndNewPasswordActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 
 public class LoginActivity extends CommonActivity {
@@ -30,13 +31,11 @@ public class LoginActivity extends CommonActivity {
         this.loginViewHolder = new LoginViewHolder(view);
         setContentView(view);
 
+        loginViewHolder.textViewEmailEntered.setText(SingletonEmail.INSTANCE.getEmail());
+
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
         setupObservers();
-
-        Bundle bundle = getIntent().getExtras();
-
-        loginViewModel.setBundle(bundle);
 
         hideKeyword(getWindow());
     }
@@ -59,7 +58,6 @@ public class LoginActivity extends CommonActivity {
     private void setupObservers() {
         loginViewModel.getPasswordContainsErrorStatus().observe(this, passwordContainsErrorObserver);
         loginViewModel.getIsLoading().observe(this, progressBarObserver);
-        loginViewModel.getEmailChanged().observe(this,emailChangedObserver);
         loginViewModel.getIsValidatedPassword().observe(this,isValidatedPasswordObserver);
         loginViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
         loginViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
@@ -79,8 +77,6 @@ public class LoginActivity extends CommonActivity {
         public void onChanged(@Nullable String message) {
             Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
-            String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
@@ -106,19 +102,9 @@ public class LoginActivity extends CommonActivity {
             loginViewModel.setPasswordContainsErrorStatus(false);
             Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            String emailInput = loginViewHolder.textViewEmailEntered.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
-
-    private Observer<String> emailChangedObserver = new Observer<String>() {
-        @Override
-        public void onChanged(String email) {
-            loginViewHolder.textViewEmailEntered.setText(email);
-        }
-    };
-
 
     private Observer<Boolean> passwordContainsErrorObserver = new Observer<Boolean>() {
         @Override

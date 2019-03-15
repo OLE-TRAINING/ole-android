@@ -11,6 +11,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Token;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 
 public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
@@ -86,7 +87,7 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
         confirmPasswordContainsErrorStatus.postValue(!password.validatePassword(confirmPasswordEntered));
         if(token.isValidToken()&& password.isValidPassword() && password.isValidConfirmPassword(confirmPasswordEntered)){
             BodyChangePassword bodyChangePassword = new BodyChangePassword();
-            bodyChangePassword.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
+            bodyChangePassword.setEmail(SingletonEmail.INSTANCE.getEmail());
             bodyChangePassword.setConfirmationToken(code);
             bodyChangePassword.setNewPassword(passwordEntered);
             bodyChangePassword.setNewPasswordConfirmation(confirmPasswordEntered);

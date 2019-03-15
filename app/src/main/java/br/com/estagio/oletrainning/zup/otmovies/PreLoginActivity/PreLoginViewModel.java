@@ -11,6 +11,8 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Email;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName;
 
 public class PreLoginViewModel extends CommonViewModel {
 
@@ -52,6 +54,7 @@ public class PreLoginViewModel extends CommonViewModel {
         email = new Email(emailEntered);
         emailContainsErrorStatus.postValue(!email.validateEmail());
         if (email.isValidEmail()) {
+            SingletonEmail.setEmailEntered(emailEntered);
             executeServiceCallGetUserData(emailEntered);
         }
     }
@@ -64,8 +67,10 @@ public class PreLoginViewModel extends CommonViewModel {
                 if (responseModel.getResponse().getRegistrationStatus() != null) {
                     if (responseModel.getResponse().getRegistrationStatus().equals(REGISTERED)) {
                         getRegistrationStatus().setValue(REGISTERED);
+                        SingletonName.setCompleteName(responseModel.getResponse().getCompleteName());
                     } else if (responseModel.getResponse().getRegistrationStatus().equals(PENDING)) {
                         getRegistrationStatus().setValue(PENDING);
+                        SingletonName.setCompleteName(responseModel.getResponse().getCompleteName());
                     } else if (responseModel.getResponse().getRegistrationStatus().equals(INEXISTENT)) {
                         getRegistrationStatus().setValue(INEXISTENT);
                     }

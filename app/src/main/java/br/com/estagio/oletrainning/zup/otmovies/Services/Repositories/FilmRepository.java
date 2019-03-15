@@ -61,19 +61,31 @@ public class FilmRepository extends CommonRepository{
         return data;
     }
 
-    public LiveData<List<Film>> getMovieGenre(String genreID) {
-        final MutableLiveData<List<Film>> data = new MutableLiveData<>();
+    public LiveData<ResponseModel<List<Film>>> getMovieGenre(String genreID) {
+        final MutableLiveData<ResponseModel<List<Film>>> data = new MutableLiveData<>();
         filmService.getMovieGenre("genres",genreID,"20","1")
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
                         SingletonAccessToken.saveAccessToken(response.headers().get("x-access-token"));
-                        if(response.body() !=null){
-                            if(response.isSuccessful()){
-                                data.setValue(FilmMapper
-                                        .reponseForDomain(response.body().getResults()));
+                        ResponseModel<List<Film>> responseModel = new ResponseModel<>();
+                        if(response.code() == SUCCESS_CODE){
+                            responseModel.setCode(SUCCESS_CODE);
+                            responseModel.setResponse(FilmMapper
+                                    .reponseForDomain(response.body().getResults()));
+                        } else if (response.code() == SESSION_EXPIRED_CODE){
+                            responseModel.setCode(SESSION_EXPIRED_CODE);
+                        } else {
+                            if(response.errorBody() != null){
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
+                            } else {
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
                             }
                         }
+                        data.setValue(responseModel);
                     }
 
                     @Override

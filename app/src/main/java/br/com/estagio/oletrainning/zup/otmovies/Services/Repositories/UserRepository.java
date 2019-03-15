@@ -9,6 +9,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.UserServices;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

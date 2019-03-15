@@ -10,6 +10,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Token;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 public class TokenValidationViewModel extends CommonViewModel {
 
@@ -47,7 +48,7 @@ public class TokenValidationViewModel extends CommonViewModel {
         token = new Token(code);
         tokenContainsErrorStatus.postValue(!token.validateTokenSize());
         if (token.isValidToken()) {
-            String email = bundle.getString(EMAIL_BUNDLE_KEY);
+            String email = SingletonEmail.INSTANCE.getEmail();
             executeServiceTokenValidation(email,code);
         }
     }

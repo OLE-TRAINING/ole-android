@@ -13,6 +13,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 public class RegisterNewUserActivity extends CommonActivity {
@@ -31,11 +32,9 @@ public class RegisterNewUserActivity extends CommonActivity {
 
         registerNewUserViewModel = ViewModelProviders.of(this).get(RegisterNewUserViewModel.class);
 
+        registerNewUserViewHolder.textViewEmailEntered.setText(SingletonEmail.INSTANCE.getEmail());
+
         setupObservers();
-
-        Bundle bundle = getIntent().getExtras();
-
-        registerNewUserViewModel.setBundle(bundle);
 
         hideKeyword(getWindow());
     }
@@ -58,7 +57,6 @@ public class RegisterNewUserActivity extends CommonActivity {
         registerNewUserViewModel.getIsInvalidPassword().observe(this, isInvalidPasswordObserver);
         registerNewUserViewModel.getIsUsernameDuplicated().observe(this,isUsernameDuplicated);
         registerNewUserViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
-        registerNewUserViewModel.getEmailChanged().observe(this,emailChangedObserver);
     }
 
     private void setupListeners() {
@@ -89,13 +87,6 @@ public class RegisterNewUserActivity extends CommonActivity {
             String username = registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim();
             String password = registerNewUserViewHolder.errorEditTextPassword.getText().toString().trim();
             registerNewUserViewModel.completedForm(name,username,password);
-        }
-    };
-
-    private Observer<String> emailChangedObserver = new Observer<String>() {
-        @Override
-        public void onChanged(String email) {
-            registerNewUserViewHolder.textViewEmailEntered.setText(email);
         }
     };
 
@@ -148,8 +139,6 @@ public class RegisterNewUserActivity extends CommonActivity {
         public void onChanged(String message) {
             Toast.makeText(RegisterNewUserActivity.this, message, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
-            String emailInput = registerNewUserViewHolder.textViewEmailEntered.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
