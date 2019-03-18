@@ -16,7 +16,6 @@ public class DialogSessionExpired extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Sessão Expirada!")
                 .setTitle("Aviso:")
@@ -27,10 +26,7 @@ public class DialogSessionExpired extends DialogFragment {
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
                     }
-                });
-
-        getDialog().setCanceledOnTouchOutside(false);
-
-        return builder.create();
+                }).create().setCanceledOnTouchOutside(false);
+        return builder.show();
     }
 }

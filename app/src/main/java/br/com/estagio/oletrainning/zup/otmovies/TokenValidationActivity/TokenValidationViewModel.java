@@ -56,11 +56,11 @@ public class TokenValidationViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> tokenValidationObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsValidatedToken().setValue(SUCCESS_MESSAGE_VALIDATE_TOKEN);
                 } else {
+                    isLoading.setValue(false);
                     ErrorMessage errorMessage = new ErrorMessage();
                     errorMessage.setKey(responseModel.getErrorMessage().getKey());
                     errorMessage.setMessage(responseModel.getErrorMessage().getMessage());
@@ -73,6 +73,7 @@ public class TokenValidationViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_VALIDATE_TOKEN);
             }
         }

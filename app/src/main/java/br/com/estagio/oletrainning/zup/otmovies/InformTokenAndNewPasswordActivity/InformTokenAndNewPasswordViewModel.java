@@ -120,11 +120,11 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> serviceValidateTokenAndChangePassObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getPasswordChanged().setValue(SUCCESS_MESSAGE_CHANGE_PASS);
                 } else {
+                    isLoading.setValue(false);
                     String key = responseModel.getErrorMessage().getKey();
                     String message = responseModel.getErrorMessage().getMessage();
                     if (isErrorMessageKeyToPasswordInput(key)) {
@@ -136,6 +136,7 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_CHANGE_PASSWORD);
             }
         }

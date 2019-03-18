@@ -127,16 +127,14 @@ public class LoginActivity extends CommonActivity {
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        loginViewHolder.progressBar,
-                        getWindow(),
-                        LoginActivity.this);
-            }
+        public void onChanged(Boolean isLoading) {
+            loadingExecutor(isLoading,
+                    loginViewHolder.progressBar,
+                    loginViewHolder.frameLayout,
+                    loginViewHolder.buttonSignIn);
         }
     };
+
 
     private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override

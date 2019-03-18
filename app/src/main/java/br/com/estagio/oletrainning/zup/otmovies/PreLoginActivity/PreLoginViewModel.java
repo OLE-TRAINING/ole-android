@@ -62,7 +62,6 @@ public class PreLoginViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> getUserResponseObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.postValue(false);
             if (responseModel != null) {
                 if (responseModel.getResponse().getRegistrationStatus() != null) {
                     if (responseModel.getResponse().getRegistrationStatus().equals(REGISTERED)) {
@@ -75,6 +74,7 @@ public class PreLoginViewModel extends CommonViewModel {
                         getRegistrationStatus().setValue(INEXISTENT);
                     }
                 } else {
+                    isLoading.postValue(false);
                     if (responseModel.getErrorMessage().getKey().equals(ERROR_INVALID_EMAIL)) {
                         getIsInvalidEmail().setValue(true);
                     } else {
@@ -82,6 +82,7 @@ public class PreLoginViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(ERROR_SERVICE_OR_CONNECTION_EMAIL);
             }
         }

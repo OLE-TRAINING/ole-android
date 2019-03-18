@@ -97,14 +97,11 @@ public class FinishYourRegistrationActivity extends CommonActivity {
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        finishYourRegistrationViewHolder.progressBar,
-                        getWindow(),
-                        FinishYourRegistrationActivity.this);
-            }
+        public void onChanged(Boolean isLoading) {
+            loadingExecutor(isLoading,
+                    finishYourRegistrationViewHolder.progressBar,
+                    finishYourRegistrationViewHolder.frameLayout,
+                    finishYourRegistrationViewHolder.button);
         }
     };
 

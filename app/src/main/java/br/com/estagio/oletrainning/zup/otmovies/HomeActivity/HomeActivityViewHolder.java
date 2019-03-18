@@ -5,6 +5,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,14 +20,12 @@ public class HomeActivityViewHolder {
     TextView textView_navView_email;
     TextView textView_navView_name;
     TextView titleToobar;
-    ProgressBar progressBar;
 
     HomeActivityViewHolder(View view) {
 
         toolbar = view.findViewById(R.id.toolbar);
         navigationView = view.findViewById(R.id.nav_view);
         drawerLayout = view.findViewById(R.id.drawer_layout);
-        progressBar = view.findViewById(R.id.progress_bar);
         View homeDrawer = view.findViewById(R.id.home_drawer);
         bottomNavigationView = homeDrawer.findViewById(R.id.bottom_navigation);
         View headerView = navigationView.getHeaderView(0);

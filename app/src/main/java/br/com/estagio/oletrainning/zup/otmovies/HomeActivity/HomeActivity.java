@@ -75,6 +75,10 @@ public class HomeActivity extends CommonActivity
         homeActivityViewHolder.titleToobar.setText(spannableString);
 
         toggle.syncState();
+
+        getSearch().setRetainInstance(true);
+        getHome().setRetainInstance(true);
+        getFavorite().setRetainInstance(true);
     }
 
     @Override

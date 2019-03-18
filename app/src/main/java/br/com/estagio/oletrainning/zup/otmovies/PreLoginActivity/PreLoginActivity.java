@@ -2,21 +2,21 @@ package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+
 import android.widget.Toast;
-
-
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity.FinishYourRegistrationActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
+
 
 
 public class PreLoginActivity extends CommonActivity {
@@ -115,11 +115,10 @@ public class PreLoginActivity extends CommonActivity {
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isLoading) {
-            loadingExecutor(
-                    isLoading,
+            loadingExecutor(isLoading,
                     preLoginViewHolder.progressBar,
-                    getWindow(),
-                    PreLoginActivity.this);
+                    preLoginViewHolder.frameLayout,
+                    preLoginViewHolder.buttonNextPreLogin);
         }
     };
 

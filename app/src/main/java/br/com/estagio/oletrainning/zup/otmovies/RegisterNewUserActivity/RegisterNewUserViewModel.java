@@ -109,11 +109,12 @@ public class RegisterNewUserViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> responseRegisterUserObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.setValue(false);
+
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsRegistered().setValue(SUCCESSFULLY_REGISTERED);
                 } else {
+                    isLoading.setValue(false);
                     ErrorMessage errorMessage = new ErrorMessage();
                     errorMessage.setKey(responseModel.getErrorMessage().getKey());
                     errorMessage.setMessage(responseModel.getErrorMessage().getMessage());
@@ -136,6 +137,7 @@ public class RegisterNewUserViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_REGISTER);
             }
         }

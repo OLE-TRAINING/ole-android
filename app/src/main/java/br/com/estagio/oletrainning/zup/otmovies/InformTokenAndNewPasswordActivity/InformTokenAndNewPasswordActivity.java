@@ -174,14 +174,11 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        informTokenAndNewPasswordViewHolder.progressBar,
-                        getWindow(),
-                        InformTokenAndNewPasswordActivity.this);
-            }
+        public void onChanged(Boolean isLoading) {
+            loadingExecutor(isLoading,
+                    informTokenAndNewPasswordViewHolder.progressBar,
+                    informTokenAndNewPasswordViewHolder.frameLayout,
+                    informTokenAndNewPasswordViewHolder.button);
         }
     };
 

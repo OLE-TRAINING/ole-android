@@ -11,7 +11,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
-public class CommonViewModel extends ViewModel {
+public abstract class CommonViewModel extends ViewModel {
 
     protected ValidationRepository validationRepository = new ValidationRepository();
 
@@ -25,6 +25,12 @@ public class CommonViewModel extends ViewModel {
     protected MutableLiveData<String> isErrorMessageForToast = new MutableLiveData<>();
 
     protected MutableLiveData<String> forwardedToken = new MutableLiveData<>();
+
+    protected final MutableLiveData<Boolean> isSessionExpired = new MutableLiveData<>();
+
+    public LiveData<Boolean> getIsSessionExpired() {
+        return isSessionExpired;
+    }
 
     public MutableLiveData<String> getIsErrorMessageForToast() {
         return isErrorMessageForToast;

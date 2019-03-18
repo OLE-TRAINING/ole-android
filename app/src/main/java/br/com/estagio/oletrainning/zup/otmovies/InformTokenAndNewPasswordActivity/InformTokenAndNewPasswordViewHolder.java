@@ -2,6 +2,7 @@ package br.com.estagio.oletrainning.zup.otmovies.InformTokenAndNewPasswordActivi
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ public class InformTokenAndNewPasswordViewHolder {
     ComponentErrorEditText errorEditTextConfirmPassword;
     Button button;
     ProgressBar progressBar;
+    FrameLayout frameLayout;
 
     InformTokenAndNewPasswordViewHolder (View view){
         imageView = view.findViewById(R.id.imageView_backArrow);
@@ -29,5 +31,6 @@ public class InformTokenAndNewPasswordViewHolder {
         errorEditTextConfirmPassword = view.findViewById(R.id.errorEditText_confirmPassword);
         button = view.findViewById(R.id.button_changePassword);
         progressBar = view.findViewById(R.id.progress_bar);
+        frameLayout = view.findViewById(R.id.loading_layout);
     }
 }

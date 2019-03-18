@@ -146,13 +146,10 @@ public class RegisterNewUserActivity extends CommonActivity {
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        registerNewUserViewHolder.progressBar,
-                        getWindow(),
-                        RegisterNewUserActivity.this);
-            }
+            loadingExecutor(isLoading,
+                    registerNewUserViewHolder.progressBar,
+                    registerNewUserViewHolder.frameLayout,
+                    registerNewUserViewHolder.buttonNextRegister);
         }
     };
 

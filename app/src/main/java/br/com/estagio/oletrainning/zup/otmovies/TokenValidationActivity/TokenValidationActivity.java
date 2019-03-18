@@ -96,14 +96,11 @@ public class TokenValidationActivity extends CommonActivity {
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        tokenValidationViewHolder.progressBar,
-                        getWindow(),
-                        TokenValidationActivity.this);
-            }
+        public void onChanged(Boolean isLoading) {
+            loadingExecutor(isLoading,
+                    tokenValidationViewHolder.progressBar,
+                    tokenValidationViewHolder.frameLayout,
+                    tokenValidationViewHolder.button);
         }
     };
 

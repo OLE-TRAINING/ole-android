@@ -83,11 +83,11 @@ public class LoginViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> passwordValidationObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == 200) {
                     getIsValidatedPassword().setValue(SUCCESS_MESSAGE_LOGIN);
                 } else {
+                    isLoading.setValue(false);
                     String key = responseModel.getErrorMessage().getKey();
                     String message = responseModel.getErrorMessage().getMessage();
                     if (isMessageErrorTopToast(key)) {
@@ -97,6 +97,7 @@ public class LoginViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_LOGIN);
             }
         }

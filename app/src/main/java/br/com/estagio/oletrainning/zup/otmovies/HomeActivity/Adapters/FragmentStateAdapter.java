@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment.MovieListFragment;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
 
 import static java.lang.String.valueOf;
@@ -21,7 +21,6 @@ public class FragmentStateAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
         return new MovieListFragment(findGenreID(position),genre);
     }
 
