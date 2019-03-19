@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment.MovieListFragment;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonFilmGenres;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonGenreID;
 
 import static java.lang.String.valueOf;
@@ -19,7 +18,6 @@ public class FragmentStateAdapter extends FragmentStatePagerAdapter {
     public FragmentStateAdapter(FragmentManager fm, FilmGenres genre) {
         super(fm);
         this.genre = genre;
-        SingletonFilmGenres.setFilmGenresEntered(genre);
     }
 
     @Override

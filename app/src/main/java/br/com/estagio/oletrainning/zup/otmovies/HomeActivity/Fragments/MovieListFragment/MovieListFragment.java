@@ -7,32 +7,28 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 
-import java.util.List;
-
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmViewModel;
-import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragmentViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.GenreAndPageSize;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonGenreID;
 
 
 public class MovieListFragment extends CommonFragment {
 
-
+    private FilmViewModel filmViewModel;
     private MovieListFragmentViewModel movieListFragmentViewModel;
     private MovieListFragmentViewHolder movieListFragmentViewHolder;
-    private FilmViewModel filmViewModel;
-    HomeFragmentViewModel homeFragmentViewModel;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,57 +39,52 @@ public class MovieListFragment extends CommonFragment {
         filmViewModel = ViewModelProviders.of(MovieListFragment.this).get(FilmViewModel.class);
 
         movieListFragmentViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        movieListFragmentViewHolder.recyclerView.setHasFixedSize(true);
 
-        homeFragmentViewModel =new HomeFragmentViewModel();
 
-        homeFragmentViewModel.executeServiceGetGenreList();
-        
-        filmViewModel.startPageSizeObserverViewModel();
+        movieListFragmentViewModel.executeServiceGetFilmResults(getString(R.string.first_page),SingletonGenreID.INSTANCE.getGenreID());
 
-        filmViewModel.executeGetPageSize();
+        setupObservers();
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setupObservers();
+    private void setupObservers(){
+        movieListFragmentViewModel.getThereIsAPageSize().observe(this,pageSizeObeserver);
+        movieListFragmentViewModel.getIsMessageErrorToast().observe(this,isMessageErrorToastObserver);
+        movieListFragmentViewModel.getIsLoading().observe(this,progressBarObserver);
     }
 
-    private void setupObservers() {
-        movieListFragmentViewModel = new MovieListFragmentViewModel();
-        movieListFragmentViewModel.getIsSessionExpired().observe(this, sessionObserver);
-        movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
-        filmViewModel.getThereIsAPageSizeAndGenreID().observe(this,pageSizeAndGenreidsObserver);
-    }
-
-    private Observer<PagedList<FilmResponse>>filmPagedListObserver = new Observer<PagedList<FilmResponse>>() {
+    private Observer<Integer> pageSizeObeserver = new Observer<Integer>() {
         @Override
-        public void onChanged(@Nullable PagedList<FilmResponse> filmResponses) {
-            if(filmResponses !=null){
-                final FilmAdapter adapter = new FilmAdapter(getContext());
-                adapter.submitList(filmResponses);
-                movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
-            }
+        public void onChanged(Integer pageSize) {
+
+            filmViewModel = ViewModelProviders.of(MovieListFragment.this).get(FilmViewModel.class);
+            final FilmAdapter adapter = new FilmAdapter(getActivity());
+
+            filmViewModel.startPageSizeObserverViewModel();
+
+            filmViewModel.getThereIsAPageSizeAndGenreID().setValue(new GenreAndPageSize(pageSize,
+                    SingletonGenreID.INSTANCE.getGenreID()));
+
+            filmViewModel.getItemPagedList().observe(MovieListFragment.this, new Observer<PagedList<FilmResponse>>() {
+                @Override
+                public void onChanged(@Nullable PagedList<FilmResponse> items) {
+                    adapter.submitList(items);
+                }
+            });
+
+            movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
         }
     };
 
-    private Observer<GenreAndPageSize> pageSizeAndGenreidsObserver = new Observer<GenreAndPageSize>() {
+    private Observer<String> isMessageErrorToastObserver = new Observer<String>() {
         @Override
-        public void onChanged(GenreAndPageSize genreAndPageSize) {
-            if(genreAndPageSize !=null){
-                filmViewModel.getPageSizeAndGenre().setValue(genreAndPageSize);
-                filmViewModel.getItemPagedList().observe(getViewLifecycleOwner(),filmPagedListObserver);
-            } else {
-                showError();
-            }
+        public void onChanged(@Nullable String message) {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
         }
     };
 
-    private void showError() {
-        Toast.makeText(getContext(), "Erro ao obter lista de filmes", Toast.LENGTH_SHORT).show();
-    }
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
@@ -107,6 +98,7 @@ public class MovieListFragment extends CommonFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        filmViewModel.removeObserver();
         movieListFragmentViewModel.removeObserver();
     }
 }

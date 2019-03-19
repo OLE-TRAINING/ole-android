@@ -9,13 +9,7 @@ import android.arch.paging.PageKeyedDataSource;
 import android.arch.paging.PagedList;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.GenreAndPageSize;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonGenreID;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FilmViewModel extends ViewModel {
 
@@ -24,26 +18,29 @@ public class FilmViewModel extends ViewModel {
     private MutableLiveData<GenreAndPageSize> pageSizeAndGenre = new MutableLiveData<>();
     private MutableLiveData<GenreAndPageSize> thereIsAPageSizeAndGenreID = new MutableLiveData<>();
 
-    public MutableLiveData<GenreAndPageSize> getThereIsAPageSizeAndGenreID() {
-        return thereIsAPageSizeAndGenreID;
-    }
-
-    public MutableLiveData<GenreAndPageSize> getPageSizeAndGenre() {
-        return pageSizeAndGenre;
-    }
-
     public LiveData<PagedList<FilmResponse>> getItemPagedList() {
         return itemPagedList;
     }
 
-    public void startPageSizeObserverViewModel() {
-        getPageSizeAndGenre().observeForever(pageSizeAndGenreChangeObserver);
+    public MutableLiveData<GenreAndPageSize> getThereIsAPageSizeAndGenreID() {
+        return thereIsAPageSizeAndGenreID;
+    }
+    public MutableLiveData<GenreAndPageSize> getPageSizeAndGenre() {
+        return pageSizeAndGenre;
     }
 
+    public LiveData<PageKeyedDataSource<Integer, FilmResponse>> getLiveDataSource() {
+        return liveDataSource;
+    }
+
+    public void startPageSizeObserverViewModel() {
+        getThereIsAPageSizeAndGenreID().observeForever(pageSizeAndGenreChangeObserver);
+    }
 
     private Observer<GenreAndPageSize> pageSizeAndGenreChangeObserver = new Observer<GenreAndPageSize>() {
         @Override
         public void onChanged(GenreAndPageSize genreAndPageSize) {
+            thereIsAPageSizeAndGenreID.setValue(genreAndPageSize);
             FilmDataSourceFactory itemDataSourceFactory =
                     new FilmDataSourceFactory(genreAndPageSize.getPageSize(),
                             genreAndPageSize.getGenreID());
@@ -58,28 +55,9 @@ public class FilmViewModel extends ViewModel {
         }
     };
 
-    public void executeGetPageSize(){
-               RetrofitServiceBuilder.getInstance().getApi().getMovieGenre("genres", SingletonGenreID.INSTANCE.getGenreID(), "20", "1")
-                .enqueue(new Callback<FilmsResults>() {
-                    @Override
-                    public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
-                        if (response.body() != null) {
-                            GenreAndPageSize genreAndPageSize = new GenreAndPageSize(response.body().getTotal_pages(),SingletonGenreID.INSTANCE.getGenreID());
-                            thereIsAPageSizeAndGenreID.setValue(genreAndPageSize);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<FilmsResults> call, Throwable t) {
-                        thereIsAPageSizeAndGenreID.setValue(null);
-                    }
-                });
-    }
-
-
     public void removeObserver() {
-        if (getPageSizeAndGenre() != null) {
-            getPageSizeAndGenre().removeObserver(pageSizeAndGenreChangeObserver);
+        if (getThereIsAPageSizeAndGenreID() != null) {
+            getThereIsAPageSizeAndGenreID().removeObserver(pageSizeAndGenreChangeObserver);
         }
     }
 }

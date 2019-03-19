@@ -3,53 +3,71 @@ package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieLis
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.paging.PagedList;
+
 import android.support.annotation.Nullable;
 
-import java.util.List;
-
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FilmRepository;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
 
 public class MovieListFragmentViewModel extends CommonViewModel {
 
-    private int SUCCESS_CODE = 200;
-    private int SESSION_EXPIRED_CODE = 401;
-
     private FilmRepository filmRepository = new FilmRepository();
+    private LiveData<ResponseModel<FilmsResults>> getFilmsResults;
 
-    private LiveData<PagedList<FilmResponse>> filmPagedList;
+    private MutableLiveData<Integer> thereIsAPageSize = new MutableLiveData<>();
+    private MutableLiveData<FilmsResults> thereIsFilmResults = new MutableLiveData<>();
+    private MutableLiveData<String> isMessageErrorToast = new MutableLiveData<>();
+    private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
 
-    private LiveData<ResponseModel<List<Film>>> getMovieGenre;
 
-    private MutableLiveData<List<Film>> thereIsAMovieGenre = new MutableLiveData<>();
-
-    public MutableLiveData<List<Film>> getThereIsAMovieGenre() {
-        return thereIsAMovieGenre;
+    public MutableLiveData<Integer> getThereIsAPageSize() {
+        return thereIsAPageSize;
     }
 
+    public MutableLiveData<String> getIsMessageErrorToast() {
+        return isMessageErrorToast;
+    }
 
-
-    private Observer<ResponseModel<List<Film>>> filmMovieGenreObserver = new Observer<ResponseModel<List<Film>>>() {
+    private Observer<ResponseModel<FilmsResults>> getFilmsResultsObserver = new Observer<ResponseModel<FilmsResults>>() {
         @Override
-        public void onChanged(@Nullable ResponseModel<List<Film>> responseFilmMovieGenre) {
+        public void onChanged(@Nullable ResponseModel<FilmsResults> responseModel) {
             isLoading.setValue(false);
-            if (responseFilmMovieGenre != null && responseFilmMovieGenre.getCode() == SUCCESS_CODE) {
-                thereIsAMovieGenre.setValue(responseFilmMovieGenre.getResponse());
-            } else if (responseFilmMovieGenre != null && responseFilmMovieGenre.getCode() == SESSION_EXPIRED_CODE) {
-                isSessionExpired.setValue(true);
+            if (responseModel != null) {
+                if (responseModel.getCode() == 200) {
+                    thereIsFilmResults.setValue(responseModel.getResponse());
+                    thereIsAPageSize.setValue(responseModel.getResponse().getTotal_pages());
+                } else {
+                    String message = responseModel.getErrorMessage().getMessage();
+                    getIsMessageErrorToast().setValue(message);
+                }
+            } else {
+                getIsMessageErrorToast().setValue(SERVICE_OR_CONNECTION_ERROR);
             }
         }
     };
 
-    @Override
+    public void executeServiceGetFilmResults(String page, String genreID) {
+        isLoading.setValue(true);
+        getFilmsResults = filmRepository.getFilmsResults(page,genreID);
+        getFilmsResults.observeForever(getFilmsResultsObserver);
+        filmRepository.getThereIsPaginationError().observeForever(thereIsPaginationErrorObserve);
+    }
+    private Observer<ErrorMessage> thereIsPaginationErrorObserve = new Observer<ErrorMessage>() {
+        @Override
+        public void onChanged(@Nullable ErrorMessage errorMessage) {
+            if(errorMessage != null){
+                getIsMessageErrorToast().setValue(errorMessage.getMessage());
+            }
+        }
+    };
+
     public void removeObserver() {
-        super.removeObserver();
-        if (getMovieGenre != null) {
-            getMovieGenre.removeObserver(filmMovieGenreObserver);
+        if (getFilmsResults != null && filmRepository.getThereIsPaginationError() != null) {
+            getFilmsResults.removeObserver(getFilmsResultsObserver);
+            filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
         }
     }
 }

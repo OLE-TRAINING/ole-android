@@ -21,6 +21,12 @@ public class HomeFragmentViewModel extends CommonViewModel {
 
     private MutableLiveData<FilmGenres> thereIsAGenreList = new MutableLiveData<>();
 
+    private MutableLiveData<Boolean> isSessionExpired = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getIsSessionExpired() {
+        return isSessionExpired;
+    }
+
     public MutableLiveData<FilmGenres> getThereIsAGenreList() {
         return thereIsAGenreList;
     }
@@ -35,19 +41,11 @@ public class HomeFragmentViewModel extends CommonViewModel {
         @Override
         public void onChanged(@Nullable ResponseModel<FilmGenres> responseFilmGenres) {
             isLoading.setValue(false);
-            if (responseFilmGenres != null && responseFilmGenres.getCode() == SUCCESS_CODE) {
+            if(responseFilmGenres != null && responseFilmGenres.getCode() == SUCCESS_CODE){
                 thereIsAGenreList.setValue(responseFilmGenres.getResponse());
-            } else if (responseFilmGenres != null && responseFilmGenres.getCode() == SESSION_EXPIRED_CODE) {
+            } else if (responseFilmGenres != null && responseFilmGenres.getCode() == SESSION_EXPIRED_CODE){
                 isSessionExpired.setValue(true);
             }
         }
     };
-
-    @Override
-    public void removeObserver() {
-        super.removeObserver();
-        if (getGenreList != null) {
-            getGenreList.removeObserver(filmGenresObserver);
-        }
-    }
 }
