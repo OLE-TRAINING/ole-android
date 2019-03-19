@@ -1,6 +1,8 @@
 package br.com.estagio.oletrainning.zup.otmovies.Common;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -16,6 +18,7 @@ import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivit
 
 
 public abstract class CommonActivity extends AppCompatActivity {
+
 
     public void hideKeyword(Window window){
         window.setSoftInputMode(

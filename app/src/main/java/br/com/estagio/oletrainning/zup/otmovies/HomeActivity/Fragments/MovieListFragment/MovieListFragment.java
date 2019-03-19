@@ -1,60 +1,59 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment;
 
-import android.annotation.SuppressLint;
-
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 
 import java.util.List;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmViewModel;
-import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.ListFilmsAdapter;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragmentViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
 
-@SuppressLint("ValidFragment")
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.GenreAndPageSize;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
+
+
 public class MovieListFragment extends CommonFragment {
 
-    private String genreID;
-    private ListFilmsAdapter listFilmsAdapter;
+
     private MovieListFragmentViewModel movieListFragmentViewModel;
-    private FilmGenres filmGenres;
     private MovieListFragmentViewHolder movieListFragmentViewHolder;
-    FilmViewModel filmViewModel;
+    private FilmViewModel filmViewModel;
+    HomeFragmentViewModel homeFragmentViewModel;
 
-    @SuppressLint("ValidFragment")
-    public MovieListFragment(String genreID, FilmGenres filmGenres) {
-        this.filmGenres = filmGenres;
-        this.genreID = genreID;
-    }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
-        View view = this.getLayoutInflater().inflate(R.layout.fragment_movie_list, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_movie_list, container,false);
         this.movieListFragmentViewHolder = new MovieListFragmentViewHolder(view);
 
-        filmViewModel = ViewModelProviders.of(this).get(FilmViewModel.class);
+        filmViewModel = ViewModelProviders.of(MovieListFragment.this).get(FilmViewModel.class);
 
-        setsUpAdapter();
+        movieListFragmentViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        homeFragmentViewModel =new HomeFragmentViewModel();
+
+        homeFragmentViewModel.executeServiceGetGenreList();
+        
+        filmViewModel.startPageSizeObserverViewModel();
+
+        filmViewModel.executeGetPageSize();
 
         return view;
     }
-
 
     @Override
     public void onResume() {
@@ -63,24 +62,29 @@ public class MovieListFragment extends CommonFragment {
     }
 
     private void setupObservers() {
-        movieListFragmentViewModel.getThereIsAMovieGenre().observe(this, filmGenreObserver);
+        movieListFragmentViewModel = new MovieListFragmentViewModel();
         movieListFragmentViewModel.getIsSessionExpired().observe(this, sessionObserver);
         movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
+        filmViewModel.getThereIsAPageSizeAndGenreID().observe(this,pageSizeAndGenreidsObserver);
     }
 
-    private void setsUpAdapter() {
-        RecyclerView recyclerView = movieListFragmentViewHolder.recyclerView;
-
-        final FilmAdapter adapter = new FilmAdapter(getContext());
-
-        recyclerView.setAdapter(adapter);
-    }
-
-    private Observer<List<Film>> filmGenreObserver = new Observer<List<Film>>() {
+    private Observer<PagedList<FilmResponse>>filmPagedListObserver = new Observer<PagedList<FilmResponse>>() {
         @Override
-        public void onChanged(@Nullable List<Film> films) {
-            if (films != null) {
-                listFilmsAdapter.setFilms(films);
+        public void onChanged(@Nullable PagedList<FilmResponse> filmResponses) {
+            if(filmResponses !=null){
+                final FilmAdapter adapter = new FilmAdapter(getContext());
+                adapter.submitList(filmResponses);
+                movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
+            }
+        }
+    };
+
+    private Observer<GenreAndPageSize> pageSizeAndGenreidsObserver = new Observer<GenreAndPageSize>() {
+        @Override
+        public void onChanged(GenreAndPageSize genreAndPageSize) {
+            if(genreAndPageSize !=null){
+                filmViewModel.getPageSizeAndGenre().setValue(genreAndPageSize);
+                filmViewModel.getItemPagedList().observe(getViewLifecycleOwner(),filmPagedListObserver);
             } else {
                 showError();
             }

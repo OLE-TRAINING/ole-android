@@ -73,7 +73,7 @@ public class RetrofitServiceBuilder {
         return retrofit.create(serviceType);
     }
 
-    public static synchronized RetrofitServiceBuilder getInsance(){
+    public static synchronized RetrofitServiceBuilder getInstance(){
         if(mInstance == null){
             mInstance = new RetrofitServiceBuilder();
         }

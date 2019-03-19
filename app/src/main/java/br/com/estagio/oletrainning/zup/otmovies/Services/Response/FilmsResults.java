@@ -5,15 +5,15 @@ import java.util.List;
 public class FilmsResults {
 
     private final Integer page;
-    private final Integer total_results;
-    private final Integer total_pages;
+    private final Integer totalMovies;
+    private final Integer totalPages;
 
     private final List<FilmResponse> results;
 
-    public FilmsResults(Integer page, Integer total_results, Integer total_pages, List<FilmResponse> results) {
+    public FilmsResults(Integer page, Integer totalMovies, Integer totalPages, List<FilmResponse> results) {
         this.page = page;
-        this.total_results = total_results;
-        this.total_pages = total_pages;
+        this.totalMovies = totalMovies;
+        this.totalPages = totalPages;
         this.results = results;
     }
 
@@ -26,10 +26,10 @@ public class FilmsResults {
     }
 
     public Integer getTotal_results() {
-        return total_results;
+        return totalMovies;
     }
 
     public Integer getTotal_pages() {
-        return total_pages;
+        return totalPages;
     }
 }

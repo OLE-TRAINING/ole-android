@@ -3,6 +3,7 @@ package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieLis
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.paging.PagedList;
 import android.support.annotation.Nullable;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FilmRepository;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 
 public class MovieListFragmentViewModel extends CommonViewModel {
 
@@ -19,6 +21,8 @@ public class MovieListFragmentViewModel extends CommonViewModel {
 
     private FilmRepository filmRepository = new FilmRepository();
 
+    private LiveData<PagedList<FilmResponse>> filmPagedList;
+
     private LiveData<ResponseModel<List<Film>>> getMovieGenre;
 
     private MutableLiveData<List<Film>> thereIsAMovieGenre = new MutableLiveData<>();
@@ -26,6 +30,8 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     public MutableLiveData<List<Film>> getThereIsAMovieGenre() {
         return thereIsAMovieGenre;
     }
+
+
 
     private Observer<ResponseModel<List<Film>>> filmMovieGenreObserver = new Observer<ResponseModel<List<Film>>>() {
         @Override

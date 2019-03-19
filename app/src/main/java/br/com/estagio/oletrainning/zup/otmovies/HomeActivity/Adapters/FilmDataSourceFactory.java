@@ -10,11 +10,17 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 public class FilmDataSourceFactory extends DataSource.Factory {
 
     private MutableLiveData<PageKeyedDataSource<Integer, FilmResponse>> itemLiveDataSource = new MutableLiveData<>();
+    private final int pageSize;
+    private String genreID;
 
+    public FilmDataSourceFactory(Integer pageSize,String genreID) {
+        this.pageSize = pageSize;
+        this.genreID = genreID;
+    }
 
     @Override
     public DataSource create() {
-        FilmDataSource filmDataSource = new FilmDataSource();
+        FilmDataSource filmDataSource = new FilmDataSource(pageSize,genreID);
         itemLiveDataSource.postValue(filmDataSource);
         return filmDataSource;
     }
