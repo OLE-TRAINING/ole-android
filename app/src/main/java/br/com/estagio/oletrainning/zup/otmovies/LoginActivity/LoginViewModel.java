@@ -29,7 +29,6 @@ public class LoginViewModel extends CommonViewModel {
 
     private MutableLiveData<String> isValidatedPassword = new MutableLiveData<>();
 
-
     public MutableLiveData<String> getIsValidatedPassword() {
         return isValidatedPassword;
     }

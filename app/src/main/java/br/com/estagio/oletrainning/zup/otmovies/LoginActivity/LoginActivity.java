@@ -31,6 +31,11 @@ public class LoginActivity extends CommonActivity {
         this.loginViewHolder = new LoginViewHolder(view);
         setContentView(view);
 
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+
         loginViewHolder.textViewEmailEntered.setText(SingletonEmail.INSTANCE.getEmail());
 
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
@@ -71,6 +76,8 @@ public class LoginActivity extends CommonActivity {
         loginViewHolder.errorEditTextPassword.getEditText().addTextChangedListener(editTextPasswordTextChangedListener);
         loginViewHolder.textViewForgetPassword.setOnClickListener(textViewForgetPasswordOnClickListener);
     }
+
+
 
     private Observer<String> forwardedTokenObserver = new Observer<String>() {
         @Override

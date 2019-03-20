@@ -32,6 +32,11 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
 
         informTokenAndNewPasswordViewModel = ViewModelProviders.of(this).get(InformTokenAndNewPasswordViewModel.class);
 
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+
         informTokenAndNewPasswordViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
 
         setupObservers();

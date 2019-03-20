@@ -31,6 +31,11 @@ public class TokenValidationActivity extends CommonActivity {
 
         tokenValidationViewModel = ViewModelProviders.of(this).get(TokenValidationViewModel.class);
 
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+
         tokenValidationViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
 
         setupObservers();

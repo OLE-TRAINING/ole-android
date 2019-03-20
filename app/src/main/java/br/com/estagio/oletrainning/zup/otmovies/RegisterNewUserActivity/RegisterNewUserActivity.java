@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
@@ -31,6 +32,11 @@ public class RegisterNewUserActivity extends CommonActivity {
         setContentView(view);
 
         registerNewUserViewModel = ViewModelProviders.of(this).get(RegisterNewUserViewModel.class);
+
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
 
         registerNewUserViewHolder.textViewEmailEntered.setText(SingletonEmail.INSTANCE.getEmail());
 

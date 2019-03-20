@@ -1,5 +1,6 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -22,6 +23,7 @@ import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Favorite.
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Search.SearchFragment;
+import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName;
@@ -60,6 +62,11 @@ public class HomeActivity extends CommonActivity
         setContentView(view);
 
         setSupportActionBar(homeActivityViewHolder.toolbar);
+
+        if(SingletonEmail.INSTANCE.getEmail() == null || SingletonName.INSTANCE.getUsername() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
 
         String emailAdd = SingletonEmail.INSTANCE.getEmail();
         homeActivityViewHolder.textView_navView_email.setText(emailAdd);

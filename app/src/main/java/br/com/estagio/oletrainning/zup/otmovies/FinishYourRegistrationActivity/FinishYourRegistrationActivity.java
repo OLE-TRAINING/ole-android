@@ -32,6 +32,11 @@ public class FinishYourRegistrationActivity extends CommonActivity {
 
         finishYourRegistrationViewModel = ViewModelProviders.of(this).get(FinishYourRegistrationViewModel.class);
 
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+
         finishYourRegistrationViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
 
         setupObservers();
