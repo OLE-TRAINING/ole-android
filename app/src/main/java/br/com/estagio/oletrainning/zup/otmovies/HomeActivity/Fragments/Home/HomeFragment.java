@@ -36,6 +36,8 @@ public class HomeFragment extends CommonFragment {
 
         viewModelHome.executeServiceGetGenreList();
 
+        setRetainInstance(true);
+
         return view;
     }
 

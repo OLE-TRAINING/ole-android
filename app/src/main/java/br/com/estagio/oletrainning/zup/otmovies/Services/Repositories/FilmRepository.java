@@ -76,6 +76,7 @@ public class FilmRepository extends CommonRepository{
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         ResponseModel<FilmsResults> responseModel = new ResponseModel<>();
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             responseModel.setCode(SUCCESS_CODE);
@@ -110,6 +111,7 @@ public class FilmRepository extends CommonRepository{
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             callback.onResult(response.body().getResults(), null, FIRST_PAGE + 1);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
@@ -145,6 +147,7 @@ public class FilmRepository extends CommonRepository{
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             Integer key = (params.key > 1) ? params.key - 1 : null;
                             callback.onResult(response.body().getResults(),key);
@@ -182,6 +185,7 @@ public class FilmRepository extends CommonRepository{
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             Integer key = (params.key < PAGE_SIZE)? params.key + 1 : null;
                             callback.onResult(response.body().getResults(), key);

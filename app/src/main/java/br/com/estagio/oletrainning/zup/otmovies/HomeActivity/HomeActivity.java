@@ -38,20 +38,10 @@ public class HomeActivity extends CommonActivity
     private static final String TAG_FRAGMENT_SEARCH = "fragment_search";
 
     private Fragment home = new HomeFragment();
-    private Fragment favorite = new FavoriteFragment();
-    private Fragment search = new SearchFragment();
-
     public Fragment getHome() {
         return home;
     }
 
-    public Fragment getFavorite() {
-        return favorite;
-    }
-
-    public Fragment getSearch() {
-        return search;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +63,7 @@ public class HomeActivity extends CommonActivity
         homeActivityViewHolder.textView_navView_name.setText(SingletonName.INSTANCE.getUsername());
 
         setupListener();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, homeActivityViewHolder.drawerLayout, homeActivityViewHolder.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         homeActivityViewHolder.drawerLayout.addDrawerListener(toggle);
@@ -83,9 +74,6 @@ public class HomeActivity extends CommonActivity
 
         toggle.syncState();
 
-        getSearch().setRetainInstance(true);
-        getHome().setRetainInstance(true);
-        getFavorite().setRetainInstance(true);
     }
 
     @Override
@@ -132,10 +120,10 @@ public class HomeActivity extends CommonActivity
                 pushFragments(TAG_FRAGMENT_HOME, getHome());
                 break;
             case R.id.navigation_favorite:
-                pushFragments(TAG_FRAGMENT_FAVORITE, getFavorite());
+                pushFragments(TAG_FRAGMENT_FAVORITE, new FavoriteFragment());
                 break;
             case R.id.navigation_search:
-                pushFragments(TAG_FRAGMENT_SEARCH, getSearch());
+                pushFragments(TAG_FRAGMENT_SEARCH, new SearchFragment());
                 break;
         }
         return true;
