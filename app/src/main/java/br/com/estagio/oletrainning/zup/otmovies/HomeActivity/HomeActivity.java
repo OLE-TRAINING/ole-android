@@ -1,5 +1,9 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
+import android.app.AlertDialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,7 +26,10 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Favorite.FavoriteFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragment;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment.MovieListFragment;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment.MovieListFragmentViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Search.SearchFragment;
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
@@ -41,6 +48,8 @@ public class HomeActivity extends CommonActivity
     public Fragment getHome() {
         return home;
     }
+
+    private HomeActivityViewModel homeActivityViewModel;
 
 
     @Override
@@ -64,6 +73,12 @@ public class HomeActivity extends CommonActivity
 
         setupListener();
 
+        homeActivityViewModel = ViewModelProviders.of(this).get(HomeActivityViewModel.class);
+
+        homeActivityViewModel.getHomeTellerIsSessionExpired().observe(this,sessionObserver);
+
+        homeActivityViewModel.startSessionServiceObserver();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, homeActivityViewHolder.drawerLayout, homeActivityViewHolder.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         homeActivityViewHolder.drawerLayout.addDrawerListener(toggle);
@@ -82,6 +97,23 @@ public class HomeActivity extends CommonActivity
         colorStatusBar(this.getWindow(), R.color.colorPrimary, false);
         pushFragments(TAG_FRAGMENT_HOME, getHome());
     }
+
+    private Observer<Boolean> sessionObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isSessionExpired) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+            builder.setMessage("Sua sessão expirou, favor fazer login novamente!")
+                    .setTitle("Aviso:")
+                    .setCancelable(false)
+                    .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    }).create().setCanceledOnTouchOutside(false);
+        }
+    };
 
     private void setupListener() {
         homeActivityViewHolder.bottomNavigationView
@@ -174,5 +206,11 @@ public class HomeActivity extends CommonActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         DialogConfirmLogout dialogConfirmLogout = new DialogConfirmLogout();
         dialogConfirmLogout.show(fragmentManager, "LogoutConfirmation");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        homeActivityViewModel.removeObserver();
     }
 }

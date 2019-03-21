@@ -27,6 +27,11 @@ public class FilmRepository extends CommonRepository{
     private static final int FIRST_PAGE = 1;
 
     private MutableLiveData<ErrorMessage> thereIsPaginationError = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isSessionExpiredService = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getIsSessionExpiredService() {
+        return isSessionExpiredService;
+    }
 
     public MutableLiveData<ErrorMessage> getThereIsPaginationError() {
         return thereIsPaginationError;
@@ -48,7 +53,7 @@ public class FilmRepository extends CommonRepository{
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            responseModel.setCode(SESSION_EXPIRED_CODE);
+                            isSessionExpiredService.setValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -82,7 +87,7 @@ public class FilmRepository extends CommonRepository{
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            responseModel.setCode(SESSION_EXPIRED_CODE);
+                            isSessionExpiredService.setValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -115,10 +120,7 @@ public class FilmRepository extends CommonRepository{
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             callback.onResult(response.body().getResults(), null, FIRST_PAGE + 1);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            ErrorMessage errorMessage = new ErrorMessage();
-                            errorMessage.setKey(String.valueOf(SESSION_EXPIRED_CODE));
-                            errorMessage.setMessage(response.message());
-                            thereIsPaginationError.setValue(errorMessage);
+                            isSessionExpiredService.setValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 ErrorMessage errorMessage = serializeErrorBody(response.errorBody());
@@ -152,10 +154,8 @@ public class FilmRepository extends CommonRepository{
                             Integer key = (params.key > 1) ? params.key - 1 : null;
                             callback.onResult(response.body().getResults(),key);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            ErrorMessage errorMessage = new ErrorMessage();
-                            errorMessage.setKey(String.valueOf(SESSION_EXPIRED_CODE));
-                            errorMessage.setMessage(response.message());
-                            thereIsPaginationError.setValue(errorMessage);
+                            isSessionExpiredService.setValue(true);
+
                         } else {
                             if(response.errorBody() != null){
                                 ErrorMessage errorMessage = serializeErrorBody(response.errorBody());
@@ -190,10 +190,7 @@ public class FilmRepository extends CommonRepository{
                             Integer key = (params.key < PAGE_SIZE)? params.key + 1 : null;
                             callback.onResult(response.body().getResults(), key);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            ErrorMessage errorMessage = new ErrorMessage();
-                            errorMessage.setKey(String.valueOf(SESSION_EXPIRED_CODE));
-                            errorMessage.setMessage(response.message());
-                            thereIsPaginationError.setValue(errorMessage);
+                            isSessionExpiredService.setValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 ErrorMessage errorMessage = serializeErrorBody(response.errorBody());

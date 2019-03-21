@@ -31,9 +31,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     private MutableLiveData<GenreAndPageSize> receiverAPageSizeAndGenreIDService = new MutableLiveData<>();
     private MutableLiveData<Boolean> homeTellerThereIsFilmResults = new MutableLiveData<>();
     private MutableLiveData<String> isMessageErrorToast = new MutableLiveData<>();
-
     private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
-
 
     public LiveData<PagedList<FilmResponse>> getItemPagedList() {
         return itemPagedList;
@@ -86,14 +84,18 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         }
     };
 
-    public void executeServiceGetFilmResults(String page) {
+    private void setupObserversForever(){
         filmRepository.getThereIsPaginationError().observeForever(thereIsPaginationErrorObserve);
         filmDataSource.getIsLoadingPaginationControl().observeForever(isLoadingPaginationControlObserver);
         receiverAPageSizeAndGenreIDService.observeForever(receiverAPageSizeAndGenreIDServiceObserver);
+    }
+
+    public void executeServiceGetFilmResults(String page) {
+        isLoading.setValue(true);
+        setupObserversForever();
         Log.d("singletonGenreID",SingletonGenreID.INSTANCE.getGenreID());
         filmsResults = filmRepository.getFilmsResults(page, SingletonGenreID.INSTANCE.getGenreID());
         filmsResults.observeForever(filmsResultsObserver);
-
     }
 
     private Observer<Boolean> isLoadingPaginationControlObserver = new Observer<Boolean>() {

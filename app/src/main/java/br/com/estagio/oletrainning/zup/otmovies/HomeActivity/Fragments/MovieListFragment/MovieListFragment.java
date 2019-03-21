@@ -24,7 +24,6 @@ public class MovieListFragment extends CommonFragment {
     private MovieListFragmentViewHolder movieListFragmentViewHolder;
     private FilmAdapter adapter;
 
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container,false);
@@ -53,14 +52,13 @@ public class MovieListFragment extends CommonFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         movieListFragmentViewHolder.recyclerView.setLayoutManager(linearLayoutManager);
         movieListFragmentViewHolder.recyclerView.setHasFixedSize(true);
-
     }
 
     private void setupObservers() {
-        movieListFragmentViewModel.getIsSessionExpired().observe(this, sessionObserver);
         movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
         movieListFragmentViewModel.getHomeTellerThereIsFilmResults().observe(this,homeTellerThereIsFilmResultsObserver);
         movieListFragmentViewModel.getIsErrorMessageForToast().observe(this, isMessageForToastObserver);
+
     }
 
     private Observer <Boolean> homeTellerThereIsFilmResultsObserver = new Observer<Boolean>() {
