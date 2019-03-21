@@ -7,6 +7,7 @@ import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PageKeyedDataSource;
 import android.arch.paging.PagedList;
 import android.support.annotation.Nullable;
+import android.support.v4.content.Loader;
 import android.util.Log;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
@@ -32,6 +33,11 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     private MutableLiveData<Boolean> homeTellerThereIsFilmResults = new MutableLiveData<>();
     private MutableLiveData<String> isMessageErrorToast = new MutableLiveData<>();
     private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
+    private MutableLiveData<Boolean> homeTellerIsSessionExpired = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getHomeTellerIsSessionExpired() {
+        return homeTellerIsSessionExpired;
+    }
 
     public LiveData<PagedList<FilmResponse>> getItemPagedList() {
         return itemPagedList;
@@ -52,6 +58,8 @@ public class MovieListFragmentViewModel extends CommonViewModel {
             PagedList.Config config =
                     (new PagedList.Config.Builder())
                             .setEnablePlaceholders(false)
+                            .setInitialLoadSizeHint(40)
+                            .setPrefetchDistance(5)
                             .setPageSize(genreAndPageSize.getPageSize())
                             .build();
 
@@ -86,7 +94,6 @@ public class MovieListFragmentViewModel extends CommonViewModel {
 
     private void setupObserversForever(){
         filmRepository.getThereIsPaginationError().observeForever(thereIsPaginationErrorObserve);
-        filmDataSource.getIsLoadingPaginationControl().observeForever(isLoadingPaginationControlObserver);
         receiverAPageSizeAndGenreIDService.observeForever(receiverAPageSizeAndGenreIDServiceObserver);
     }
 
@@ -98,17 +105,6 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         filmsResults.observeForever(filmsResultsObserver);
     }
 
-    private Observer<Boolean> isLoadingPaginationControlObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean isLoadingPagination) {
-            if(isLoadingPagination){
-                isLoading.setValue(true);
-            } else {
-                isLoading.setValue(false);
-            }
-        }
-    };
-
     private Observer<ErrorMessage> thereIsPaginationErrorObserve = new Observer<ErrorMessage>() {
         @Override
         public void onChanged(@Nullable ErrorMessage errorMessage) {
@@ -118,16 +114,29 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         }
     };
 
+    public void startSessionServiceObserver(){
+        filmRepository.getIsSessionExpiredService().observeForever(isSessionExpiredServiceObserver);
+    }
+
+    private Observer<Boolean> isSessionExpiredServiceObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isSessionExpired) {
+            if(isSessionExpired){
+                homeTellerIsSessionExpired.setValue(true);
+            }
+        }
+    };
+
     @Override
     public void removeObserver() {
         super.removeObserver();
         if (filmsResults != null && filmRepository.getThereIsPaginationError() != null
                 &&  receiverAPageSizeAndGenreIDService != null
-        && filmDataSource.getIsLoadingPaginationControl() != null)  {
+        && filmRepository.getIsSessionExpiredService() != null)  {
             filmsResults.removeObserver(filmsResultsObserver);
             filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverAPageSizeAndGenreIDService.removeObserver(receiverAPageSizeAndGenreIDServiceObserver);
-            filmDataSource.getIsLoadingPaginationControl().removeObserver(isLoadingPaginationControlObserver);
+            filmRepository.getIsSessionExpiredService().removeObserver(isSessionExpiredServiceObserver);
         }
     }
 

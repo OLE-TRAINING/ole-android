@@ -1,8 +1,11 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 
@@ -23,6 +27,7 @@ public class MovieListFragment extends CommonFragment {
     private MovieListFragmentViewModel movieListFragmentViewModel;
     private MovieListFragmentViewHolder movieListFragmentViewHolder;
     private FilmAdapter adapter;
+    private LinearLayoutManager linearLayoutManager;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,6 +35,10 @@ public class MovieListFragment extends CommonFragment {
         this.movieListFragmentViewHolder = new MovieListFragmentViewHolder(view);
 
         movieListFragmentViewModel = ViewModelProviders.of(MovieListFragment.this).get(MovieListFragmentViewModel.class);
+
+        movieListFragmentViewModel.startSessionServiceObserver();
+
+        movieListFragmentViewModel.getHomeTellerIsSessionExpired().observe(this,sessionObserver);
 
         adapter = new FilmAdapter(getActivity());
 
@@ -45,21 +54,39 @@ public class MovieListFragment extends CommonFragment {
     @Override
     public void onResume() {
         super.onResume();
-        setupObservers();
+        setupObserversAndListeners();
     }
 
     private void setupLayoutManager(){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
         movieListFragmentViewHolder.recyclerView.setLayoutManager(linearLayoutManager);
         movieListFragmentViewHolder.recyclerView.setHasFixedSize(true);
     }
 
-    private void setupObservers() {
+    private void setupObserversAndListeners() {
         movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
         movieListFragmentViewModel.getHomeTellerThereIsFilmResults().observe(this,homeTellerThereIsFilmResultsObserver);
         movieListFragmentViewModel.getIsErrorMessageForToast().observe(this, isMessageForToastObserver);
 
     }
+
+    private Observer<Boolean> sessionObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isSessionExpired) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Sua sessão expirou, favor fazer login novamente!")
+                    .setTitle("Aviso:")
+                    .setCancelable(false)
+                    .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    }).create().setCanceledOnTouchOutside(false);
+            builder.show();
+        }
+    };
 
     private Observer <Boolean> homeTellerThereIsFilmResultsObserver = new Observer<Boolean>() {
         @Override
@@ -68,15 +95,16 @@ public class MovieListFragment extends CommonFragment {
                 @Override
                 public void onChanged(@Nullable PagedList<FilmResponse> items) {
                     adapter.submitList(items);
-
                 }
             });
 
             movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
+            movieListFragmentViewModel.getIsLoading().setValue(false);
+
         }
     };
 
-    Observer<String> isMessageForToastObserver = new Observer<String>() {
+    private Observer<String> isMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(@Nullable String message) {
             Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();

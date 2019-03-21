@@ -14,7 +14,7 @@ public class MovieListFragmentViewHolder {
     RecyclerView recyclerView;
 
     public MovieListFragmentViewHolder(View view) {
-        progressBar = view.findViewById(R.id.progress_bar_mf);
+        progressBar = view.findViewById(R.id.progress_bar);
         frameLayout = view.findViewById(R.id.loading_layout);
         recyclerView = view.findViewById(R.id.recycler_films);
     }

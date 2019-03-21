@@ -55,10 +55,10 @@ public class RetrofitServiceBuilder {
                             return chain.proceed(request);
                         }
                     })
-                    .connectTimeout(60,TimeUnit.SECONDS)
-                    .readTimeout(60,TimeUnit.SECONDS)
-                    .writeTimeout(60,TimeUnit.SECONDS)
-                    .callTimeout(60,TimeUnit.SECONDS);
+                    .connectTimeout(100,TimeUnit.SECONDS)
+                    .readTimeout(300,TimeUnit.SECONDS)
+                    .writeTimeout(100,TimeUnit.SECONDS)
+                    .callTimeout(100,TimeUnit.SECONDS);
 
     private static Retrofit getRetroInstance() {
         return new Retrofit.Builder().baseUrl(URL)

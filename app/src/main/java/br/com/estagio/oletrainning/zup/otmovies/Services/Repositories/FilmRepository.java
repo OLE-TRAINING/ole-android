@@ -53,7 +53,7 @@ public class FilmRepository extends CommonRepository{
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            isSessionExpiredService.setValue(true);
+                            isSessionExpiredService.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -87,7 +87,7 @@ public class FilmRepository extends CommonRepository{
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            isSessionExpiredService.setValue(true);
+                            isSessionExpiredService.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -120,7 +120,7 @@ public class FilmRepository extends CommonRepository{
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             callback.onResult(response.body().getResults(), null, FIRST_PAGE + 1);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            isSessionExpiredService.setValue(true);
+                            isSessionExpiredService.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 ErrorMessage errorMessage = serializeErrorBody(response.errorBody());
@@ -154,7 +154,7 @@ public class FilmRepository extends CommonRepository{
                             Integer key = (params.key > 1) ? params.key - 1 : null;
                             callback.onResult(response.body().getResults(),key);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            isSessionExpiredService.setValue(true);
+                            isSessionExpiredService.postValue(true);
 
                         } else {
                             if(response.errorBody() != null){
@@ -190,7 +190,7 @@ public class FilmRepository extends CommonRepository{
                             Integer key = (params.key < PAGE_SIZE)? params.key + 1 : null;
                             callback.onResult(response.body().getResults(), key);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            isSessionExpiredService.setValue(true);
+                            isSessionExpiredService.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 ErrorMessage errorMessage = serializeErrorBody(response.errorBody());
