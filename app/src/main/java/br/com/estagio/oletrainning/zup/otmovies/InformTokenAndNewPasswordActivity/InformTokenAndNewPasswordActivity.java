@@ -7,8 +7,10 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
+
+import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
@@ -61,6 +63,7 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
         informTokenAndNewPasswordViewModel.getIsErrorMessageToPasswordInput().observe(this,isErrorMessageToPasswordInputObserver);
         informTokenAndNewPasswordViewModel.getPasswordChanged().observe(this,passwordChangedObserver);
         informTokenAndNewPasswordViewModel.getIsErrorMessageToTokenInput().observe(this,isErrorMessageToTokenInputObserver);
+        informTokenAndNewPasswordViewModel.getIsMessageSuccessForToast().observe(this,isMessageSuccessForToastObserver);
     }
 
     private void setupListeners() {
@@ -114,7 +117,8 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
     private Observer<String> passwordChangedObserver = new Observer<String>() {
         @Override
         public void onChanged(@Nullable String s) {
-            Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.success_message_change_pass), Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(),getString(R.string.success_message_change_pass), TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,600);
             Intent intent = new Intent(InformTokenAndNewPasswordActivity.this, LoginActivity.class);
             startActivity(intent);
         }
@@ -133,7 +137,16 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(InformTokenAndNewPasswordActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,600);
+        }
+    };
+
+    private Observer<String> isMessageSuccessForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,700);
         }
     };
 

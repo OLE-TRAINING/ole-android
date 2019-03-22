@@ -83,7 +83,7 @@ public class LoginViewModel extends CommonViewModel {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
                     getIsValidatedPassword().setValue(SUCCESS_MESSAGE_LOGIN);
                 } else {
                     isLoading.setValue(false);

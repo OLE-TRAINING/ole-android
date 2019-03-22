@@ -10,10 +10,13 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
@@ -38,7 +41,7 @@ public class MovieListFragment extends CommonFragment {
 
         movieListFragmentViewModel.startSessionServiceObserver();
 
-        movieListFragmentViewModel.getHomeTellerIsSessionExpired().observe(this,sessionObserver);
+        movieListFragmentViewModel.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
 
         adapter = new FilmAdapter(getActivity());
 
@@ -65,10 +68,18 @@ public class MovieListFragment extends CommonFragment {
 
     private void setupObserversAndListeners() {
         movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
-        movieListFragmentViewModel.getHomeTellerThereIsFilmResults().observe(this,homeTellerThereIsFilmResultsObserver);
+        movieListFragmentViewModel.getFragmentTellerThereIsFilmResults().observe(this,homeTellerThereIsFilmResultsObserver);
         movieListFragmentViewModel.getIsErrorMessageForToast().observe(this, isMessageForToastObserver);
-
+        movieListFragmentViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
     }
+
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            TastyToast.makeText(getActivity(),message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,700);
+        }
+    };
 
     private Observer<Boolean> sessionObserver = new Observer<Boolean>() {
         @Override

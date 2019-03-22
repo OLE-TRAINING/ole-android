@@ -121,7 +121,7 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
                     getPasswordChanged().setValue(SUCCESS_MESSAGE_CHANGE_PASS);
                 } else {
                     isLoading.setValue(false);

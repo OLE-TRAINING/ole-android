@@ -7,10 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 
 
 import android.widget.Toast;
+
+import com.sdsmdg.tastytoast.TastyToast;
+
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity.FinishYourRegistrationActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
@@ -98,7 +102,8 @@ public class PreLoginActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(PreLoginActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,400);
         }
     };
 

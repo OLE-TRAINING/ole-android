@@ -7,8 +7,10 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
+
+import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
@@ -63,6 +65,7 @@ public class TokenValidationActivity extends CommonActivity {
         tokenValidationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
         tokenValidationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
         tokenValidationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
+        tokenValidationViewModel.getIsMessageSuccessForToast().observe(this,isMessageSuccessForToastObserver);
     }
 
     private Observer<String> messageErrorChangedObserver = new Observer<String>() {
@@ -76,7 +79,8 @@ public class TokenValidationActivity extends CommonActivity {
     private Observer<String> isValidatedTokenObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(TokenValidationActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,500);
             Intent intent = new Intent(TokenValidationActivity.this, LoginActivity.class);
             startActivity(intent);
         }
@@ -85,7 +89,16 @@ public class TokenValidationActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(TokenValidationActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,500);
+        }
+    };
+
+    private Observer<String> isMessageSuccessForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,700);
         }
     };
 

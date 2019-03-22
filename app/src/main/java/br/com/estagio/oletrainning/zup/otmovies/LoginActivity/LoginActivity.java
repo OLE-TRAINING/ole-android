@@ -7,8 +7,11 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
+
+import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
@@ -82,7 +85,8 @@ public class LoginActivity extends CommonActivity {
     private Observer<String> forwardedTokenObserver = new Observer<String>() {
         @Override
         public void onChanged(@Nullable String message) {
-            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.INFO)
+                    .setGravity(Gravity.CENTER,0,500);
             Intent intent = new Intent(LoginActivity.this, InformTokenAndNewPasswordActivity.class);
             startActivity(intent);
         }
@@ -91,7 +95,8 @@ public class LoginActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,500);
         }
     };
 
@@ -107,7 +112,8 @@ public class LoginActivity extends CommonActivity {
         @Override
         public void onChanged(String message) {
             loginViewModel.setPasswordContainsErrorStatus(false);
-            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,600);
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
         }

@@ -57,7 +57,7 @@ public class TokenValidationViewModel extends CommonViewModel {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
                     getIsValidatedToken().setValue(SUCCESS_MESSAGE_VALIDATE_TOKEN);
                 } else {
                     isLoading.setValue(false);

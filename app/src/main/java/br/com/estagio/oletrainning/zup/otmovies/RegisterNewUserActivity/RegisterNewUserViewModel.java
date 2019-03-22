@@ -111,7 +111,7 @@ public class RegisterNewUserViewModel extends CommonViewModel {
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
 
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
                     getIsRegistered().setValue(SUCCESSFULLY_REGISTERED);
                 } else {
                     isLoading.setValue(false);

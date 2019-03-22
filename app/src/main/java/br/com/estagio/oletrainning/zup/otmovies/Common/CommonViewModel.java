@@ -14,7 +14,8 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmai
 public abstract class CommonViewModel extends ViewModel {
 
     protected ValidationRepository validationRepository = new ValidationRepository();
-
+    protected int SUCCESS_CODE = 200;
+    protected int SESSION_EXPIRED_CODE = 401;
     protected String SUCCESS_RESEND_TOKEN = "Código reenviado com sucesso!";
     protected String SERVICE_OR_CONNECTION_ERROR_RESEND_TOKEN = "Falha ao reenviar o código. Verifique a conexão e tente novamente.";
 
@@ -26,10 +27,10 @@ public abstract class CommonViewModel extends ViewModel {
 
     protected MutableLiveData<String> forwardedToken = new MutableLiveData<>();
 
-    protected final MutableLiveData<Boolean> isSessionExpired = new MutableLiveData<>();
+    private MutableLiveData<String> isMessageSuccessForToast = new MutableLiveData<>();
 
-    public LiveData<Boolean> getIsSessionExpired() {
-        return isSessionExpired;
+    public MutableLiveData<String> getIsMessageSuccessForToast() {
+        return isMessageSuccessForToast;
     }
 
     public MutableLiveData<String> getIsErrorMessageForToast() {
@@ -53,8 +54,8 @@ public abstract class CommonViewModel extends ViewModel {
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             isLoading.setValue(false);
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
-                    getIsErrorMessageForToast().setValue(SUCCESS_RESEND_TOKEN);
+                if (responseModel.getCode() == SUCCESS_CODE) {
+                    getIsMessageSuccessForToast().setValue(SUCCESS_RESEND_TOKEN);
                     getForwardedToken().setValue(SUCCESS_RESEND_TOKEN);
                 } else {
                     getIsErrorMessageForToast().setValue(responseModel.getErrorMessage().getMessage());

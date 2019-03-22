@@ -9,11 +9,11 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FilmRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Response.GenresResponse;
 
 public class HomeFragmentViewModel extends CommonViewModel {
 
-    private int SUCCESS_CODE = 200;
-    private int SESSION_EXPIRED_CODE = 401;
+    private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber lista de gêneros. Verifique a conexão e tente novamente.";
 
     private FilmRepository filmRepository = new FilmRepository();
 
@@ -21,10 +21,10 @@ public class HomeFragmentViewModel extends CommonViewModel {
 
     private MutableLiveData<FilmGenres> thereIsAGenreList = new MutableLiveData<>();
 
-    private MutableLiveData<Boolean> isSessionExpired = new MutableLiveData<>();
+    private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> getIsSessionExpired() {
-        return isSessionExpired;
+    public MutableLiveData<Boolean> getFragmentTellerIsSessionExpired() {
+        return fragmentTellerIsSessionExpired;
     }
 
     public MutableLiveData<FilmGenres> getThereIsAGenreList() {
@@ -37,14 +37,30 @@ public class HomeFragmentViewModel extends CommonViewModel {
         getGenreList.observeForever(filmGenresObserver);
     }
 
+    public FilmGenres changeOrderGenres (FilmGenres filmGenres){
+        if (filmGenres.getGenres() != null && !(filmGenres.getGenres().get(0).getId() == -1)){
+            GenresResponse genresResponse = new GenresResponse(-1, "Lançamentos");
+            filmGenres.getGenres().add(0, genresResponse);
+            filmGenres.getGenres().remove(filmGenres.getGenres().size() - 1);
+        }
+        return filmGenres;
+    }
+
     private Observer<ResponseModel<FilmGenres>> filmGenresObserver = new Observer<ResponseModel<FilmGenres>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<FilmGenres> responseFilmGenres) {
             isLoading.setValue(false);
-            if(responseFilmGenres != null && responseFilmGenres.getCode() == SUCCESS_CODE){
-                thereIsAGenreList.setValue(responseFilmGenres.getResponse());
-            } else if (responseFilmGenres != null && responseFilmGenres.getCode() == SESSION_EXPIRED_CODE){
-                isSessionExpired.setValue(true);
+            if (responseFilmGenres != null) {
+                if (responseFilmGenres.getCode() == SUCCESS_CODE) {
+                    thereIsAGenreList.setValue(responseFilmGenres.getResponse());
+                } else if (responseFilmGenres.getCode() == SESSION_EXPIRED_CODE) {
+                    fragmentTellerIsSessionExpired.setValue(true);
+                } else if (!(responseFilmGenres.getCode() == SESSION_EXPIRED_CODE)){
+                    String message = responseFilmGenres.getErrorMessage().getMessage();
+                    isErrorMessageForToast.setValue(message);
+                }
+            } else {
+                isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR);
             }
         }
     };
