@@ -1,11 +1,15 @@
 package br.com.estagio.oletrainning.zup.otmovies.Common;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;

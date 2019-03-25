@@ -1,10 +1,7 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home;
 
-import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,12 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FragmentStateAdapter;
-import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
 
@@ -50,27 +45,9 @@ public class HomeFragment extends CommonFragment {
     private void setupObservers() {
         viewModelHome.getThereIsAGenreList().observe(this, genresObserver);
         viewModelHome.getIsLoading().observe(this,progressBarObserver);
-        viewModelHome.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
         viewModelHome.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        viewModelHome.getFragmentTellerSessionExpired().observe(this,sessionObserver);
     }
-
-    private Observer<Boolean> sessionObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean isSessionExpired) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Sua sessão expirou, favor fazer login novamente!")
-                    .setTitle("Aviso:")
-                    .setCancelable(false)
-                    .setPositiveButton("Login", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            startActivity(intent);
-                        }
-                    }).create().setCanceledOnTouchOutside(false);
-            builder.show();
-        }
-    };
 
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
@@ -101,4 +78,10 @@ public class HomeFragment extends CommonFragment {
                     viewHolder.frameLayout);
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModelHome.removeObserver();
+    }
 }

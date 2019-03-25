@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
-
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FilmRepository;
@@ -21,10 +20,10 @@ public class HomeFragmentViewModel extends CommonViewModel {
 
     private MutableLiveData<FilmGenres> thereIsAGenreList = new MutableLiveData<>();
 
-    private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
+    private MutableLiveData<Boolean> fragmentTellerSessionExpired = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> getFragmentTellerIsSessionExpired() {
-        return fragmentTellerIsSessionExpired;
+    public MutableLiveData<Boolean> getFragmentTellerSessionExpired() {
+        return fragmentTellerSessionExpired;
     }
 
     public MutableLiveData<FilmGenres> getThereIsAGenreList() {
@@ -35,6 +34,7 @@ public class HomeFragmentViewModel extends CommonViewModel {
         isLoading.setValue(true);
         getGenreList = filmRepository.getGenreList();
         getGenreList.observeForever(filmGenresObserver);
+        filmRepository.getViewModelTellerSession().observeForever(sessionServicesObserver);
     }
 
     public FilmGenres changeOrderGenres (FilmGenres filmGenres){
@@ -46,6 +46,13 @@ public class HomeFragmentViewModel extends CommonViewModel {
         return filmGenres;
     }
 
+    private Observer<Boolean> sessionServicesObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(@Nullable Boolean isSessionExpired) {
+                fragmentTellerSessionExpired.setValue(isSessionExpired);
+        }
+    };
+
     private Observer<ResponseModel<FilmGenres>> filmGenresObserver = new Observer<ResponseModel<FilmGenres>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<FilmGenres> responseFilmGenres) {
@@ -53,15 +60,19 @@ public class HomeFragmentViewModel extends CommonViewModel {
             if (responseFilmGenres != null) {
                 if (responseFilmGenres.getCode() == SUCCESS_CODE) {
                     thereIsAGenreList.setValue(responseFilmGenres.getResponse());
-                } else if (responseFilmGenres.getCode() == SESSION_EXPIRED_CODE) {
-                    fragmentTellerIsSessionExpired.setValue(true);
-                } else if (!(responseFilmGenres.getCode() == SESSION_EXPIRED_CODE)){
-                    String message = responseFilmGenres.getErrorMessage().getMessage();
-                    isErrorMessageForToast.setValue(message);
                 }
             } else {
                 isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR);
             }
         }
     };
+
+    @Override
+    public void removeObserver() {
+        super.removeObserver();
+        if (getGenreList != null && filmRepository.getThereIsPaginationError() != null)  {
+            getGenreList.removeObserver(filmGenresObserver);
+            filmRepository.getViewModelTellerSession().removeObserver(sessionServicesObserver);
+        }
+    }
 }

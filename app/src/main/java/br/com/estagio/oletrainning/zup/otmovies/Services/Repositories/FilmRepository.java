@@ -3,16 +3,15 @@ package br.com.estagio.oletrainning.zup.otmovies.Services.Repositories;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PageKeyedDataSource;
-
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.FilmService;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmGenres;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAccessToken;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonSessionExpired;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,20 +24,13 @@ public class FilmRepository extends CommonRepository{
     private String UNEXPECTED_ERROR_MESSAGE = "Erro inesperado, tente novamente mais tarde!";
     private int SESSION_EXPIRED_CODE = 401;
     private static final int FIRST_PAGE = 1;
-    private boolean isGetGenreListSessionExpired;
-    private boolean isGetFilmsResultsSessionExpired;
-    private boolean isGetFilmsResultsLoadInitialSessionExpired;
-    private boolean isGetFilmsResultsLoadBeforeSessionExpired;
-    private boolean isGetFilmsResultsLoadAfterSessionExpired;
-    private boolean sessionExpiredControl;
+    private MutableLiveData<Boolean> viewModelTellerSession = new MutableLiveData<>();
 
+    public MutableLiveData<Boolean> getViewModelTellerSession() {
+        return viewModelTellerSession;
+    }
 
     private MutableLiveData<ErrorMessage> thereIsPaginationError = new MutableLiveData<>();
-    private MutableLiveData<Boolean> viewModelTellerIsSessionExpiredPagination = new MutableLiveData<>();
-
-    public MutableLiveData<Boolean> getViewModelTellerIsSessionExpiredPagination() {
-        return viewModelTellerIsSessionExpiredPagination;
-    }
 
     public MutableLiveData<ErrorMessage> getThereIsPaginationError() {
         return thereIsPaginationError;
@@ -46,9 +38,6 @@ public class FilmRepository extends CommonRepository{
 
     public FilmRepository(){
         filmService = RetrofitServiceBuilder.buildService(FilmService.class);
-        sessionExpiredControl = isGetGenreListSessionExpired && isGetFilmsResultsSessionExpired &&
-                isGetFilmsResultsLoadInitialSessionExpired && isGetFilmsResultsLoadBeforeSessionExpired
-                && isGetFilmsResultsLoadAfterSessionExpired;
     }
 
     public LiveData<ResponseModel<FilmGenres>> getGenreList() {
@@ -59,13 +48,12 @@ public class FilmRepository extends CommonRepository{
                     public void onResponse(Call<FilmGenres> call, Response<FilmGenres> response) {
                         SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         ResponseModel<FilmGenres> responseModel = new ResponseModel<>();
-                        if(response.code() == SUCCESS_CODE && response.body() != null){
-                            responseModel.setCode(SUCCESS_CODE);
-                            responseModel.setResponse(response.body());
-                        } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
+                        if(response.body() != null){
+                            if(response.code() == SUCCESS_CODE){
+                                responseModel.setCode(SUCCESS_CODE);
+                                responseModel.setResponse(response.body());
+                            } else if (response.code() == SESSION_EXPIRED_CODE){
                                 responseModel.setCode(SESSION_EXPIRED_CODE);
-                                isGetGenreListSessionExpired = true;
                             }
                         } else {
                             if(response.errorBody() != null){
@@ -96,13 +84,13 @@ public class FilmRepository extends CommonRepository{
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
                         SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         ResponseModel<FilmsResults> responseModel = new ResponseModel<>();
-                        if(response.code() == SUCCESS_CODE && response.body() != null){
-                            responseModel.setCode(SUCCESS_CODE);
-                            responseModel.setResponse(response.body());
-                        } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
-                                viewModelTellerIsSessionExpiredPagination.postValue(true);
-                                isGetFilmsResultsSessionExpired = true;
+                        if(response.body() != null){
+                            if(response.code() == SUCCESS_CODE){
+                                responseModel.setCode(SUCCESS_CODE);
+                                responseModel.setResponse(response.body());
+                            } else if (response.code() == SESSION_EXPIRED_CODE){
+                                responseModel.setCode(SESSION_EXPIRED_CODE);
+                                SingletonSessionExpired.setIsSessionExpiredEntered(true);
                             }
                         } else {
                             if(response.errorBody() != null){
@@ -133,12 +121,11 @@ public class FilmRepository extends CommonRepository{
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
                         SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
-                        if(response.code() == SUCCESS_CODE && response.body() != null){
-                            callback.onResult(response.body().getResults(), null, FIRST_PAGE + 1);
-                        } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
-                                viewModelTellerIsSessionExpiredPagination.postValue(true);
-                                isGetFilmsResultsLoadInitialSessionExpired = true;
+                        if(response.body() != null) {
+                            if(response.code() == SUCCESS_CODE){
+                                callback.onResult(response.body().getResults(), null, FIRST_PAGE + 1);
+                            } else if (response.code() == SESSION_EXPIRED_CODE){
+                                viewModelTellerSession.postValue(true);
                             }
                         } else {
                             if(response.errorBody() != null){
@@ -151,6 +138,7 @@ public class FilmRepository extends CommonRepository{
                                 thereIsPaginationError.setValue(errorMessage);
                             }
                         }
+
                     }
 
                     @Override
@@ -169,13 +157,12 @@ public class FilmRepository extends CommonRepository{
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
                         SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
-                        if(response.code() == SUCCESS_CODE && response.body() != null){
-                            Integer key = (params.key > 1) ? params.key - 1 : null;
-                            callback.onResult(response.body().getResults(),key);
-                        } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
-                                viewModelTellerIsSessionExpiredPagination.postValue(true);
-                                isGetFilmsResultsLoadBeforeSessionExpired = true;
+                        if(response.body() != null){
+                            if(response.code() == SUCCESS_CODE){
+                                Integer key = (params.key > 1) ? params.key - 1 : null;
+                                callback.onResult(response.body().getResults(),key);
+                            } else if (response.code() == SESSION_EXPIRED_CODE){
+                                viewModelTellerSession.postValue(true);
                             }
                         } else {
                             if(response.errorBody() != null){
@@ -207,13 +194,12 @@ public class FilmRepository extends CommonRepository{
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
                         SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
-                        if(response.code() == SUCCESS_CODE && response.body() != null){
-                            Integer key = (params.key < PAGE_SIZE)? params.key + 1 : null;
-                            callback.onResult(response.body().getResults(), key);
-                        } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
-                                viewModelTellerIsSessionExpiredPagination.postValue(true);
-                                isGetFilmsResultsLoadAfterSessionExpired = true;
+                        if(response.body() != null){
+                            if(response.code() == SUCCESS_CODE){
+                                Integer key = (params.key < PAGE_SIZE)? params.key + 1 : null;
+                                callback.onResult(response.body().getResults(), key);
+                            } else if (response.code() == SESSION_EXPIRED_CODE){
+                                viewModelTellerSession.postValue(true);
                             }
                         } else {
                             if(response.errorBody() != null){

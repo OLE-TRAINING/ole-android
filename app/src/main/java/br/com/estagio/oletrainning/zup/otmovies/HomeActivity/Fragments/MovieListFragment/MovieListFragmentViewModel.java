@@ -8,7 +8,6 @@ import android.arch.paging.PageKeyedDataSource;
 import android.arch.paging.PagedList;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmDataSourceFactory;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
@@ -30,10 +29,10 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     private LiveData<ResponseModel<FilmsResults>> filmsResults;
     private MutableLiveData<GenreAndPageSize> receiverAPageSizeAndGenreIDService = new MutableLiveData<>();
     private MutableLiveData<Boolean> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
-    private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
+    private MutableLiveData<Boolean> fragmentTellerSessionExpired = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> getFragmentTellerIsSessionExpired() {
-        return fragmentTellerIsSessionExpired;
+    public MutableLiveData<Boolean> getFragmentTellerSessionExpired() {
+        return fragmentTellerSessionExpired;
     }
 
     public LiveData<PagedList<FilmResponse>> getItemPagedList() {
@@ -75,9 +74,6 @@ public class MovieListFragmentViewModel extends CommonViewModel {
                             SingletonGenreID.INSTANCE.getGenreID());
                     receiverAPageSizeAndGenreIDService.setValue(genreAndPageSize);
                     fragmentTellerThereIsFilmResults.setValue(true);
-                } else if (!(responseModel.getCode() == SESSION_EXPIRED_CODE)) {
-                    String message = responseModel.getErrorMessage().getMessage();
-                    isErrorMessageForToast.setValue(message);
                 }
             } else {
                 isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR);
@@ -88,6 +84,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     private void setupObserversForever(){
         filmRepository.getThereIsPaginationError().observeForever(thereIsPaginationErrorObserve);
         receiverAPageSizeAndGenreIDService.observeForever(receiverAPageSizeAndGenreIDServiceObserver);
+        filmRepository.getViewModelTellerSession().observeForever(sessionServicesObserver);
     }
 
     public void executeServiceGetFilmResults(String page) {
@@ -98,6 +95,14 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         filmsResults.observeForever(filmsResultsObserver);
     }
 
+    private Observer<Boolean> sessionServicesObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(@Nullable Boolean isSessionExpired) {
+            fragmentTellerSessionExpired.setValue(isSessionExpired);
+        }
+    };
+
+
     private Observer<ErrorMessage> thereIsPaginationErrorObserve = new Observer<ErrorMessage>() {
         @Override
         public void onChanged(@Nullable ErrorMessage errorMessage) {
@@ -107,29 +112,16 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         }
     };
 
-    public void startSessionServiceObserver(){
-        filmRepository.getViewModelTellerIsSessionExpiredPagination().observeForever(isSessionExpiredPaginationObserver);
-    }
-
-    private Observer<Boolean> isSessionExpiredPaginationObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean isSessionExpired) {
-            if(isSessionExpired){
-                fragmentTellerIsSessionExpired.setValue(true);
-            }
-        }
-    };
-
     @Override
     public void removeObserver() {
         super.removeObserver();
         if (filmsResults != null && filmRepository.getThereIsPaginationError() != null
                 &&  receiverAPageSizeAndGenreIDService != null
-        && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null)  {
+        && filmRepository.getViewModelTellerSession() != null)  {
             filmsResults.removeObserver(filmsResultsObserver);
             filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverAPageSizeAndGenreIDService.removeObserver(receiverAPageSizeAndGenreIDServiceObserver);
-            filmRepository.getViewModelTellerIsSessionExpiredPagination().removeObserver(isSessionExpiredPaginationObserver);
+            filmRepository.getViewModelTellerSession().removeObserver(sessionServicesObserver);
         }
     }
 
