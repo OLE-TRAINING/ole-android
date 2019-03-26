@@ -61,14 +61,9 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
             String priceText = "R$ "+ String.valueOf(film.getPrice());
             holder.price.setText(priceText);
 
-
-
         } else {
             Toast.makeText(mCtx, "Não foi possível carregar este filme.", Toast.LENGTH_LONG).show();
         }
-
-
-
     }
 
 

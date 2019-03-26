@@ -19,9 +19,6 @@ public class FilmDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
         this.genreID = genreID;
     }
 
-    public FilmDataSource() {
-    }
-
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, FilmResponse> callback) {
         filmRepository.getFilmsResultsLoadInitial(callback,String.valueOf(FIRST_PAGE),genreID);

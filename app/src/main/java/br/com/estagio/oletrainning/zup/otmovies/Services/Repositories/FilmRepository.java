@@ -25,16 +25,15 @@ public class FilmRepository extends CommonRepository{
     private String UNEXPECTED_ERROR_MESSAGE = "Erro inesperado, tente novamente mais tarde!";
     private int SESSION_EXPIRED_CODE = 401;
     private static final int FIRST_PAGE = 1;
-    private boolean isGetGenreListSessionExpired;
-    private boolean isGetFilmsResultsSessionExpired;
-    private boolean isGetFilmsResultsLoadInitialSessionExpired;
-    private boolean isGetFilmsResultsLoadBeforeSessionExpired;
-    private boolean isGetFilmsResultsLoadAfterSessionExpired;
-    private boolean sessionExpiredControl;
-
 
     private MutableLiveData<ErrorMessage> thereIsPaginationError = new MutableLiveData<>();
     private MutableLiveData<Boolean> viewModelTellerIsSessionExpiredPagination = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isLoadingPaginationService = new MutableLiveData<>();
+
+
+    public MutableLiveData<Boolean> getIsLoadingPaginationService() {
+        return isLoadingPaginationService;
+    }
 
     public MutableLiveData<Boolean> getViewModelTellerIsSessionExpiredPagination() {
         return viewModelTellerIsSessionExpiredPagination;
@@ -46,9 +45,6 @@ public class FilmRepository extends CommonRepository{
 
     public FilmRepository(){
         filmService = RetrofitServiceBuilder.buildService(FilmService.class);
-        sessionExpiredControl = isGetGenreListSessionExpired && isGetFilmsResultsSessionExpired &&
-                isGetFilmsResultsLoadInitialSessionExpired && isGetFilmsResultsLoadBeforeSessionExpired
-                && isGetFilmsResultsLoadAfterSessionExpired;
     }
 
     public LiveData<ResponseModel<FilmGenres>> getGenreList() {
@@ -63,10 +59,8 @@ public class FilmRepository extends CommonRepository{
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
                                 responseModel.setCode(SESSION_EXPIRED_CODE);
-                                isGetGenreListSessionExpired = true;
-                            }
+
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -100,10 +94,7 @@ public class FilmRepository extends CommonRepository{
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
                                 viewModelTellerIsSessionExpiredPagination.postValue(true);
-                                isGetFilmsResultsSessionExpired = true;
-                            }
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -136,10 +127,7 @@ public class FilmRepository extends CommonRepository{
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             callback.onResult(response.body().getResults(), null, FIRST_PAGE + 1);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
                                 viewModelTellerIsSessionExpiredPagination.postValue(true);
-                                isGetFilmsResultsLoadInitialSessionExpired = true;
-                            }
                         } else {
                             if(response.errorBody() != null){
                                 ErrorMessage errorMessage = serializeErrorBody(response.errorBody());
@@ -173,10 +161,7 @@ public class FilmRepository extends CommonRepository{
                             Integer key = (params.key > 1) ? params.key - 1 : null;
                             callback.onResult(response.body().getResults(),key);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
                                 viewModelTellerIsSessionExpiredPagination.postValue(true);
-                                isGetFilmsResultsLoadBeforeSessionExpired = true;
-                            }
                         } else {
                             if(response.errorBody() != null){
                                 ErrorMessage errorMessage = serializeErrorBody(response.errorBody());
@@ -202,19 +187,18 @@ public class FilmRepository extends CommonRepository{
     public void getFilmsResultsloadAfter (
             final Integer PAGE_SIZE, final PageKeyedDataSource.LoadParams<Integer> params,
             final PageKeyedDataSource.LoadCallback<Integer, FilmResponse> callback, String genreID) {
+        isLoadingPaginationService.postValue(true);
         filmService.getMovieGenre("genres",genreID,"20",String.valueOf(params.key))
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
                         SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
+                        isLoadingPaginationService.postValue(false);
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             Integer key = (params.key < PAGE_SIZE)? params.key + 1 : null;
                             callback.onResult(response.body().getResults(), key);
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            if(!sessionExpiredControl){
                                 viewModelTellerIsSessionExpiredPagination.postValue(true);
-                                isGetFilmsResultsLoadAfterSessionExpired = true;
-                            }
                         } else {
                             if(response.errorBody() != null){
                                 ErrorMessage errorMessage = serializeErrorBody(response.errorBody());

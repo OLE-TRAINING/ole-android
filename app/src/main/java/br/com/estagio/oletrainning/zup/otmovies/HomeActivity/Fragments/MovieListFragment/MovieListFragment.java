@@ -7,7 +7,6 @@ import android.arch.paging.PagedList;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
@@ -15,9 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.sdsmdg.tastytoast.TastyToast;
-
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
@@ -25,7 +22,6 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 
 public class MovieListFragment extends CommonFragment {
-
 
     private MovieListFragmentViewModel movieListFragmentViewModel;
     private MovieListFragmentViewHolder movieListFragmentViewHolder;
@@ -38,8 +34,6 @@ public class MovieListFragment extends CommonFragment {
         this.movieListFragmentViewHolder = new MovieListFragmentViewHolder(view);
 
         movieListFragmentViewModel = ViewModelProviders.of(MovieListFragment.this).get(MovieListFragmentViewModel.class);
-
-        movieListFragmentViewModel.startSessionServiceObserver();
 
         movieListFragmentViewModel.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
 

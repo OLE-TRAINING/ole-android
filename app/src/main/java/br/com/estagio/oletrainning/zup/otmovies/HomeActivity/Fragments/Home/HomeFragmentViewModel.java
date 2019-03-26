@@ -55,13 +55,18 @@ public class HomeFragmentViewModel extends CommonViewModel {
                     thereIsAGenreList.setValue(responseFilmGenres.getResponse());
                 } else if (responseFilmGenres.getCode() == SESSION_EXPIRED_CODE) {
                     fragmentTellerIsSessionExpired.setValue(true);
-                } else if (!(responseFilmGenres.getCode() == SESSION_EXPIRED_CODE)){
-                    String message = responseFilmGenres.getErrorMessage().getMessage();
-                    isErrorMessageForToast.setValue(message);
                 }
             } else {
                 isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR);
             }
         }
     };
+
+    @Override
+    public void removeObserver() {
+        super.removeObserver();
+        if (getGenreList != null && filmRepository.getThereIsPaginationError() != null)  {
+            getGenreList.removeObserver(filmGenresObserver);
+        }
+    }
 }

@@ -101,4 +101,10 @@ public class HomeFragment extends CommonFragment {
                     viewHolder.frameLayout);
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModelHome.removeObserver();
+    }
 }
