@@ -45,6 +45,14 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
 
         FilmResponse film = getItem(position);
 
+        if((getItemCount() - 1) == position) {
+            holder.linearLayoutLoadingPagination.setVisibility(View.VISIBLE);
+        } else if(getCurrentList().size() > 0){
+            holder.linearLayoutLoadingPagination.setVisibility(View.GONE);
+        } else {
+            holder.linearLayoutLoadingPagination.setVisibility(View.GONE);
+        }
+
         if (film != null) {
 
             holder.textTitleFilm.setText(film.getTitle());
@@ -95,6 +103,7 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
         private TextView filmNote;
         private CheckBox checkBox;
         private TextView price;
+        private LinearLayout linearLayoutLoadingPagination;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -111,6 +120,7 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
             textTitleFilm = itemView.findViewById(R.id.text_title_film);
             checkBox = itemView.findViewById(R.id.checkbox_favorite);
             price = itemView.findViewById(R.id.textView_price);
+            linearLayoutLoadingPagination = itemView.findViewById(R.id.linearLayout_pagination);
         }
 
         private String keywordPhraseBuilder(@NonNull List<String> filmGenreNamesList) {
