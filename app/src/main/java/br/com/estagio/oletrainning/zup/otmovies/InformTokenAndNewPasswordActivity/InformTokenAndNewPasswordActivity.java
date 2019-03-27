@@ -7,13 +7,16 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
+
+import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 
 public class InformTokenAndNewPasswordActivity extends CommonActivity {
@@ -31,11 +34,14 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
 
         informTokenAndNewPasswordViewModel = ViewModelProviders.of(this).get(InformTokenAndNewPasswordViewModel.class);
 
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+
+        informTokenAndNewPasswordViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
+
         setupObservers();
-
-        Bundle bundle = getIntent().getExtras();
-
-        informTokenAndNewPasswordViewModel.setBundle(bundle);
 
         hideKeyword(getWindow());
     }
@@ -52,12 +58,12 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
         informTokenAndNewPasswordViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
         informTokenAndNewPasswordViewModel.getPasswordContainsErrorStatus().observe(this, passwordContainsErrorObserver);
         informTokenAndNewPasswordViewModel.getConfirmPasswordContainsErrorStatus().observe(this, confirmPasswordContainsErrorObserver);
-        informTokenAndNewPasswordViewModel.getEmailChanged().observe(this, emailChangedObserver);
         informTokenAndNewPasswordViewModel.getShowPasswordConfirmationInput().observe(this,showPasswordConfirmationInput);
         informTokenAndNewPasswordViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
         informTokenAndNewPasswordViewModel.getIsErrorMessageToPasswordInput().observe(this,isErrorMessageToPasswordInputObserver);
         informTokenAndNewPasswordViewModel.getPasswordChanged().observe(this,passwordChangedObserver);
         informTokenAndNewPasswordViewModel.getIsErrorMessageToTokenInput().observe(this,isErrorMessageToTokenInputObserver);
+        informTokenAndNewPasswordViewModel.getIsMessageSuccessForToast().observe(this,isMessageSuccessForToastObserver);
     }
 
     private void setupListeners() {
@@ -111,10 +117,9 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
     private Observer<String> passwordChangedObserver = new Observer<String>() {
         @Override
         public void onChanged(@Nullable String s) {
-            Toast.makeText(InformTokenAndNewPasswordActivity.this, getString(R.string.success_message_change_pass), Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(),getString(R.string.success_message_change_pass), TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,600);
             Intent intent = new Intent(InformTokenAndNewPasswordActivity.this, LoginActivity.class);
-            String emailInput = informTokenAndNewPasswordViewHolder.textViewEmail.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
@@ -132,7 +137,16 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(InformTokenAndNewPasswordActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,600);
+        }
+    };
+
+    private Observer<String> isMessageSuccessForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,700);
         }
     };
 
@@ -145,12 +159,6 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
             } else {
                 informTokenAndNewPasswordViewHolder.errorEditTextConfirmPassword.setVisibility(View.INVISIBLE);
             }
-        }
-    };
-    private Observer<String> emailChangedObserver = new Observer<String>() {
-        @Override
-        public void onChanged(String email) {
-            informTokenAndNewPasswordViewHolder.textViewEmail.setText(email);
         }
     };
 
@@ -184,14 +192,11 @@ public class InformTokenAndNewPasswordActivity extends CommonActivity {
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        informTokenAndNewPasswordViewHolder.progressBar,
-                        getWindow(),
-                        InformTokenAndNewPasswordActivity.this);
-            }
+        public void onChanged(Boolean isLoading) {
+            loadingExecutor(isLoading,
+                    informTokenAndNewPasswordViewHolder.progressBar,
+                    informTokenAndNewPasswordViewHolder.frameLayout,
+                    informTokenAndNewPasswordViewHolder.button);
         }
     };
 

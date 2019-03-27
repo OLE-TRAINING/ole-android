@@ -11,6 +11,8 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Email;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName;
 
 public class PreLoginViewModel extends CommonViewModel {
 
@@ -52,24 +54,27 @@ public class PreLoginViewModel extends CommonViewModel {
         email = new Email(emailEntered);
         emailContainsErrorStatus.postValue(!email.validateEmail());
         if (email.isValidEmail()) {
+            SingletonEmail.setEmailEntered(emailEntered);
             executeServiceCallGetUserData(emailEntered);
         }
     }
 
     private Observer<ResponseModel<UserData>> getUserResponseObserver = new Observer<ResponseModel<UserData>>() {
         @Override
-        public void onChanged(ResponseModel<UserData> responseModel) {
-            isLoading.postValue(false);
+        public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
             if (responseModel != null) {
                 if (responseModel.getResponse().getRegistrationStatus() != null) {
                     if (responseModel.getResponse().getRegistrationStatus().equals(REGISTERED)) {
                         getRegistrationStatus().setValue(REGISTERED);
+                        SingletonName.setCompleteName(responseModel.getResponse().getCompleteName());
                     } else if (responseModel.getResponse().getRegistrationStatus().equals(PENDING)) {
                         getRegistrationStatus().setValue(PENDING);
+                        SingletonName.setCompleteName(responseModel.getResponse().getCompleteName());
                     } else if (responseModel.getResponse().getRegistrationStatus().equals(INEXISTENT)) {
                         getRegistrationStatus().setValue(INEXISTENT);
                     }
                 } else {
+                    isLoading.postValue(false);
                     if (responseModel.getErrorMessage().getKey().equals(ERROR_INVALID_EMAIL)) {
                         getIsInvalidEmail().setValue(true);
                     } else {
@@ -77,6 +82,7 @@ public class PreLoginViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(ERROR_SERVICE_OR_CONNECTION_EMAIL);
             }
         }

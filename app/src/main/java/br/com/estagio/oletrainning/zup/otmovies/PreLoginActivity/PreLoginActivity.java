@@ -2,20 +2,25 @@ package br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
+
 
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.FinishYourRegistrationActivity.FinishYourRegistrationActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.RegisterNewUserActivity.RegisterNewUserActivity;
+
 
 
 public class PreLoginActivity extends CommonActivity {
@@ -76,18 +81,12 @@ public class PreLoginActivity extends CommonActivity {
         public void onChanged(String status) {
             if (status.equals(getString(R.string.registered))) {
                 Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
-                String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
-                intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                 startActivity(intent);
             } else if (status.equals(getString(R.string.pending))) {
                 Intent intent = new Intent(PreLoginActivity.this, FinishYourRegistrationActivity.class);
-                String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
-                intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                 startActivity(intent);
             } else if (status.equals(getString(R.string.inexistent))) {
                 Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
-                String emailInput = preLoginViewHolder.errorEditTextEmail.getText().toString().trim();
-                intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
                 startActivity(intent);
             }
         }
@@ -103,7 +102,8 @@ public class PreLoginActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(PreLoginActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,400);
         }
     };
 
@@ -120,11 +120,10 @@ public class PreLoginActivity extends CommonActivity {
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isLoading) {
-            loadingExecutor(
-                    isLoading,
+            loadingExecutor(isLoading,
                     preLoginViewHolder.progressBar,
-                    getWindow(),
-                    PreLoginActivity.this);
+                    preLoginViewHolder.frameLayout,
+                    preLoginViewHolder.buttonNextPreLogin);
         }
     };
 

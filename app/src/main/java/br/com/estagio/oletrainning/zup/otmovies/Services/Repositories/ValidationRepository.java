@@ -4,22 +4,20 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.RetrofitServiceBuilder;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.ValidationServices;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAccessToken;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ValidationRepository  extends UserRepository{
+public class ValidationRepository  extends CommonRepository{
 
     private ValidationServices validationServices;
-
-    private String UNEXPECTED_ERROR_KEY = "erro.inesperado";
-    private String UNEXPECTED_ERROR_MESSAGE = "Erro inesperado, tente novamente mais tarde!";
-    private int SUCCESS_CODE = 200;
-
 
     public ValidationRepository(){
         validationServices = RetrofitServiceBuilder.buildService(ValidationServices.class);
@@ -31,15 +29,20 @@ public class ValidationRepository  extends UserRepository{
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
+                        ResponseModel<UserData> responseModel = new ResponseModel<>();
                         if((response.code() == SUCCESS_CODE)) {
-                            data.setValue(setCode(response.code()));
+                            responseModel.setCode(response.code());
                         } else{
                             if(response.errorBody() != null){
-                                data.setValue(serializeErrorBody(response));
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
                             } else {
-                                data.setValue(setMessage(UNEXPECTED_ERROR_KEY,UNEXPECTED_ERROR_MESSAGE));
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
                             }
                         }
+                        data.setValue(responseModel);
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
@@ -55,15 +58,20 @@ public class ValidationRepository  extends UserRepository{
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
+                        ResponseModel<UserData> responseModel = new ResponseModel<>();
                         if((response.code() == SUCCESS_CODE)) {
-                            data.setValue(setCode(response.code()));
+                            responseModel.setCode(response.code());
                         } else{
                             if(response.errorBody() != null){
-                                data.setValue(serializeErrorBody(response));
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
                             } else {
-                                data.setValue(setMessage(UNEXPECTED_ERROR_KEY,UNEXPECTED_ERROR_MESSAGE));
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
                             }
                         }
+                        data.setValue(responseModel);
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
@@ -79,15 +87,20 @@ public class ValidationRepository  extends UserRepository{
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
+                        ResponseModel<UserData> responseModel = new ResponseModel<>();
                         if((response.code() == SUCCESS_CODE)) {
-                            data.setValue(setCode(response.code()));
+                            responseModel.setCode(response.code());
                         } else{
                             if(response.errorBody() != null){
-                                data.setValue(serializeErrorBody(response));
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
                             } else {
-                                data.setValue(setMessage(UNEXPECTED_ERROR_KEY,UNEXPECTED_ERROR_MESSAGE));
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
                             }
                         }
+                        data.setValue(responseModel);
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
@@ -103,15 +116,21 @@ public class ValidationRepository  extends UserRepository{
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
+                        ResponseModel<UserData> responseModel = new ResponseModel<>();
                         if((response.code() == SUCCESS_CODE)) {
-                            data.setValue(setCode(response.code()));
+                            responseModel.setCode(response.code());
                         } else{
                             if(response.errorBody() != null){
-                                data.setValue(serializeErrorBody(response));
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
                             } else {
-                                data.setValue(setMessage(UNEXPECTED_ERROR_KEY,UNEXPECTED_ERROR_MESSAGE));
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
                             }
                         }
+                        data.setValue(responseModel);
                     }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {

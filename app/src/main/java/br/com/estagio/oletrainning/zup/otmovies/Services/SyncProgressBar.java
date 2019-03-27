@@ -1,7 +1,8 @@
-package br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar;
+package br.com.estagio.oletrainning.zup.otmovies.Services;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ProgressBar;
 
 public class SyncProgressBar extends AsyncTask<Object, Object, String> {
@@ -22,8 +23,10 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
     @Override
     protected String doInBackground(Object... params) {
         try {
+
             Thread.sleep(250);
-            for (int i=0; i<16; i++) {
+
+            for (int i = 0; i < 16; i++) {
                 publishProgress();
                 Thread.sleep(250);
             }
@@ -31,6 +34,7 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -47,3 +51,4 @@ public class SyncProgressBar extends AsyncTask<Object, Object, String> {
         super.onPostExecute(result);
     }
 }
+

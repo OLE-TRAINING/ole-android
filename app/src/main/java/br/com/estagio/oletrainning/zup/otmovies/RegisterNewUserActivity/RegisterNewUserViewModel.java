@@ -13,6 +13,8 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.UserRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName;
 
 public class RegisterNewUserViewModel extends CommonViewModel {
 
@@ -83,8 +85,9 @@ public class RegisterNewUserViewModel extends CommonViewModel {
         passwordContainsErrorStatus.postValue(!password.validatePassword());
         if (name.isValidName() && username.isValidUserName() && password.isValidPassword()) {
             UserData userData = new UserData();
-            userData.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
+            userData.setEmail(SingletonEmail.INSTANCE.getEmail());
             userData.setCompleteName(nameEntered);
+            SingletonName.setCompleteName(nameEntered);
             userData.setUsername(usernameEntered);
             userData.setPassword(passwordEntered);
             executeServiceRegisterUser(userData);
@@ -106,11 +109,12 @@ public class RegisterNewUserViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> responseRegisterUserObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.setValue(false);
+
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
                     getIsRegistered().setValue(SUCCESSFULLY_REGISTERED);
                 } else {
+                    isLoading.setValue(false);
                     ErrorMessage errorMessage = new ErrorMessage();
                     errorMessage.setKey(responseModel.getErrorMessage().getKey());
                     errorMessage.setMessage(responseModel.getErrorMessage().getMessage());
@@ -133,6 +137,7 @@ public class RegisterNewUserViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_REGISTER);
             }
         }

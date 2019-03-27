@@ -1,17 +1,24 @@
 package br.com.estagio.oletrainning.zup.otmovies.Common;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import br.com.estagio.oletrainning.zup.otmovies.CustomComponents.AsyncTaskProgressBar.SyncProgressBar;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 
-public class CommonActivity extends AppCompatActivity {
+
+public abstract class CommonActivity extends AppCompatActivity {
+
 
     public void hideKeyword(Window window){
         window.setSoftInputMode(
@@ -35,17 +42,18 @@ public class CommonActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, Window window, Context context){
+    public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout, Button button) {
         if (isLoading != null) {
             if (isLoading) {
-                progressBar.setVisibility(View.VISIBLE);
-                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                new SyncProgressBar(context,progressBar).execute();
+                Sprite threeBounce = new ThreeBounce();
+                progressBar.setIndeterminateDrawable(threeBounce);
+                button.setVisibility(View.INVISIBLE);
+                frameLayout.setVisibility(View.VISIBLE);
             } else {
-                progressBar.setProgress(100);
-                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                progressBar.setVisibility(View.INVISIBLE);
+                Sprite threeBounce = new ThreeBounce();
+                progressBar.setIndeterminateDrawable(threeBounce);
+                button.setVisibility(View.VISIBLE);
+                frameLayout.setVisibility(View.INVISIBLE);
             }
         }
     }

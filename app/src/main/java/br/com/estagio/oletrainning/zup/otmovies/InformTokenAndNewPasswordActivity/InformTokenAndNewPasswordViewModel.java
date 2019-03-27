@@ -6,18 +6,17 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
-import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.ConfirmPassword;
 import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Password;
 import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Token;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.BodyChangePassword;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 
 public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
 
     private Password password;
-    private ConfirmPassword confirmPassword;
     private Token token;
     private String INVALID_PASSWORD_MISMATCH_KEY = "error.invalid.password.mismatch";
     private String INVALID_PASSWORD_KEY = "error.invalid.password";
@@ -83,13 +82,12 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
     public void completedForm(String code, String passwordEntered, String confirmPasswordEntered){
         token = new Token(code);
         password = new Password(passwordEntered);
-        confirmPassword = new ConfirmPassword(passwordEntered,confirmPasswordEntered);
         tokenContainsErrorStatus.postValue(!token.validateTokenSize());
         passwordContainsErrorStatus.postValue(!password.validatePassword());
-        confirmPasswordContainsErrorStatus.postValue(!confirmPassword.validatePassword(confirmPasswordEntered));
-        if(token.isValidToken()&& password.isValidPassword() && confirmPassword.isValidConfirmPassword()){
+        confirmPasswordContainsErrorStatus.postValue(!password.validatePassword(confirmPasswordEntered));
+        if(token.isValidToken()&& password.isValidPassword() && password.isValidConfirmPassword(confirmPasswordEntered)){
             BodyChangePassword bodyChangePassword = new BodyChangePassword();
-            bodyChangePassword.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
+            bodyChangePassword.setEmail(SingletonEmail.INSTANCE.getEmail());
             bodyChangePassword.setConfirmationToken(code);
             bodyChangePassword.setNewPassword(passwordEntered);
             bodyChangePassword.setNewPasswordConfirmation(confirmPasswordEntered);
@@ -122,11 +120,11 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> serviceValidateTokenAndChangePassObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.setValue(false);
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
                     getPasswordChanged().setValue(SUCCESS_MESSAGE_CHANGE_PASS);
                 } else {
+                    isLoading.setValue(false);
                     String key = responseModel.getErrorMessage().getKey();
                     String message = responseModel.getErrorMessage().getMessage();
                     if (isErrorMessageKeyToPasswordInput(key)) {
@@ -138,6 +136,7 @@ public class InformTokenAndNewPasswordViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_CHANGE_PASSWORD);
             }
         }

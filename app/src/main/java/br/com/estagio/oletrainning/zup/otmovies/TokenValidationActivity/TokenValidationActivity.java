@@ -7,13 +7,16 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
+
+import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 public class TokenValidationActivity extends CommonActivity {
 
@@ -30,11 +33,14 @@ public class TokenValidationActivity extends CommonActivity {
 
         tokenValidationViewModel = ViewModelProviders.of(this).get(TokenValidationViewModel.class);
 
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+
+        tokenValidationViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
+
         setupObservers();
-
-        Bundle bundle = getIntent().getExtras();
-
-        tokenValidationViewModel.setBundle(bundle);
 
         hideKeyword(getWindow());
     }
@@ -56,10 +62,10 @@ public class TokenValidationActivity extends CommonActivity {
     private void setupObservers() {
         tokenValidationViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
         tokenValidationViewModel.getIsLoading().observe(this, progressBarObserver);
-        tokenValidationViewModel.getEmailChanged().observe(this, emailChangedObserver);
         tokenValidationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
         tokenValidationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
         tokenValidationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
+        tokenValidationViewModel.getIsMessageSuccessForToast().observe(this,isMessageSuccessForToastObserver);
     }
 
     private Observer<String> messageErrorChangedObserver = new Observer<String>() {
@@ -73,10 +79,9 @@ public class TokenValidationActivity extends CommonActivity {
     private Observer<String> isValidatedTokenObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(TokenValidationActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,500);
             Intent intent = new Intent(TokenValidationActivity.this, LoginActivity.class);
-            String emailInput = tokenValidationViewHolder.textViewEmail.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
@@ -84,14 +89,16 @@ public class TokenValidationActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(TokenValidationActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,500);
         }
     };
 
-    private Observer<String> emailChangedObserver = new Observer<String>() {
+    private Observer<String> isMessageSuccessForToastObserver = new Observer<String>() {
         @Override
-        public void onChanged(String email) {
-            tokenValidationViewHolder.textViewEmail.setText(email);
+        public void onChanged(String message) {
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,700);
         }
     };
 
@@ -107,14 +114,11 @@ public class TokenValidationActivity extends CommonActivity {
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        tokenValidationViewHolder.progressBar,
-                        getWindow(),
-                        TokenValidationActivity.this);
-            }
+        public void onChanged(Boolean isLoading) {
+            loadingExecutor(isLoading,
+                    tokenValidationViewHolder.progressBar,
+                    tokenValidationViewHolder.frameLayout,
+                    tokenValidationViewHolder.button);
         }
     };
 

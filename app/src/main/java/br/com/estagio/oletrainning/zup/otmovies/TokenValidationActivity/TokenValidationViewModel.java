@@ -10,6 +10,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Token;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 public class TokenValidationViewModel extends CommonViewModel {
 
@@ -47,7 +48,7 @@ public class TokenValidationViewModel extends CommonViewModel {
         token = new Token(code);
         tokenContainsErrorStatus.postValue(!token.validateTokenSize());
         if (token.isValidToken()) {
-            String email = bundle.getString(EMAIL_BUNDLE_KEY);
+            String email = SingletonEmail.INSTANCE.getEmail();
             executeServiceTokenValidation(email,code);
         }
     }
@@ -55,11 +56,11 @@ public class TokenValidationViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> tokenValidationObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.setValue(false);
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
                     getIsValidatedToken().setValue(SUCCESS_MESSAGE_VALIDATE_TOKEN);
                 } else {
+                    isLoading.setValue(false);
                     ErrorMessage errorMessage = new ErrorMessage();
                     errorMessage.setKey(responseModel.getErrorMessage().getKey());
                     errorMessage.setMessage(responseModel.getErrorMessage().getMessage());
@@ -72,6 +73,7 @@ public class TokenValidationViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_VALIDATE_TOKEN);
             }
         }

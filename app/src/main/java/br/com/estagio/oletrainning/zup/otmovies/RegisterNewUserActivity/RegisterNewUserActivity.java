@@ -6,13 +6,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
+
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.TokenValidationActivity.TokenValidationActivity;
 
 public class RegisterNewUserActivity extends CommonActivity {
@@ -31,11 +36,14 @@ public class RegisterNewUserActivity extends CommonActivity {
 
         registerNewUserViewModel = ViewModelProviders.of(this).get(RegisterNewUserViewModel.class);
 
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+
+        registerNewUserViewHolder.textViewEmailEntered.setText(SingletonEmail.INSTANCE.getEmail());
+
         setupObservers();
-
-        Bundle bundle = getIntent().getExtras();
-
-        registerNewUserViewModel.setBundle(bundle);
 
         hideKeyword(getWindow());
     }
@@ -58,7 +66,6 @@ public class RegisterNewUserActivity extends CommonActivity {
         registerNewUserViewModel.getIsInvalidPassword().observe(this, isInvalidPasswordObserver);
         registerNewUserViewModel.getIsUsernameDuplicated().observe(this,isUsernameDuplicated);
         registerNewUserViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
-        registerNewUserViewModel.getEmailChanged().observe(this,emailChangedObserver);
     }
 
     private void setupListeners() {
@@ -92,13 +99,6 @@ public class RegisterNewUserActivity extends CommonActivity {
         }
     };
 
-    private Observer<String> emailChangedObserver = new Observer<String>() {
-        @Override
-        public void onChanged(String email) {
-            registerNewUserViewHolder.textViewEmailEntered.setText(email);
-        }
-    };
-
     private Observer<Boolean> isUsernameDuplicated = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isUsernameDuplicated) {
@@ -112,7 +112,8 @@ public class RegisterNewUserActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(RegisterNewUserActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,500);
         }
     };
 
@@ -146,10 +147,9 @@ public class RegisterNewUserActivity extends CommonActivity {
     private Observer<String> isRegisteredObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(RegisterNewUserActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,500);
             Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
-            String emailInput = registerNewUserViewHolder.textViewEmailEntered.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
@@ -157,13 +157,10 @@ public class RegisterNewUserActivity extends CommonActivity {
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        registerNewUserViewHolder.progressBar,
-                        getWindow(),
-                        RegisterNewUserActivity.this);
-            }
+            loadingExecutor(isLoading,
+                    registerNewUserViewHolder.progressBar,
+                    registerNewUserViewHolder.frameLayout,
+                    registerNewUserViewHolder.buttonNextRegister);
         }
     };
 

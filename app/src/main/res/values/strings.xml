@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">OTmovies</string>
+    <string name="app_name_caps">OTMOVIES</string>
     <string name="textView_EmailHeadHint">INFORME SUA CONTA DE\n E-MAIL</string>
     <string name="textButton_next">AVANÇAR</string>
     <string name="emailHint">E-mail (exemplo@mail.com)</string>
@@ -75,5 +76,16 @@
     <string name="nav_header_title">User Name</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="text_fragment_a">Esta é a fragment A da Tab A!</string>
+    <string name="text_fragment_b">Esta é a fragment B da Tab B!</string>
+    <string name="first_page">1</string>
+
+    <string-array name="titles_tabs">
+        <item>Tab A</item>
+        <item>Tab B</item>
+    </string-array>
+    <string name="title_activity_list_film">ListFilmActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

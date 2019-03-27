@@ -33,16 +33,8 @@ public class UserData {
         this.email = email;
     }
 
-    public String getCompleteName() {
-        return completeName;
-    }
-
     public void setCompleteName(String completeName) {
         this.completeName = completeName;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public void setUsername(String username) {
@@ -53,15 +45,15 @@ public class UserData {
         return registrationStatus;
     }
 
-    public void setRegistrationStatus(String registrationStatus) {
-        this.registrationStatus = registrationStatus;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCompleteName() {
+        return completeName;
     }
 }

@@ -7,13 +7,17 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
+
+import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 
 public class FinishYourRegistrationActivity extends CommonActivity {
@@ -31,11 +35,14 @@ public class FinishYourRegistrationActivity extends CommonActivity {
 
         finishYourRegistrationViewModel = ViewModelProviders.of(this).get(FinishYourRegistrationViewModel.class);
 
+        if(SingletonEmail.INSTANCE.getEmail() == null){
+            Intent intent = new Intent(this, PreLoginActivity.class);
+            startActivity(intent);
+        }
+
+        finishYourRegistrationViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
+
         setupObservers();
-
-        Bundle bundle = getIntent().getExtras();
-
-        finishYourRegistrationViewModel.setBundle(bundle);
 
         hideKeyword(getWindow());
     }
@@ -57,10 +64,10 @@ public class FinishYourRegistrationActivity extends CommonActivity {
     private void setupObservers() {
         finishYourRegistrationViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
         finishYourRegistrationViewModel.getIsLoading().observe(this, progressBarObserver);
-        finishYourRegistrationViewModel.getEmailChanged().observe(this, emailChangedObserver);
         finishYourRegistrationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
         finishYourRegistrationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
         finishYourRegistrationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
+        finishYourRegistrationViewModel.getIsMessageSuccessForToast().observe(this,isMessageSuccessForToastObserver);
     }
 
     private Observer<String> messageErrorChangedObserver = new Observer<String>() {
@@ -74,10 +81,9 @@ public class FinishYourRegistrationActivity extends CommonActivity {
     private Observer<String> isValidatedTokenObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(FinishYourRegistrationActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,500);
             Intent intent = new Intent(FinishYourRegistrationActivity.this, LoginActivity.class);
-            String emailInput = finishYourRegistrationViewHolder.textViewEmail.getText().toString().trim();
-            intent.putExtra(getString(R.string.EmailPreLogin), emailInput);
             startActivity(intent);
         }
     };
@@ -85,14 +91,16 @@ public class FinishYourRegistrationActivity extends CommonActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            Toast.makeText(FinishYourRegistrationActivity.this, message, Toast.LENGTH_LONG).show();
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER,0,500);
         }
     };
 
-    private Observer<String> emailChangedObserver = new Observer<String>() {
+    private Observer<String> isMessageSuccessForToastObserver = new Observer<String>() {
         @Override
-        public void onChanged(String email) {
-            finishYourRegistrationViewHolder.textViewEmail.setText(email);
+        public void onChanged(String message) {
+            TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER,0,500);
         }
     };
 
@@ -108,14 +116,11 @@ public class FinishYourRegistrationActivity extends CommonActivity {
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable Boolean isLoading) {
-            if (isLoading != null) {
-                loadingExecutor(
-                        isLoading,
-                        finishYourRegistrationViewHolder.progressBar,
-                        getWindow(),
-                        FinishYourRegistrationActivity.this);
-            }
+        public void onChanged(Boolean isLoading) {
+            loadingExecutor(isLoading,
+                    finishYourRegistrationViewHolder.progressBar,
+                    finishYourRegistrationViewHolder.frameLayout,
+                    finishYourRegistrationViewHolder.button);
         }
     };
 

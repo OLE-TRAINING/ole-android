@@ -10,6 +10,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.Common.UsefulClass.Password;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
 public class LoginViewModel extends CommonViewModel {
 
@@ -28,7 +29,6 @@ public class LoginViewModel extends CommonViewModel {
 
     private MutableLiveData<String> isValidatedPassword = new MutableLiveData<>();
 
-
     public MutableLiveData<String> getIsValidatedPassword() {
         return isValidatedPassword;
     }
@@ -46,7 +46,7 @@ public class LoginViewModel extends CommonViewModel {
         passwordContainsErrorStatus.postValue(!password.validatePassword());
         if (password.isValidPassword()) {
             UserData userData = new UserData();
-            userData.setEmail(bundle.getString(EMAIL_BUNDLE_KEY));
+            userData.setEmail(SingletonEmail.INSTANCE.getEmail());
             userData.setPassword(passwordEntered);
             executeServicePasswordValidation(userData);
         }
@@ -59,8 +59,9 @@ public class LoginViewModel extends CommonViewModel {
     @Override
     public void tokenForwardingRequested() {
         super.tokenForwardingRequested();
+        passwordContainsErrorStatus.setValue(false);
         changeSuccessMessageResendToken();
-        String email = bundle.getString(EMAIL_BUNDLE_KEY);
+        String email = SingletonEmail.INSTANCE.getEmail();
         executeServiceTokenResend(email);
     }
 
@@ -81,11 +82,11 @@ public class LoginViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> passwordValidationObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            isLoading.setValue(false);
             if (responseModel != null) {
-                if (responseModel.getCode() == 200) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
                     getIsValidatedPassword().setValue(SUCCESS_MESSAGE_LOGIN);
                 } else {
+                    isLoading.setValue(false);
                     String key = responseModel.getErrorMessage().getKey();
                     String message = responseModel.getErrorMessage().getMessage();
                     if (isMessageErrorTopToast(key)) {
@@ -95,6 +96,7 @@ public class LoginViewModel extends CommonViewModel {
                     }
                 }
             } else {
+                isLoading.setValue(false);
                 getIsErrorMessageForToast().setValue(SERVICE_OR_CONNECTION_ERROR_LOGIN);
             }
         }
