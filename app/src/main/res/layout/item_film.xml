@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_film"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="wrap_content">
@@ -204,23 +205,5 @@
         </RelativeLayout>
 
     </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout_pagination"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorTransparent"
-        android:visibility="gone"
-        android:orientation="vertical">
-
-        <include
-            layout="@layout/loading_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:visibility="gone"/>
-
-    </LinearLayout>
 
 </LinearLayout>

@@ -26,9 +26,9 @@ public class FilmRepository extends CommonRepository{
     private int SESSION_EXPIRED_CODE = 401;
     private static final int FIRST_PAGE = 1;
 
-    private MutableLiveData<ErrorMessage> thereIsPaginationError = new MutableLiveData<>();
-    private MutableLiveData<Boolean> viewModelTellerIsSessionExpiredPagination = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isLoadingPaginationService = new MutableLiveData<>();
+    private MutableLiveData<ErrorMessage> thereIsPaginationError;
+    private MutableLiveData<Boolean> viewModelTellerIsSessionExpiredPagination;
+    private MutableLiveData<Boolean> isLoadingPaginationService;
 
 
     public MutableLiveData<Boolean> getIsLoadingPaginationService() {
@@ -45,6 +45,9 @@ public class FilmRepository extends CommonRepository{
 
     public FilmRepository(){
         filmService = RetrofitServiceBuilder.buildService(FilmService.class);
+        thereIsPaginationError = new MutableLiveData<>();
+        viewModelTellerIsSessionExpiredPagination = new MutableLiveData<>();
+        isLoadingPaginationService = new MutableLiveData<>();
     }
 
     public LiveData<ResponseModel<FilmGenres>> getGenreList() {
@@ -59,8 +62,7 @@ public class FilmRepository extends CommonRepository{
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                                responseModel.setCode(SESSION_EXPIRED_CODE);
-
+                            responseModel.setCode(SESSION_EXPIRED_CODE);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -187,13 +189,11 @@ public class FilmRepository extends CommonRepository{
     public void getFilmsResultsloadAfter (
             final Integer PAGE_SIZE, final PageKeyedDataSource.LoadParams<Integer> params,
             final PageKeyedDataSource.LoadCallback<Integer, FilmResponse> callback, String genreID) {
-        isLoadingPaginationService.postValue(true);
         filmService.getMovieGenre("genres",genreID,"20",String.valueOf(params.key))
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
                         SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
-                        isLoadingPaginationService.postValue(false);
                         if(response.code() == SUCCESS_CODE && response.body() != null){
                             Integer key = (params.key < PAGE_SIZE)? params.key + 1 : null;
                             callback.onResult(response.body().getResults(), key);

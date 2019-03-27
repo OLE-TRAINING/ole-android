@@ -170,7 +170,8 @@ public class TokenValidationActivity extends CommonActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(TokenValidationActivity.this, PreLoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PreLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

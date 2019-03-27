@@ -82,6 +82,7 @@ public class RegisterNewUserActivity extends CommonActivity {
             int id = v.getId();
             if (id == R.id.imageView_backArrow) {
                 Intent intent = new Intent(RegisterNewUserActivity.this, PreLoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         }
@@ -245,7 +246,8 @@ public class RegisterNewUserActivity extends CommonActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(RegisterNewUserActivity.this, PreLoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PreLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

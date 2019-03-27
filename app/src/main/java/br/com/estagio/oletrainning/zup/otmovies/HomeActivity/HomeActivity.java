@@ -32,20 +32,33 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName
 public class HomeActivity extends CommonActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    private FragmentManager fragmentManager;
     private HomeActivityViewHolder homeActivityViewHolder;
     private static final String TAG_FRAGMENT_HOME = "fragment_home";
     private static final String TAG_FRAGMENT_FAVORITE = "fragment_favorite";
     private static final String TAG_FRAGMENT_SEARCH = "fragment_search";
 
-    private Fragment home = new HomeFragment();
+    private Fragment home = HomeFragment.newInstance();
+    private Fragment favorite = new FavoriteFragment();
+    private Fragment search = new SearchFragment();
+
     public Fragment getHome() {
         return home;
     }
 
+    public Fragment getFavorite() {
+        return favorite;
+    }
+
+    public Fragment getSearch() {
+        return search;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        fragmentManager = getSupportFragmentManager();
 
         View view = this.getLayoutInflater().inflate(R.layout.activity_home, null);
         this.homeActivityViewHolder = new HomeActivityViewHolder(view);
@@ -73,6 +86,10 @@ public class HomeActivity extends CommonActivity
         homeActivityViewHolder.titleToobar.setText(spannableString);
 
         toggle.syncState();
+
+        getSearch().setRetainInstance(true);
+        getHome().setRetainInstance(true);
+        getFavorite().setRetainInstance(true);
     }
 
     @Override
@@ -119,26 +136,26 @@ public class HomeActivity extends CommonActivity
                 pushFragments(TAG_FRAGMENT_HOME, getHome());
                 break;
             case R.id.navigation_favorite:
-                pushFragments(TAG_FRAGMENT_FAVORITE, new FavoriteFragment());
+                pushFragments(TAG_FRAGMENT_FAVORITE, getFavorite());
                 break;
             case R.id.navigation_search:
-                pushFragments(TAG_FRAGMENT_SEARCH, new SearchFragment());
+                pushFragments(TAG_FRAGMENT_SEARCH, getSearch());
                 break;
         }
         return true;
     }
 
     private void pushFragments(String tag, Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction ft = manager.beginTransaction();
 
-        if (manager.findFragmentByTag(tag) == null) {
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+
+        if (fragmentManager.findFragmentByTag(tag) == null) {
             ft.add(R.id.content_home_drawer, fragment, tag);
         }
 
-        Fragment fragmentHome = manager.findFragmentByTag(TAG_FRAGMENT_HOME);
-        Fragment fragmentFavorite = manager.findFragmentByTag(TAG_FRAGMENT_FAVORITE);
-        Fragment fragmentSearch = manager.findFragmentByTag(TAG_FRAGMENT_SEARCH);
+        Fragment fragmentHome = fragmentManager.findFragmentByTag(TAG_FRAGMENT_HOME);
+        Fragment fragmentFavorite = fragmentManager.findFragmentByTag(TAG_FRAGMENT_FAVORITE);
+        Fragment fragmentSearch = fragmentManager.findFragmentByTag(TAG_FRAGMENT_SEARCH);
 
         if (fragmentHome != null) {
             ft.hide(fragmentHome);

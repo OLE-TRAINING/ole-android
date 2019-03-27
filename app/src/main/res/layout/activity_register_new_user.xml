@@ -59,7 +59,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/smallMargin"
+            android:layout_marginTop="@dimen/marginThirty"
+            android:layout_marginBottom="@dimen/marginThirty"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered">

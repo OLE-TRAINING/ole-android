@@ -145,6 +145,12 @@ public class PreLoginActivity extends CommonActivity {
     };
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         preLoginViewModel.removeObserver();

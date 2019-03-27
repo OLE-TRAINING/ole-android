@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,13 +11,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import com.sdsmdg.tastytoast.TastyToast;
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
-import br.com.estagio.oletrainning.zup.otmovies.LoginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAlertDialogSession;
 
 public class MovieListFragment extends CommonFragment {
 
@@ -28,22 +25,23 @@ public class MovieListFragment extends CommonFragment {
     private FilmAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_movie_list, container,false);
         this.movieListFragmentViewHolder = new MovieListFragmentViewHolder(view);
+
+        setRetainInstance(true);
 
         movieListFragmentViewModel = ViewModelProviders.of(MovieListFragment.this).get(MovieListFragmentViewModel.class);
 
         movieListFragmentViewModel.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
-
-        adapter = new FilmAdapter(getActivity());
-
-        setupLayoutManager();
-
-        movieListFragmentViewModel.executeServiceGetFilmResults("1");
-
-        setRetainInstance(true);
 
         return view;
     }
@@ -52,7 +50,12 @@ public class MovieListFragment extends CommonFragment {
     public void onResume() {
         super.onResume();
         setupObserversAndListeners();
+        adapter = new FilmAdapter(getActivity());
+        movieListFragmentViewModel.executeServiceGetFilmResults("1");
+        setupLayoutManager();
     }
+
+
 
     private void setupLayoutManager(){
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -63,8 +66,8 @@ public class MovieListFragment extends CommonFragment {
     private void setupObserversAndListeners() {
         movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
         movieListFragmentViewModel.getFragmentTellerThereIsFilmResults().observe(this,homeTellerThereIsFilmResultsObserver);
-        movieListFragmentViewModel.getIsErrorMessageForToast().observe(this, isMessageForToastObserver);
-        movieListFragmentViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        movieListFragmentViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
+        movieListFragmentViewModel.getFragmentTellerIsLoadingPagination().observe(this,isLoadingPaginationObserver);
     }
 
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
@@ -78,18 +81,11 @@ public class MovieListFragment extends CommonFragment {
     private Observer<Boolean> sessionObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isSessionExpired) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Sua sessão expirou, favor fazer login novamente!")
-                    .setTitle("Aviso:")
-                    .setCancelable(false)
-                    .setPositiveButton("Login", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            startActivity(intent);
-                        }
-                    }).create().setCanceledOnTouchOutside(false);
-            builder.show();
+            if(SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder() == null){
+                SingletonAlertDialogSession.createAlertDialogBuilder(getActivity());
+                SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder().create().setCanceledOnTouchOutside(false);
+                SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder().show();
+            }
         }
     };
 
@@ -102,17 +98,20 @@ public class MovieListFragment extends CommonFragment {
                     adapter.submitList(items);
                 }
             });
-
             movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
             movieListFragmentViewModel.getIsLoading().setValue(false);
 
         }
     };
 
-    private Observer<String> isMessageForToastObserver = new Observer<String>() {
+    private Observer<Boolean> isLoadingPaginationObserver = new Observer<Boolean>() {
         @Override
-        public void onChanged(@Nullable String message) {
-            Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+        public void onChanged(Boolean isLoadingPagination) {
+            if(isLoadingPagination){
+                movieListFragmentViewHolder.linearLayoutPagination.setVisibility(View.VISIBLE);
+            } else {
+                movieListFragmentViewHolder.linearLayoutPagination.setVisibility(View.GONE);
+            }
         }
     };
 
@@ -124,6 +123,20 @@ public class MovieListFragment extends CommonFragment {
                     movieListFragmentViewHolder.frameLayout);
         }
     };
+
+    public static MovieListFragment newInstance() {
+        return new MovieListFragment();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        AlertDialog.Builder dialog = SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder();
+        if (dialog != null && getRetainInstance()) {
+            dialog.setOnDismissListener(null);
+        }
+        super.onDestroyView();
+    }
 
     @Override
     public void onDestroy() {

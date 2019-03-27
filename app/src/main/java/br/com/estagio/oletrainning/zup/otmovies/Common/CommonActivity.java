@@ -45,6 +45,8 @@ public abstract class CommonActivity extends AppCompatActivity {
     public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout, Button button) {
         if (isLoading != null) {
             if (isLoading) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Sprite threeBounce = new ThreeBounce();
                 progressBar.setIndeterminateDrawable(threeBounce);
                 button.setVisibility(View.INVISIBLE);
@@ -54,6 +56,7 @@ public abstract class CommonActivity extends AppCompatActivity {
                 progressBar.setIndeterminateDrawable(threeBounce);
                 button.setVisibility(View.VISIBLE);
                 frameLayout.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
         }
     }

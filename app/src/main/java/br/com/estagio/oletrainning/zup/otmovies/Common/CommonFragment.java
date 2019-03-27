@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
@@ -16,8 +17,10 @@ import com.github.ybq.android.spinkit.style.ThreeBounce;
 public abstract class CommonFragment extends Fragment {
 
     public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
-        if (isLoading != null) {
+        if (isLoading != null && getActivity() != null) {
             if (isLoading) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Sprite threeBounce = new ThreeBounce();
                 progressBar.setIndeterminateDrawable(threeBounce);
                 frameLayout.setVisibility(View.VISIBLE);
@@ -25,6 +28,7 @@ public abstract class CommonFragment extends Fragment {
                 Sprite threeBounce = new ThreeBounce();
                 progressBar.setIndeterminateDrawable(threeBounce);
                 frameLayout.setVisibility(View.INVISIBLE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
         }
     }

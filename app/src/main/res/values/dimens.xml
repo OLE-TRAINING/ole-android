@@ -4,11 +4,11 @@
     <dimen name="marginStandard">8dp</dimen>
     <dimen name="marginLayout">30dp</dimen>
     <dimen name="paddingEditText">15dp</dimen>
-    <dimen name="textSizeDefault">16sp</dimen>
+    <dimen name="textSizeDefault">12sp</dimen>
     <dimen name="textSizeSmall">14sp</dimen>
     <dimen name="textSizeTiny">10sp</dimen>
     <dimen name="defaultHeaderLetterSpacing">.15</dimen>
-    <dimen name="textSizeHeader">22sp</dimen>
+    <dimen name="textSizeHeader">18sp</dimen>
     <dimen name="bigMargin">16dp</dimen>
     <dimen name="lineSpacing">36dp</dimen>
     <dimen name="formFinalSpacing">160dp</dimen>
@@ -40,7 +40,7 @@
     <dimen name="marginStart_textView">8dp</dimen>
     <dimen name="marginTop_ErrorEditText">16dp</dimen>
     <dimen name="smallMargin">8dp</dimen>
-    <dimen name="margin_top_header">40dp</dimen>
+    <dimen name="margin_top_header">88dp</dimen>
     <dimen name="margin_top_arrow">40dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
@@ -53,7 +53,7 @@
     <dimen name="paddingItemDecorationEdge">24dp</dimen>
     <dimen name="activity_margin_content">24dp</dimen>
     <dimen name="activity_margin_half">8dp</dimen>
-    <dimen name="poster_thumb_width">180dp</dimen>
-    <dimen name="poster_thumb_height">270dp</dimen>
+    <dimen name="poster_thumb_width">162dp</dimen>
+    <dimen name="poster_thumb_height">243dp</dimen>
     <dimen name="activity_margin_quarter">4dp</dimen>
 </resources>

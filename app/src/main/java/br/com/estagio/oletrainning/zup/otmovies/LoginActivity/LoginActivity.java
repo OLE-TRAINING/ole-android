@@ -166,6 +166,7 @@ public class LoginActivity extends CommonActivity {
             int id = v.getId();
             if (id == R.id.imageView_backArrow) {
                 Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         }
@@ -198,10 +199,10 @@ public class LoginActivity extends CommonActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PreLoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

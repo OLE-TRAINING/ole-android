@@ -23,7 +23,7 @@ public class FragmentStateAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         SingletonGenreID.setGenreIDEntered(findGenreID(position));
-        return new MovieListFragment();
+        return MovieListFragment.newInstance();
     }
 
     @Override
