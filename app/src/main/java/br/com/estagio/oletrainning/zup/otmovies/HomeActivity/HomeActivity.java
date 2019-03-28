@@ -23,6 +23,7 @@ import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Favorite.
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Search.SearchFragment;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieDetailsFragment.MovieDetails;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
@@ -37,10 +38,16 @@ public class HomeActivity extends CommonActivity
     private static final String TAG_FRAGMENT_HOME = "fragment_home";
     private static final String TAG_FRAGMENT_FAVORITE = "fragment_favorite";
     private static final String TAG_FRAGMENT_SEARCH = "fragment_search";
+    private static final String TAG_FRAGMENT_MOVIE_DETAILS = "fragment_movie_details";
 
     private Fragment home = HomeFragment.newInstance();
     private Fragment favorite = new FavoriteFragment();
     private Fragment search = new SearchFragment();
+    private Fragment movieDetails = new MovieDetails();
+
+    public Fragment getMovieDetails() {
+        return movieDetails;
+    }
 
     public Fragment getHome() {
         return home;
@@ -89,7 +96,7 @@ public class HomeActivity extends CommonActivity
 
         getSearch().setRetainInstance(true);
         getHome().setRetainInstance(true);
-        getFavorite().setRetainInstance(true);
+        getMovieDetails().setRetainInstance(true);
     }
 
     @Override
@@ -136,7 +143,7 @@ public class HomeActivity extends CommonActivity
                 pushFragments(TAG_FRAGMENT_HOME, getHome());
                 break;
             case R.id.navigation_favorite:
-                pushFragments(TAG_FRAGMENT_FAVORITE, getFavorite());
+                pushFragments(TAG_FRAGMENT_MOVIE_DETAILS,getMovieDetails());
                 break;
             case R.id.navigation_search:
                 pushFragments(TAG_FRAGMENT_SEARCH, getSearch());
@@ -154,14 +161,14 @@ public class HomeActivity extends CommonActivity
         }
 
         Fragment fragmentHome = fragmentManager.findFragmentByTag(TAG_FRAGMENT_HOME);
-        Fragment fragmentFavorite = fragmentManager.findFragmentByTag(TAG_FRAGMENT_FAVORITE);
+        Fragment fragmentMovieDetails = fragmentManager.findFragmentByTag(TAG_FRAGMENT_MOVIE_DETAILS);
         Fragment fragmentSearch = fragmentManager.findFragmentByTag(TAG_FRAGMENT_SEARCH);
 
         if (fragmentHome != null) {
             ft.hide(fragmentHome);
         }
-        if (fragmentFavorite != null) {
-            ft.hide(fragmentFavorite);
+        if (fragmentMovieDetails != null) {
+            ft.hide(fragmentMovieDetails);
         }
         if (fragmentSearch != null) {
             ft.hide(fragmentSearch);
@@ -172,9 +179,9 @@ public class HomeActivity extends CommonActivity
                 ft.show(fragmentHome);
             }
         }
-        if (tag == TAG_FRAGMENT_FAVORITE) {
-            if (fragmentFavorite != null) {
-                ft.show(fragmentFavorite);
+        if (tag == TAG_FRAGMENT_MOVIE_DETAILS) {
+            if (fragmentMovieDetails != null) {
+                ft.show(fragmentMovieDetails);
             }
         }
 
