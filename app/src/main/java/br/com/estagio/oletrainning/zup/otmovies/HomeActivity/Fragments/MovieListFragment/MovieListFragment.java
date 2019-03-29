@@ -1,17 +1,21 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment;
 
-import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.sdsmdg.tastytoast.TastyToast;
+
+import java.util.ArrayList;
+
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -24,11 +28,15 @@ public class MovieListFragment extends CommonFragment {
     private MovieListFragmentViewHolder movieListFragmentViewHolder;
     private FilmAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
+    private Parcelable listState;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        if(savedInstanceState!= null){
+            listState=savedInstanceState.getParcelable("ListState");
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,28 +45,58 @@ public class MovieListFragment extends CommonFragment {
         View view = inflater.inflate(R.layout.fragment_movie_list, container,false);
         this.movieListFragmentViewHolder = new MovieListFragmentViewHolder(view);
 
-        setRetainInstance(true);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
 
         movieListFragmentViewModel = ViewModelProviders.of(MovieListFragment.this).get(MovieListFragmentViewModel.class);
-
         movieListFragmentViewModel.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
+
+        if(savedInstanceState == null){
+            movieListFragmentViewModel.executeServiceGetFilmResults("1");
+        }
 
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        setupObserversAndListeners();
-        adapter = new FilmAdapter(getActivity());
-        movieListFragmentViewModel.executeServiceGetFilmResults("1");
-        setupLayoutManager();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Integer positionIndex = linearLayoutManager.findFirstVisibleItemPosition();
+        View startView = movieListFragmentViewHolder.recyclerView.getChildAt(0);
+        Integer topView = (startView == null) ? 0 : (startView.getTop() - movieListFragmentViewHolder.recyclerView.getChildAt(0).getPaddingTop());
+        ArrayList<Integer> position = new ArrayList<>();
+        position.add(0, positionIndex);
+        position.add(1,topView);
+        outState.putIntegerArrayList("positionArray", position);
+        outState.putInt("test",View.BaseSavedState.PARCELABLE_WRITE_RETURN_VALUE);
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
 
+
+        if(linearLayoutManager!=null && savedInstanceState != null && savedInstanceState.getIntegerArrayList("positionArray")!=null){
+            ArrayList<Integer> position = savedInstanceState.getIntegerArrayList("positionArray");
+            Integer positionIndex = position.get(0);
+            Integer topView = position.get(1);
+            if (positionIndex!= -1) {
+                linearLayoutManager.scrollToPositionWithOffset(positionIndex, topView);
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(adapter == null){
+            adapter = new FilmAdapter(getActivity());
+        }
+        setupObserversAndListeners();
+        setupLayoutManager();
+
+    }
 
     private void setupLayoutManager(){
-        linearLayoutManager = new LinearLayoutManager(getActivity());
         movieListFragmentViewHolder.recyclerView.setLayoutManager(linearLayoutManager);
         movieListFragmentViewHolder.recyclerView.setHasFixedSize(true);
     }
@@ -89,18 +127,19 @@ public class MovieListFragment extends CommonFragment {
         }
     };
 
+    private final Observer<PagedList<FilmResponse>> pagedListObserver = new Observer<PagedList<FilmResponse>>() {
+        @Override
+        public void onChanged(@Nullable PagedList<FilmResponse> filmResponses) {
+            adapter.submitList(filmResponses);
+        }
+    };
+
     private Observer <Boolean> homeTellerThereIsFilmResultsObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(@Nullable Boolean aBoolean) {
-            movieListFragmentViewModel.getItemPagedList().observe(MovieListFragment.this, new Observer<PagedList<FilmResponse>>() {
-                @Override
-                public void onChanged(@Nullable PagedList<FilmResponse> items) {
-                    adapter.submitList(items);
-                }
-            });
+            movieListFragmentViewModel.getItemPagedList().observe(MovieListFragment.this, pagedListObserver);
             movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
             movieListFragmentViewModel.getIsLoading().setValue(false);
-
         }
     };
 
@@ -128,19 +167,11 @@ public class MovieListFragment extends CommonFragment {
         return new MovieListFragment();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        AlertDialog.Builder dialog = SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder();
-        if (dialog != null && getRetainInstance()) {
-            dialog.setOnDismissListener(null);
-        }
-        super.onDestroyView();
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         movieListFragmentViewModel.removeObserver();
+        SingletonAlertDialogSession.INSTANCE.destroyAlertDialogBuilder();
     }
 }

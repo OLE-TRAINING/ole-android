@@ -39,4 +39,8 @@ public enum SingletonAlertDialogSession {
         }
         return null;
     }
+
+    public void destroyAlertDialogBuilder() {
+        setAlertDialogBuilder(null);
+    }
 }

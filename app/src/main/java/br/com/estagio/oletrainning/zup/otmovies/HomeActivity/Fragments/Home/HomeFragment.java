@@ -6,13 +6,11 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -33,30 +31,27 @@ public class HomeFragment extends CommonFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        setRetainInstance(true);
-
         View view = this.getLayoutInflater().inflate(R.layout.fragment_home, container, false);
         this.viewHolder = new HomeFragmentViewHolder(view);
 
         viewModelHome = ViewModelProviders.of(this).get(HomeFragmentViewModel.class);
 
-        setupObservers();
+        viewModelHome.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
 
         viewModelHome.executeServiceGetGenreList();
 
-        return view;
-    }
+        if(SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder() != null){
+            SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder().show();
+        }
 
-    @Override
-    public void onAttachFragment(Fragment childFragment) {
-        super.onAttachFragment(childFragment);
-        setRetainInstance(true);
+        setupObservers();
+
+        return view;
     }
 
     private void setupObservers() {
         viewModelHome.getThereIsAGenreList().observe(this, genresObserver);
         viewModelHome.getIsLoading().observe(this,progressBarObserver);
-        viewModelHome.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
         viewModelHome.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
     }
 

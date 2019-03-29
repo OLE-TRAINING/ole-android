@@ -97,13 +97,16 @@ public class HomeActivity extends CommonActivity
         getSearch().setRetainInstance(true);
         getHome().setRetainInstance(true);
         getMovieDetails().setRetainInstance(true);
+
+        if (savedInstanceState == null) {
+            homeActivityViewHolder.bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        }
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
         colorStatusBar(this.getWindow(), R.color.colorPrimary, false);
-        pushFragments(TAG_FRAGMENT_HOME, getHome());
     }
 
     private void setupListener() {

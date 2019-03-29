@@ -63,6 +63,7 @@ public class FilmRepository extends CommonRepository{
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
                             responseModel.setCode(SESSION_EXPIRED_CODE);
+                            viewModelTellerIsSessionExpiredPagination.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
