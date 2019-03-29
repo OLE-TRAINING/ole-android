@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.estagio.oletrainning.zup.otmovies">
+    package="br.com.estagio.oletrainning.zup.otmovies"
+    >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -14,6 +15,7 @@
         <activity android:name=".Common.CommonActivity"></activity>
         <activity
             android:name=".HomeActivity.HomeActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_home" />
         <activity android:name=".PreLoginActivity.PreLoginActivity">
             <intent-filter>

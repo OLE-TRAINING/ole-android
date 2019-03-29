@@ -94,10 +94,6 @@ public class HomeActivity extends CommonActivity
 
         toggle.syncState();
 
-        getSearch().setRetainInstance(true);
-        getHome().setRetainInstance(true);
-        getMovieDetails().setRetainInstance(true);
-
         if (savedInstanceState == null) {
             homeActivityViewHolder.bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
@@ -112,22 +108,15 @@ public class HomeActivity extends CommonActivity
     private void setupListener() {
         homeActivityViewHolder.bottomNavigationView
                 .setOnNavigationItemSelectedListener(this);
-        homeActivityViewHolder.navigationView.setNavigationItemSelectedListener(navigationViewListener);
-
+        homeActivityViewHolder.logoutButton.setOnClickListener(logoutOnClickListener);
     }
 
-    NavigationView.OnNavigationItemSelectedListener navigationViewListener =
-            new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.nav_logout:
-                            logoutConfirmation();
-                            return true;
-                    }
-                    return false;
-                }
-            };
+    private View.OnClickListener logoutOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            logoutConfirmation();
+        }
+    };
 
     @Override
     public void onBackPressed() {

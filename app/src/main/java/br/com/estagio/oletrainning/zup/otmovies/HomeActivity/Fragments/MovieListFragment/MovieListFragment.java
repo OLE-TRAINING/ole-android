@@ -50,39 +50,9 @@ public class MovieListFragment extends CommonFragment {
         movieListFragmentViewModel = ViewModelProviders.of(MovieListFragment.this).get(MovieListFragmentViewModel.class);
         movieListFragmentViewModel.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
 
-        if(savedInstanceState == null){
-            movieListFragmentViewModel.executeServiceGetFilmResults("1");
-        }
+        movieListFragmentViewModel.executeServiceGetFilmResults("1");
 
         return view;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Integer positionIndex = linearLayoutManager.findFirstVisibleItemPosition();
-        View startView = movieListFragmentViewHolder.recyclerView.getChildAt(0);
-        Integer topView = (startView == null) ? 0 : (startView.getTop() - movieListFragmentViewHolder.recyclerView.getChildAt(0).getPaddingTop());
-        ArrayList<Integer> position = new ArrayList<>();
-        position.add(0, positionIndex);
-        position.add(1,topView);
-        outState.putIntegerArrayList("positionArray", position);
-        outState.putInt("test",View.BaseSavedState.PARCELABLE_WRITE_RETURN_VALUE);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
-
-        if(linearLayoutManager!=null && savedInstanceState != null && savedInstanceState.getIntegerArrayList("positionArray")!=null){
-            ArrayList<Integer> position = savedInstanceState.getIntegerArrayList("positionArray");
-            Integer positionIndex = position.get(0);
-            Integer topView = position.get(1);
-            if (positionIndex!= -1) {
-                linearLayoutManager.scrollToPositionWithOffset(positionIndex, topView);
-            }
-        }
     }
 
     @Override

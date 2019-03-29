@@ -6,6 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ public class HomeActivityViewHolder {
     TextView textView_navView_email;
     TextView textView_navView_name;
     TextView titleToobar;
+    LinearLayout logoutButton;
 
     HomeActivityViewHolder(View view) {
 
@@ -31,6 +33,7 @@ public class HomeActivityViewHolder {
         View headerView = navigationView.getHeaderView(0);
         textView_navView_email = headerView.findViewById(R.id.textview_nav_email);
         textView_navView_name = headerView.findViewById(R.id.textview_nav_name);
+        logoutButton = headerView.findViewById(R.id.linearLayout_logout);
         titleToobar = homeDrawer.findViewById(R.id.textHomeTitle);
     }
 }
