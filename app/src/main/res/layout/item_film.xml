@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_film"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@color/colorTransparent"
+        android:orientation="vertical"
         android:padding="10dp">
 
         <LinearLayout
@@ -29,24 +28,33 @@
             android:paddingRight="@dimen/activity_margin"
             android:paddingBottom="@dimen/activity_margin">
 
-            <CheckBox
-                android:id="@+id/checkbox_favorite"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:button="@drawable/check_favorite"
-                android:checked="false" />
+                android:layout_gravity="start">
 
-            <TextView
-                android:id="@+id/text_title_film"
-                style="@style/TextAppearance.AppCompat.Subhead"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/activity_margin_content"
-                android:layout_marginTop="@dimen/activity_margin_quarter"
-                android:maxLines="1"
-                tools:text="Movie Title"/>
+                <TextView
+                    android:id="@+id/text_title_film"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_margin_content"
+                    android:layout_marginTop="@dimen/activity_margin_quarter"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    tools:text="Movie Title" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="80dp"
+                    android:button="@drawable/check_favorite"
+                    android:checked="false"
+                    android:gravity="center_vertical" />
+
+            </FrameLayout>
 
 
             <TextView
@@ -120,7 +128,6 @@
                 android:ellipsize="end"
                 android:fontFamily="@font/robotoregular"
                 android:maxLines="5"
-                android:textSize="12sp"
                 tools:text="Nowadays, user engagement is considered one of the most important metrics for the success of your app. owadays, user engagement is considered one of the most important metrics for the success of your app" />
 
 
@@ -135,22 +142,21 @@
                 android:gravity="end|bottom"
                 android:maxLines="1"
                 android:textColor="@color/colorPrimary"
-                android:textSize="12sp"
                 tools:text="R$ 16,90" />
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="182dp"
+            android:layout_height="245dp"
             android:layout_margin="@dimen/activity_margin_half"
-            android:elevation="50dp"
             android:background="@color/colorTransparent"
-            android:layout_height="245dp">
+            android:elevation="50dp">
 
             <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:elevation="-10dp"
                 android:layout_marginRight="@dimen/activity_margin_half"
+                android:elevation="-10dp"
                 app:cardBackgroundColor="@color/placeholder_grey"
                 app:cardCornerRadius="3dp"
                 app:cardPreventCornerOverlap="false">
@@ -199,7 +205,6 @@
                     android:textColor="@color/colorBlack"
                     android:textSize="14sp" />
             </FrameLayout>
-
 
 
         </RelativeLayout>

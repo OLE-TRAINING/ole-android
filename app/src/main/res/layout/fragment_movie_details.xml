@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="wrap_content"
+    android:background="@color/fragmentBackground">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Opções Semelhantes:"
+            android:textColor="@color/colorBlack"
+            android:alpha="0.38"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_marginTop="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:visibility="invisible"/>
+
+        <include
+            layout="@layout/loading_layout"
+            android:layout_marginTop="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:visibility="invisible"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_films_details"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:background="@color/colorTextWhite"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
@@ -30,37 +70,39 @@
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="360dp"
+
+                app:layout_anchor="@id/coordinator_layout"
+                app:layout_anchorGravity="bottom"
+                app:layout_collapseMode="pin" />
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="261dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical"
                 app:layout_collapseMode="pin">
 
-                <FrameLayout
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="261dp"
-                    android:orientation="vertical"
-                    app:layout_collapseMode="pin">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/activity_margin"
-                        android:orientation="vertical"
                         android:background="@color/colorTransparent"
+                        android:orientation="vertical"
                         android:paddingStart="@dimen/poster_thumb_width"
                         android:paddingEnd="@dimen/activity_margin"
                         android:paddingBottom="@dimen/activity_margin">
-
-                        <CheckBox
-                            android:id="@+id/checkbox_favorite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginTop="@dimen/bigMargin"
-                            android:button="@drawable/check_favorite"
-                            android:checked="false" />
 
                         <TextView
                             android:id="@+id/text_title"
@@ -69,14 +111,14 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/activity_margin_content"
-                            android:layout_marginTop="@dimen/activity_margin_quarter"
+                            android:layout_marginTop="20dp"
                             android:maxLines="1"
                             android:text="Movie Title"
-                            android:textColor="@color/colorBlack" />
+                            android:textColor="@color/colorBlack"
+                            android:textSize="25dp" />
 
                         <TextView
                             android:id="@+id/textView_keywords"
-                            style="@style/TextAppearance.AppCompat.Caption"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/activity_margin_content"
@@ -89,7 +131,7 @@
                             android:textColor="@color/colorBlack" />
 
                         <LinearLayout
-                            android:id="@+id/linearLayout_runtimeAndYear"
+                            android:id="@+id/linearLayout_yearAndCountries"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/activity_margin_content"
@@ -97,77 +139,145 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/textView_yearDetails"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="•"
-                                android:textColor="@color/yellow"
-                                android:textSize="15sp" />
+                                android:text="2019"
+                                android:textColor="@color/colorBlack" />
 
                             <TextView
-                                android:id="@+id/textView_runtime"
-                                style="@style/TextAppearance.AppCompat.Caption"
+                                android:id="@+id/textView_countriesDetails"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
+                                android:text="USA, UK"
+                                android:textColor="@color/colorBlack" />
+
+                            <TextView
+                                android:id="@+id/textView_runtimeDetails"
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:alpha="0.38"
                                 android:fontFamily="@font/robotoregular"
                                 android:maxLines="1"
                                 android:text="2h 15min"
                                 android:textColor="@color/colorBlack" />
 
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout_diretorPoints"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/activity_margin_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <FrameLayout
+                                android:layout_width="50dp"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/imdb_icon">
+
+                                <TextView
+                                    android:id="@+id/textView_imdb"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:text="IMDB"
+                                    android:textColor="@color/colorTextWhite" />
+
+                            </FrameLayout>
+
                             <TextView
-                                android:id="@+id/textView_year"
-                                style="@style/TextAppearance.AppCompat.Caption"
-                                android:layout_width="match_parent"
+                                android:id="@+id/textView_pointsDetails"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
+                                android:text="7.9"
+                                android:textColor="@color/colorBlack" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:alpha="0.38"
-                                android:fontFamily="@font/robotobold"
+                                android:fontFamily="@font/robotoregular"
                                 android:maxLines="1"
-                                android:text="2017"
+                                android:text="/10"
                                 android:textColor="@color/colorBlack" />
 
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="@dimen/activity_margin_content"
-                            android:layout_marginTop="8dp"
-                            android:alpha="0.4"
-                            android:background="@android:color/black" />
-
-                        <TextView
-                            android:id="@+id/movie_description"
-                            style="@style/TextAppearance.AppCompat.Caption"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_marginStart="@dimen/activity_margin_content"
-                            android:layout_marginLeft="@dimen/activity_margin_content"
-                            android:layout_marginTop="@dimen/activity_margin_half"
-                            android:ellipsize="end"
-                            android:fontFamily="@font/robotoregular"
-                            android:maxLines="5"
-                            android:text="Nowadays, user engagement is considered one of the most important metrics for the success of your app. owadays, user engagement is considered one of the most important metrics for the success of your app"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp" />
-
-
-                        <TextView
-                            android:id="@+id/textView_price"
-                            style="@style/TextAppearance.AppCompat.Caption"
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:id="@+id/linearLayout_diretorDetails"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/activity_margin_content"
-                            android:layout_marginTop="16dp"
-                            android:fontFamily="@font/robotobold"
-                            android:gravity="end|bottom"
-                            android:maxLines="1"
-                            android:text="R$ 16,90"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="12sp" />
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:alpha="0.38"
+                                android:fontFamily="@font/robotoregular"
+                                android:maxLines="1"
+                                android:text="Diretor: "
+                                android:textColor="@color/colorBlack" />
+
+                            <TextView
+                                android:id="@+id/textView_diretorDetails"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="James Cameron"
+                                android:textColor="@color/colorBlack" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout_writerDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/activity_margin_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:alpha="0.38"
+                                android:fontFamily="@font/robotoregular"
+                                android:maxLines="1"
+                                android:text="Escritor: "
+                                android:textColor="@color/colorBlack" />
+
+                            <TextView
+                                android:id="@+id/textView_writerDetails"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="James Cameron"
+                                android:textColor="@color/colorBlack" />
+
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/checkbox_favorite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginTop="8dp"
+                            android:button="@drawable/check_favorite"
+                            android:checked="false" />
+
+
                     </LinearLayout>
 
                     <android.support.v7.widget.CardView
+                        android:id="@+id/cardView_fotoDetails"
                         android:layout_width="@dimen/poster_thumb_width"
                         android:layout_height="@dimen/poster_thumb_height"
                         android:layout_marginRight="@dimen/activity_margin_half"
@@ -193,25 +303,26 @@
 
                     </android.support.v7.widget.CardView>
 
-                </FrameLayout>
+                    <TextView
+                        android:id="@+id/movie_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/cardView_fotoDetails"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="20dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/robotoregular"
+                        android:text="Nowadays, user engagement is considered one of the most important metrics for the success of your app. owadays, user engagement is considered one of the most important metrics for the success of your app"
+                        android:textColor="@color/colorBlack" />
 
-            </android.support.v7.widget.Toolbar>
+                </RelativeLayout>
+
+
+            </FrameLayout>
+
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 
 </android.support.design.widget.CoordinatorLayout>

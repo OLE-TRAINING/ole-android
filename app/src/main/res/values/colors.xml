@@ -20,6 +20,7 @@
     <color name="fragmentBackground">#F5F6F7</color>
     <color name="placeholder_grey">#AAADC4</color>
     <color name="yellow">#ffcd00</color>
+    <color name="imdb_background_color">#ffcd00</color>
     <color name="white">#FFFFFF</color>
 
 </resources>

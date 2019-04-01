@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.squareup.picasso.Picasso;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -29,6 +31,15 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.ItemViewHolder> {
 
     private Context mCtx;
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
+    }
 
     public FilmAdapter(Context mCtx) {
         super(DIFF_CALLBACK);
@@ -39,7 +50,7 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mCtx).inflate(R.layout.item_film, parent, false);
-        return new ItemViewHolder(view);
+        return new ItemViewHolder(view,this.onItemClickListener);
     }
 
     @Override
@@ -60,7 +71,9 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
             holder.runtime.setText(film.getRuntime());
             holder.year.setText(String.valueOf(film.getYear()));
             holder.filmNote.setText(String.valueOf(film.getVoteAverage()));
-            String priceText = "R$ "+ String.valueOf(film.getPrice());
+            Float filmPrice = film.getPrice();
+            DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            String priceText = "R$ "+ String.valueOf(decimalFormat.format(filmPrice));
             holder.price.setText(priceText);
 
         } else {
@@ -99,7 +112,7 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
         private CheckBox checkBox;
         private TextView price;
 
-        public ItemViewHolder(View itemView) {
+        public ItemViewHolder(View itemView, final OnItemClickListener onItemClickListener) {
             super(itemView);
 
             progressBar = itemView.findViewById(R.id.movie_progress);
@@ -114,6 +127,17 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
             textTitleFilm = itemView.findViewById(R.id.text_title_film);
             checkBox = itemView.findViewById(R.id.checkbox_favorite);
             price = itemView.findViewById(R.id.textView_price);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onItemClickListener != null){
+                        int positon = getAdapterPosition();
+                        if(positon != RecyclerView.NO_POSITION){
+                            onItemClickListener.onItemClick(positon);
+                        }
+                    }
+                }
+            });
         }
 
         private String keywordPhraseBuilder(@NonNull List<String> filmGenreNamesList) {

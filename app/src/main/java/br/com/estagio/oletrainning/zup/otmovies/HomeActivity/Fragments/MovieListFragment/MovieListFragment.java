@@ -109,7 +109,15 @@ public class MovieListFragment extends CommonFragment {
         public void onChanged(@Nullable Boolean aBoolean) {
             movieListFragmentViewModel.getItemPagedList().observe(MovieListFragment.this, pagedListObserver);
             movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
+            adapter.setOnItemClickListener(onItemClickListener);
             movieListFragmentViewModel.getIsLoading().setValue(false);
+        }
+    };
+
+    private FilmAdapter.OnItemClickListener onItemClickListener = new FilmAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(int position) {
+
         }
     };
 

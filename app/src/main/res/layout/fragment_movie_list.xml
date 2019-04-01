@@ -39,21 +39,4 @@
 
 </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout_pagination"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorTransparent"
-        android:visibility="visible"
-        android:orientation="vertical">
-
-        <include
-            layout="@layout/loading_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:visibility="visible"/>
-
-    </LinearLayout>
-
 </LinearLayout>
