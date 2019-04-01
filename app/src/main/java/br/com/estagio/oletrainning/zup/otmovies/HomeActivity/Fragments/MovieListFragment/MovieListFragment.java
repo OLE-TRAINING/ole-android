@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,6 +118,7 @@ public class MovieListFragment extends CommonFragment {
     private FilmAdapter.OnItemClickListener onItemClickListener = new FilmAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
+
 
         }
     };

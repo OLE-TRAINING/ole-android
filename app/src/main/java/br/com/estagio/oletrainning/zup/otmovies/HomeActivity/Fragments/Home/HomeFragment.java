@@ -100,15 +100,6 @@ public class HomeFragment extends CommonFragment {
         return new HomeFragment();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        AlertDialog.Builder dialog = SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder();
-        if (dialog != null && getRetainInstance()) {
-            dialog.setOnDismissListener(null);
-        }
-        super.onDestroyView();
-    }
 
     @Override
     public void onDestroy() {

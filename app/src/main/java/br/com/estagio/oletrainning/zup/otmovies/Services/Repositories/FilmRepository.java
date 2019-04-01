@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PageKeyedDataSource;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Remote.FilmService;
@@ -79,6 +80,36 @@ public class FilmRepository extends CommonRepository{
 
                     @Override
                     public void onFailure(Call<FilmGenres> call, Throwable t) {
+                        data.setValue(null);
+                    }
+                });
+        return data;
+    }
+
+    public LiveData<ResponseModel<MovieDetailsModel>> getMovieDetails(int id) {
+        final MutableLiveData<ResponseModel<MovieDetailsModel>> data = new MutableLiveData<>();
+        filmService.getMovieDetails(id)
+                .enqueue(new Callback<MovieDetailsModel>() {
+                    @Override
+                    public void onResponse(Call<MovieDetailsModel> call, Response<MovieDetailsModel> response) {
+                        ResponseModel<MovieDetailsModel> responseModel = new ResponseModel<>();
+                        if(response.code() == SUCCESS_CODE){
+                            responseModel.setResponse(response.body());
+                        } else {
+                            if(response.errorBody() != null){
+                                responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
+                            } else {
+                                ErrorMessage errorMessage = new ErrorMessage();
+                                errorMessage.setKey(UNEXPECTED_ERROR_KEY);
+                                errorMessage.setMessage(UNEXPECTED_ERROR_MESSAGE);
+                                responseModel.setErrorMessage(errorMessage);
+                            }
+                        }
+                        data.setValue(responseModel);
+                    }
+
+                    @Override
+                    public void onFailure(Call<MovieDetailsModel> call, Throwable t) {
                         data.setValue(null);
                     }
                 });
