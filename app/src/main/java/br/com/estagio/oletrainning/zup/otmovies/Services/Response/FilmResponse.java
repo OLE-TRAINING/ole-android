@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FilmResponse {
 
-    private float id;
+    private int id;
     private String posterId;
     private String bannerId;
     private float voteAverage;
@@ -19,7 +19,7 @@ public class FilmResponse {
     private float price;
     private boolean acquired;
 
-    public float getId() {
+    public int getId() {
         return id;
     }
 

@@ -6,6 +6,8 @@ import android.arch.paging.PagedList;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,8 +21,11 @@ import java.util.ArrayList;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieDetailsFragment.MovieDetails;
 import br.com.estagio.oletrainning.zup.otmovies.R;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAlertDialogSession;
 
 public class MovieListFragment extends CommonFragment {
@@ -105,21 +110,23 @@ public class MovieListFragment extends CommonFragment {
         }
     };
 
-    private Observer <Boolean> homeTellerThereIsFilmResultsObserver = new Observer<Boolean>() {
+    private Observer <FilmsResults> homeTellerThereIsFilmResultsObserver = new Observer<FilmsResults>() {
         @Override
-        public void onChanged(@Nullable Boolean aBoolean) {
+        public void onChanged(final FilmsResults filmsResults) {
             movieListFragmentViewModel.getItemPagedList().observe(MovieListFragment.this, pagedListObserver);
             movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
-            adapter.setOnItemClickListener(onItemClickListener);
+            adapter.setOnItemClickListener(new FilmAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    if(filmsResults != null){
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        MovieDetails movieDetailsFragment = new MovieDetails(filmsResults.getResults().get(position).getId());
+                        fragmentTransaction.replace(R.id.container, movieDetailsFragment).addToBackStack("fragment_home");
+                        fragmentTransaction.commit();
+                    }
+                }
+            });
             movieListFragmentViewModel.getIsLoading().setValue(false);
-        }
-    };
-
-    private FilmAdapter.OnItemClickListener onItemClickListener = new FilmAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(int position) {
-
-
         }
     };
 

@@ -92,9 +92,14 @@ public class FilmRepository extends CommonRepository{
                 .enqueue(new Callback<MovieDetailsModel>() {
                     @Override
                     public void onResponse(Call<MovieDetailsModel> call, Response<MovieDetailsModel> response) {
+                        SingletonAccessToken.setAccessTokenReceived(response.headers().get("x-access-token"));
                         ResponseModel<MovieDetailsModel> responseModel = new ResponseModel<>();
-                        if(response.code() == SUCCESS_CODE){
+                        if(response.code() == SUCCESS_CODE && response.body() != null){
+                            responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
+                        } else if (response.code() == SESSION_EXPIRED_CODE){
+                            responseModel.setCode(SESSION_EXPIRED_CODE);
+                            viewModelTellerIsSessionExpiredPagination.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));

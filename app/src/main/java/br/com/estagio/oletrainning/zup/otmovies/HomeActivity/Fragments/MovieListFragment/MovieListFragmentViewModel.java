@@ -13,8 +13,8 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmDataSourceFactory;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.GenreAndPageSize;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FilmDataSource;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FilmRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
@@ -30,7 +30,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     private LiveData<PageKeyedDataSource<Integer, FilmResponse>> liveDataSource;
     private LiveData<ResponseModel<FilmsResults>> filmsResults;
     private MutableLiveData<GenreAndPageSize> receiverAPageSizeAndGenreIDService = new MutableLiveData<>();
-    private MutableLiveData<Boolean> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
+    private MutableLiveData<FilmsResults> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
     private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
     private MutableLiveData<Boolean> fragmentTellerIsLoadingPagination = new MutableLiveData<>();
 
@@ -46,7 +46,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         return itemPagedList;
     }
 
-    public MutableLiveData<Boolean> getFragmentTellerThereIsFilmResults() {
+    public MutableLiveData<FilmsResults> getFragmentTellerThereIsFilmResults() {
         return fragmentTellerThereIsFilmResults;
     }
 
@@ -80,7 +80,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
                     GenreAndPageSize genreAndPageSize = new GenreAndPageSize(responseModel.getResponse().getTotal_pages(),
                             SingletonGenreID.INSTANCE.getGenreID());
                     receiverAPageSizeAndGenreIDService.setValue(genreAndPageSize);
-                    fragmentTellerThereIsFilmResults.setValue(true);
+                    fragmentTellerThereIsFilmResults.setValue(responseModel.getResponse());
                 }
             } else {
                 isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR);

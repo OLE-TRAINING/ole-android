@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Film {
 
-    private final float id;
+    private final int id;
     private final String posterId;
     private final String bannerId;
     private final float voteAverage;
@@ -20,7 +20,7 @@ public class Film {
     private final boolean acquired;
 
 
-    public Film(float id, String posterId, String bannerId, float voteAverage, float voteCount, String title, int year,
+    public Film(int id, String posterId, String bannerId, float voteAverage, float voteCount, String title, int year,
                 List<String> genreNames,String runtime, String overview, boolean favorit, float price, boolean acquired) {
         this.id = id;
         this.posterId = posterId;
@@ -37,7 +37,7 @@ public class Film {
         this.acquired = acquired;
     }
 
-    public float getId() {
+    public int getId() {
         return id;
     }
 

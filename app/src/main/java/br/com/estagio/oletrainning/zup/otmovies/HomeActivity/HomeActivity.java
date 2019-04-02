@@ -123,9 +123,13 @@ public class HomeActivity extends CommonActivity
         if (homeActivityViewHolder.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             homeActivityViewHolder.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            logoutConfirmation();
+            if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                getSupportFragmentManager().popBackStack();
+            } else {
+                logoutConfirmation();
+            }
+            }
         }
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

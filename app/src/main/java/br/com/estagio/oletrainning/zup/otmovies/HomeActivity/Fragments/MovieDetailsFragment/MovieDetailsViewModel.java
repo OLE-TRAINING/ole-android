@@ -26,6 +26,10 @@ public class MovieDetailsViewModel extends CommonViewModel {
         return fragmentTellerIsSessionExpired;
     }
 
+    public MutableLiveData<MovieDetailsModel> getThereIsMovieDetails() {
+        return thereIsMovieDetails;
+    }
+
     public void executeServicegetMovieDetails(int id) {
         isLoading.setValue(true);
         getMovieDetails = filmRepository.getMovieDetails(id);
