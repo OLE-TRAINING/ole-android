@@ -1,4 +1,4 @@
-package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieDetailsFragment;
+package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.MovieDetails;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;

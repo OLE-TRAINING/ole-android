@@ -2,23 +2,27 @@ package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.view.ActionProvider;
+import android.view.ContextMenu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Favorite.FavoriteFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragment;
-import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieDetailsFragment.MovieDetails;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Search.SearchFragment;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -39,11 +43,7 @@ public class HomeActivity extends CommonActivity
     private Fragment home = HomeFragment.newInstance();
     private Fragment favorite = new FavoriteFragment();
     private Fragment search = new SearchFragment();
-    private Fragment movieDetails = new MovieDetails();
 
-    public Fragment getMovieDetails() {
-        return movieDetails;
-    }
 
     public Fragment getHome() {
         return home;
@@ -87,6 +87,7 @@ public class HomeActivity extends CommonActivity
         SpannableString spannableString = new SpannableString("OT" + "MOVIES");
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
         homeActivityViewHolder.titleToobar.setText(spannableString);
+
 
         toggle.syncState();
 
@@ -135,7 +136,7 @@ public class HomeActivity extends CommonActivity
                 pushFragments(TAG_FRAGMENT_HOME, getHome());
                 break;
             case R.id.navigation_favorite:
-                pushFragments(TAG_FRAGMENT_MOVIE_DETAILS,getMovieDetails());
+                pushFragments(TAG_FRAGMENT_FAVORITE,getFavorite());
                 break;
             case R.id.navigation_search:
                 pushFragments(TAG_FRAGMENT_SEARCH, getSearch());

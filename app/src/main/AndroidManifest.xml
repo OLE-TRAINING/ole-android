@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.estagio.oletrainning.zup.otmovies"
-    >
+    package="br.com.estagio.oletrainning.zup.otmovies">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Common.CommonActivity"></activity>
+        <activity android:name=".HomeActivity.MovieDetails.MovieDetailsActivity"
+            android:configChanges="orientation|screenSize"></activity>
+        <activity android:name=".Common.CommonActivity" />
         <activity
             android:name=".HomeActivity.HomeActivity"
             android:configChanges="orientation|screenSize"

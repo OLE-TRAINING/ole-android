@@ -1,5 +1,6 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters;
 
+import android.arch.paging.PagedList;
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,7 +35,7 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{
-        void onItemClick(int position);
+        void onItemClick(int position, PagedList<FilmResponse> currentList);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
@@ -131,9 +132,10 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
                 @Override
                 public void onClick(View v) {
                     if(onItemClickListener != null){
+                        PagedList<FilmResponse> currentList = getCurrentList();
                         int positon = getAdapterPosition();
                         if(positon != RecyclerView.NO_POSITION){
-                            onItemClickListener.onItemClick(positon);
+                            onItemClickListener.onItemClick(positon,currentList);
                         }
                     }
                 }

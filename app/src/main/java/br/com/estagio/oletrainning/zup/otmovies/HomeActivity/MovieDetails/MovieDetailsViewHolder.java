@@ -1,7 +1,6 @@
-package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieDetailsFragment;
+package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.MovieDetails;
 
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.NavigationView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,7 +13,6 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 
 public class MovieDetailsViewHolder {
 
-    CollapsingToolbarLayout collapsingToolbar;
     TextView textViewTitle;
     TextView textViewKeywords;
     TextView textViewYear;
@@ -31,9 +29,9 @@ public class MovieDetailsViewHolder {
     FrameLayout frameLayout;
     ProgressBar progressBarRecycler;
     TextView textViewToobar;
+    ImageView backArrow;
 
     public MovieDetailsViewHolder(View view) {
-        collapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
         frameLayout = view.findViewById(R.id.loading_layout);
         textViewTitle = view.findViewById(R.id.text_title_details);
         textViewKeywords = view.findViewById(R.id.textView_keywords_details);
@@ -50,5 +48,6 @@ public class MovieDetailsViewHolder {
         imageViewPoster = view.findViewById(R.id.imageView_poster_details);
         progressBarRecycler = view.findViewById(R.id.progress_bar_recycler);
         textViewToobar = view.findViewById(R.id.textview_toobar_details);
+        backArrow = view.findViewById(R.id.imageView_iconBackArrow);
     }
 }

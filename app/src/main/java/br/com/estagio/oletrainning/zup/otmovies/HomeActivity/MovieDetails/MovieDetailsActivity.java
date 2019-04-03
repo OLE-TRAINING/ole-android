@@ -1,6 +1,6 @@
-package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieDetailsFragment;
+package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.MovieDetails;
 
-import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Typeface;
@@ -9,49 +9,61 @@ import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import br.com.estagio.oletrainning.zup.otmovies.Common.CommonFragment;
+import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAlertDialogSession;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonFilmID;
 
-@SuppressLint("ValidFragment")
-public class MovieDetails extends CommonFragment {
+public class MovieDetailsActivity extends CommonActivity {
 
     private MovieDetailsViewHolder movieDetailsViewHolder;
     private MovieDetailsViewModel movieDetailsViewModel;
 
-    private int id;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        View view = this.getLayoutInflater().inflate(R.layout.fragment_movie_details_two, container, false);
+        View view = this.getLayoutInflater().inflate(R.layout.activity_movie_details, null);
         this.movieDetailsViewHolder = new MovieDetailsViewHolder(view);
 
-        movieDetailsViewModel = ViewModelProviders.of(MovieDetails.this).get(MovieDetailsViewModel.class);
+        setContentView(view);
 
-
+        movieDetailsViewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel.class);
 
         SpannableString spannableString = new SpannableString("OT" + "MOVIES");
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
         movieDetailsViewHolder.textViewToobar.setText(spannableString);
 
+        setupListeners();
+
         setupObservers();
 
-        movieDetailsViewModel.executeServicegetMovieDetails(id);
+        if(SingletonFilmID.INSTANCE.getID() != null){
+            movieDetailsViewModel.executeServicegetMovieDetails(SingletonFilmID.INSTANCE.getID());
+        }
+    }
 
-        return view;
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        colorStatusBar(this.getWindow(), R.color.colorPrimary, false);
+    }
+
+    private void setupListeners(){
+        movieDetailsViewHolder.textViewToobar.setOnClickListener(backArrowListener);
+        movieDetailsViewHolder.backArrow.setOnClickListener(backArrowListener);
     }
 
     private void setupObservers(){
@@ -60,12 +72,13 @@ public class MovieDetails extends CommonFragment {
         movieDetailsViewModel.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
     }
 
-    public MovieDetails(int id) {
-        this.id = id;
-    }
+    private View.OnClickListener backArrowListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            onBackPressed();
+        }
+    };
 
-    public MovieDetails() {
-    }
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override
@@ -88,7 +101,7 @@ public class MovieDetails extends CommonFragment {
         @Override
         public void onChanged(Boolean isSessionExpired) {
             if(SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder() == null){
-                SingletonAlertDialogSession.createAlertDialogBuilder(getActivity());
+                SingletonAlertDialogSession.createAlertDialogBuilder(MovieDetailsActivity.this);
                 SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder().create().setCanceledOnTouchOutside(false);
                 SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder().show();
             }
@@ -111,7 +124,7 @@ public class MovieDetails extends CommonFragment {
                 .into(movieDetailsViewHolder.imageViewPoster);
         Picasso.get()
                 .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+movieDetailsModel.getBannerId()
-                        +"/image/w780?gw-app-key=593c3280aedd01364c73000d3ac06d76")
+                        +"/image/original?gw-app-key=593c3280aedd01364c73000d3ac06d76")
                 .into(movieDetailsViewHolder.imageViewBanner);
     }
 
@@ -122,14 +135,25 @@ public class MovieDetails extends CommonFragment {
             if(i<listString.size()-1){
                 keywordList.append(", ");
             }
-
         }
         Log.d("KEYWORDS",keywordList.toString());
         return keywordList.toString();
     }
 
-    public static MovieDetails newInstance(int id) {
-        MovieDetails fragment = new MovieDetails(id);
-        return fragment;
+    public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
+        if (isLoading != null) {
+            if (isLoading) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                Sprite threeBounce = new ThreeBounce();
+                progressBar.setIndeterminateDrawable(threeBounce);
+                frameLayout.setVisibility(View.VISIBLE);
+            } else {
+                Sprite threeBounce = new ThreeBounce();
+                progressBar.setIndeterminateDrawable(threeBounce);
+                frameLayout.setVisibility(View.INVISIBLE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+        }
     }
 }
