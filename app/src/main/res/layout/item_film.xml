@@ -24,7 +24,7 @@
             android:paddingStart="@dimen/poster_thumb_width"
             android:paddingLeft="@dimen/poster_thumb_width"
             android:paddingTop="@dimen/activity_margin_half"
-            android:paddingEnd="@dimen/activity_margin"
+            android:paddingEnd="@dimen/activity_margin_half"
             android:paddingRight="@dimen/activity_margin"
             android:paddingBottom="@dimen/activity_margin">
 
@@ -36,12 +36,13 @@
                 <TextView
                     android:id="@+id/text_title_film"
                     style="@style/TextAppearance.AppCompat.Subhead"
-                    android:layout_width="150dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_margin_content"
                     android:layout_marginTop="@dimen/activity_margin_quarter"
                     android:gravity="center_vertical"
                     android:maxLines="2"
+                    android:ellipsize="end"
                     tools:text="Movie Title" />
 
                 <CheckBox
@@ -137,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_margin_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/robotobold"
                 android:gravity="end|bottom"
                 android:maxLines="1"
@@ -146,8 +147,8 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="182dp"
-            android:layout_height="245dp"
+            android:layout_width="157dp"
+            android:layout_height="227dp"
             android:layout_margin="@dimen/activity_margin_half"
             android:background="@color/colorTransparent"
             android:elevation="50dp">
@@ -182,13 +183,11 @@
             <FrameLayout
                 android:id="@+id/frameLayout_filmNote"
                 style="@style/Base.AlertDialog.AppCompat.Light"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="end|bottom"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
                 android:background="@drawable/ic_yellow_ball"
                 android:elevation="10dp"
                 android:outlineAmbientShadowColor="@color/colorBlack"
@@ -203,7 +202,7 @@
                     android:text="6.9"
                     android:textAlignment="gravity"
                     android:textColor="@color/colorBlack"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </FrameLayout>
 
 

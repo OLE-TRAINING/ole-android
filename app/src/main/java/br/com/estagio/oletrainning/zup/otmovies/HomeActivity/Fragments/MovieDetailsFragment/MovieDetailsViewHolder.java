@@ -1,6 +1,7 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieDetailsFragment;
 
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -29,9 +30,7 @@ public class MovieDetailsViewHolder {
     ImageView imageViewPoster;
     FrameLayout frameLayout;
     ProgressBar progressBarRecycler;
-    Toolbar toolbar;
-
-
+    TextView textViewToobar;
 
     public MovieDetailsViewHolder(View view) {
         collapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
@@ -50,5 +49,6 @@ public class MovieDetailsViewHolder {
         imageViewBanner = view.findViewById(R.id.imageView_banner_details);
         imageViewPoster = view.findViewById(R.id.imageView_poster_details);
         progressBarRecycler = view.findViewById(R.id.progress_bar_recycler);
+        textViewToobar = view.findViewById(R.id.textview_toobar_details);
     }
 }

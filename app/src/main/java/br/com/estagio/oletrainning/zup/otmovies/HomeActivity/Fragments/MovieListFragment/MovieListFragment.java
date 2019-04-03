@@ -119,6 +119,7 @@ public class MovieListFragment extends CommonFragment {
                 @Override
                 public void onItemClick(int position) {
                     if(filmsResults != null){
+                        movieListFragmentViewModel.getIsLoading().setValue(true);
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                         MovieDetails movieDetailsFragment = new MovieDetails(filmsResults.getResults().get(position).getId());
                         fragmentTransaction.replace(R.id.container, movieDetailsFragment).addToBackStack("fragment_home");

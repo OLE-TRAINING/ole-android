@@ -3,12 +3,17 @@ package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieDet
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.squareup.picasso.Picasso;
 
@@ -31,10 +36,16 @@ public class MovieDetails extends CommonFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = this.getLayoutInflater().inflate(R.layout.fragment_movie_details, container, false);
+        View view = this.getLayoutInflater().inflate(R.layout.fragment_movie_details_two, container, false);
         this.movieDetailsViewHolder = new MovieDetailsViewHolder(view);
 
         movieDetailsViewModel = ViewModelProviders.of(MovieDetails.this).get(MovieDetailsViewModel.class);
+
+
+
+        SpannableString spannableString = new SpannableString("OT" + "MOVIES");
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
+        movieDetailsViewHolder.textViewToobar.setText(spannableString);
 
         setupObservers();
 
@@ -121,6 +132,4 @@ public class MovieDetails extends CommonFragment {
         MovieDetails fragment = new MovieDetails(id);
         return fragment;
     }
-
-
 }
