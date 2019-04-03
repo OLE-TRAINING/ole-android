@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoProvider;
 
 import java.util.List;
 
@@ -92,8 +93,8 @@ public class MovieDetailsActivity extends CommonActivity {
     private Observer<MovieDetailsModel> thereIsMovieDetailsObserver = new Observer<MovieDetailsModel>() {
         @Override
         public void onChanged(MovieDetailsModel movieDetailsModel) {
-            movieDetailsViewModel.getIsLoading().setValue(false);
             setMovieDetailsInformations(movieDetailsModel);
+            movieDetailsViewModel.getIsLoading().setValue(false);
         }
     };
 

@@ -2,21 +2,16 @@ package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.view.ActionProvider;
-import android.view.ContextMenu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
@@ -38,12 +33,10 @@ public class HomeActivity extends CommonActivity
     private static final String TAG_FRAGMENT_HOME = "fragment_home";
     private static final String TAG_FRAGMENT_FAVORITE = "fragment_favorite";
     private static final String TAG_FRAGMENT_SEARCH = "fragment_search";
-    private static final String TAG_FRAGMENT_MOVIE_DETAILS = "fragment_movie_details";
 
     private Fragment home = HomeFragment.newInstance();
     private Fragment favorite = new FavoriteFragment();
     private Fragment search = new SearchFragment();
-
 
     public Fragment getHome() {
         return home;
@@ -88,7 +81,6 @@ public class HomeActivity extends CommonActivity
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
         homeActivityViewHolder.titleToobar.setText(spannableString);
 
-
         toggle.syncState();
 
         if (savedInstanceState == null) {
@@ -125,8 +117,8 @@ public class HomeActivity extends CommonActivity
             } else {
                 logoutConfirmation();
             }
-            }
         }
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -154,14 +146,14 @@ public class HomeActivity extends CommonActivity
         }
 
         Fragment fragmentHome = fragmentManager.findFragmentByTag(TAG_FRAGMENT_HOME);
-        Fragment fragmentMovieDetails = fragmentManager.findFragmentByTag(TAG_FRAGMENT_MOVIE_DETAILS);
+        Fragment fragmentFavorite = fragmentManager.findFragmentByTag(TAG_FRAGMENT_FAVORITE);
         Fragment fragmentSearch = fragmentManager.findFragmentByTag(TAG_FRAGMENT_SEARCH);
 
         if (fragmentHome != null) {
             ft.hide(fragmentHome);
         }
-        if (fragmentMovieDetails != null) {
-            ft.hide(fragmentMovieDetails);
+        if (fragmentFavorite != null) {
+            ft.hide(fragmentFavorite);
         }
         if (fragmentSearch != null) {
             ft.hide(fragmentSearch);
@@ -172,9 +164,9 @@ public class HomeActivity extends CommonActivity
                 ft.show(fragmentHome);
             }
         }
-        if (tag == TAG_FRAGMENT_MOVIE_DETAILS) {
-            if (fragmentMovieDetails != null) {
-                ft.show(fragmentMovieDetails);
+        if (tag == TAG_FRAGMENT_FAVORITE) {
+            if (fragmentFavorite != null) {
+                ft.show(fragmentFavorite);
             }
         }
 
