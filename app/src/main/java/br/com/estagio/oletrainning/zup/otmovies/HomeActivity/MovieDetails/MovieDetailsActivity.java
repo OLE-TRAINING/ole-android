@@ -125,7 +125,7 @@ public class MovieDetailsActivity extends CommonActivity {
                 .into(movieDetailsViewHolder.imageViewPoster);
         Picasso.get()
                 .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+movieDetailsModel.getBannerId()
-                        +"/image/original?gw-app-key=593c3280aedd01364c73000d3ac06d76")
+                        +"/image/w1280?gw-app-key=593c3280aedd01364c73000d3ac06d76")
                 .into(movieDetailsViewHolder.imageViewBanner);
     }
 
