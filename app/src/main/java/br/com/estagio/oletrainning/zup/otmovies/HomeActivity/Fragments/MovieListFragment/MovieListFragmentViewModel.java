@@ -13,7 +13,6 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmDataSourceFactory;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.GenreAndPageSize;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FilmRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
@@ -25,6 +24,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     private FilmRepository filmRepository = new FilmRepository();
 
     private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
+    private String FILTER_GENRES = "genres";
 
     private LiveData<PagedList<FilmResponse>> itemPagedList;
     private LiveData<PageKeyedDataSource<Integer, FilmResponse>> liveDataSource;
@@ -55,12 +55,12 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         public void onChanged(GenreAndPageSize genreAndPageSize) {
             FilmDataSourceFactory itemDataSourceFactory =
                     new FilmDataSourceFactory(genreAndPageSize.getPageSize(),
-                            genreAndPageSize.getGenreID());
+                            genreAndPageSize.getGenreID(),FILTER_GENRES);
             liveDataSource = itemDataSourceFactory.getItemLiveDataSource();
             PagedList.Config config =
                     (new PagedList.Config.Builder())
                             .setEnablePlaceholders(false)
-                            .setInitialLoadSizeHint(40)
+                            .setInitialLoadSizeHint(20)
                             .setPrefetchDistance(5)
                             .setPageSize(genreAndPageSize.getPageSize())
                             .build();
@@ -99,7 +99,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         isLoading.setValue(true);
         setupObserversForever();
         Log.d("singletonGenreID",SingletonGenreID.INSTANCE.getGenreID());
-        filmsResults = filmRepository.getFilmsResults(page, SingletonGenreID.INSTANCE.getGenreID());
+        filmsResults = filmRepository.getFilmsResults(page, SingletonGenreID.INSTANCE.getGenreID(),FILTER_GENRES);
         filmsResults.observeForever(filmsResultsObserver);
     }
 

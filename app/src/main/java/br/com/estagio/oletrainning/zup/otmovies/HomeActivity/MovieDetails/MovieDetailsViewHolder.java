@@ -42,7 +42,7 @@ public class MovieDetailsViewHolder {
         textViewDirector = view.findViewById(R.id.textView_diretor_details);
         textViewWriter = view.findViewById(R.id.textView_writer_details);
         textViewOverview = view.findViewById(R.id.textView_overview_details);
-        recyclerViewDetails = view.findViewById(R.id.recycler_films_details);
+        recyclerViewDetails = view.findViewById(R.id.recycler_films);
         progressBarFragment = view.findViewById(R.id.progress_bar_fragment);
         imageViewBanner = view.findViewById(R.id.imageView_banner_details);
         imageViewPoster = view.findViewById(R.id.imageView_poster_details);

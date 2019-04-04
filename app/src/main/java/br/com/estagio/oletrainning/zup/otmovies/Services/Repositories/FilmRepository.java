@@ -121,9 +121,9 @@ public class FilmRepository extends CommonRepository{
         return data;
     }
 
-    public LiveData<ResponseModel<FilmsResults>> getFilmsResults(String page, String genreID) {
+    public LiveData<ResponseModel<FilmsResults>> getFilmsResults(String page, String genreID, String filter) {
         final MutableLiveData<ResponseModel<FilmsResults>> data = new MutableLiveData<>();
-        filmService.getMovieGenre("genres",genreID,"20",page)
+        filmService.getMovieGenre(filter,genreID,"20",page)
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
@@ -157,8 +157,8 @@ public class FilmRepository extends CommonRepository{
 
     public void getFilmsResultsLoadInitial (
             final PageKeyedDataSource.LoadInitialCallback<Integer, FilmResponse> callback,
-            String firstPage, String genreID) {
-        filmService.getMovieGenre("genres",genreID,"20",firstPage)
+            String firstPage, String genreID,String filter) {
+        filmService.getMovieGenre(filter,genreID,"20",firstPage)
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
@@ -190,8 +190,9 @@ public class FilmRepository extends CommonRepository{
     }
 
     public void getFilmsResultsLoadBefore (
-            final PageKeyedDataSource.LoadParams<Integer> params, final PageKeyedDataSource.LoadCallback<Integer, FilmResponse> callback, String genreID) {
-        filmService.getMovieGenre("genres",genreID,"20",String.valueOf(params.key))
+            final PageKeyedDataSource.LoadParams<Integer> params, final PageKeyedDataSource.LoadCallback<Integer,
+            FilmResponse> callback, String genreID,String filter) {
+        filmService.getMovieGenre(filter,genreID,"20",String.valueOf(params.key))
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {
@@ -225,8 +226,8 @@ public class FilmRepository extends CommonRepository{
 
     public void getFilmsResultsloadAfter (
             final Integer PAGE_SIZE, final PageKeyedDataSource.LoadParams<Integer> params,
-            final PageKeyedDataSource.LoadCallback<Integer, FilmResponse> callback, String genreID) {
-        filmService.getMovieGenre("genres",genreID,"20",String.valueOf(params.key))
+            final PageKeyedDataSource.LoadCallback<Integer, FilmResponse> callback, String genreID, String filter) {
+        filmService.getMovieGenre(filter,genreID,"20",String.valueOf(params.key))
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {

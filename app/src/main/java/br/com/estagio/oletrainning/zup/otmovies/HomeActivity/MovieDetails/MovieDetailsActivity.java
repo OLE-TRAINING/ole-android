@@ -1,14 +1,18 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.MovieDetails;
 
-import android.app.ActionBar;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -16,14 +20,18 @@ import android.widget.ProgressBar;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoProvider;
 
 import java.util.List;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment.MovieListFragment;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAlertDialogSession;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonFilmID;
 
@@ -31,6 +39,8 @@ public class MovieDetailsActivity extends CommonActivity {
 
     private MovieDetailsViewHolder movieDetailsViewHolder;
     private MovieDetailsViewModel movieDetailsViewModel;
+    private FilmAdapter adapter;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +61,18 @@ public class MovieDetailsActivity extends CommonActivity {
 
         setupObservers();
 
+        linearLayoutManager = new LinearLayoutManager(this);
+
+        if (adapter == null) {
+            adapter = new FilmAdapter(this);
+        }
+        setupLayoutManager();
+
+
         if(SingletonFilmID.INSTANCE.getID() != null){
-            movieDetailsViewModel.executeServicegetMovieDetails(SingletonFilmID.INSTANCE.getID());
+            Integer filmID = SingletonFilmID.INSTANCE.getID();
+            movieDetailsViewModel.executeServicegetMovieDetails(filmID);
+            movieDetailsViewModel.executeServiceGetFilmResults("1",filmID);
         }
     }
 
@@ -60,6 +80,11 @@ public class MovieDetailsActivity extends CommonActivity {
     protected void onPostResume() {
         super.onPostResume();
         colorStatusBar(this.getWindow(), R.color.colorPrimary, false);
+    }
+
+    private void setupLayoutManager() {
+        movieDetailsViewHolder.recyclerViewDetails.setLayoutManager(linearLayoutManager);
+        movieDetailsViewHolder.recyclerViewDetails.setHasFixedSize(true);
     }
 
     private void setupListeners(){
@@ -70,7 +95,9 @@ public class MovieDetailsActivity extends CommonActivity {
     private void setupObservers(){
         movieDetailsViewModel.getIsLoading().observe(this,progressBarObserver);
         movieDetailsViewModel.getThereIsMovieDetails().observe(this,thereIsMovieDetailsObserver);
-        movieDetailsViewModel.getFragmentTellerIsSessionExpired().observe(this,sessionObserver);
+        movieDetailsViewModel.getActivityTellerIsSessionExpired().observe(this,sessionObserver);
+        movieDetailsViewModel.getActivityTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
+        movieDetailsViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
     }
 
     private View.OnClickListener backArrowListener = new View.OnClickListener() {
@@ -80,6 +107,43 @@ public class MovieDetailsActivity extends CommonActivity {
         }
     };
 
+    private final Observer<PagedList<FilmResponse>> pagedListObserver = new Observer<PagedList<FilmResponse>>() {
+        @Override
+        public void onChanged(@Nullable PagedList<FilmResponse> filmResponses) {
+            adapter.submitList(filmResponses);
+        }
+    };
+
+    private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            TastyToast.makeText(MovieDetailsActivity.this, message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER, 0, 700);
+        }
+    };
+
+    private Observer<FilmsResults> homeTellerThereIsFilmResultsObserver = new Observer<FilmsResults>() {
+        @Override
+        public void onChanged(final FilmsResults filmsResults) {
+            movieDetailsViewModel.getItemPagedList().observe(MovieDetailsActivity.this, pagedListObserver);
+            movieDetailsViewHolder.recyclerViewDetails.setAdapter(adapter);
+            adapter.setOnItemClickListener(new FilmAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position, PagedList<FilmResponse> currentList) {
+                    Log.d("position",String.valueOf(position));
+                    if (filmsResults != null) {
+                        movieDetailsViewModel.getIsLoading().setValue(true);
+                        SingletonFilmID.setIDEntered(currentList.get(position).getId());
+                        if(SingletonFilmID.INSTANCE.getID() != null){
+                            startActivity(new Intent(MovieDetailsActivity.this, MovieDetailsActivity.class));
+                        }
+                        movieDetailsViewModel.getIsLoading().setValue(false);
+                    }
+                }
+            });
+            movieDetailsViewModel.getIsLoading().setValue(false);
+        }
+    };
 
     private Observer<Boolean> progressBarObserver = new Observer<Boolean>() {
         @Override

@@ -31,16 +31,7 @@ public class MovieListFragment extends CommonFragment {
     private MovieListFragmentViewHolder movieListFragmentViewHolder;
     private FilmAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
-    private Parcelable listState;
 
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            listState = savedInstanceState.getParcelable("ListState");
-        }
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,7 +57,6 @@ public class MovieListFragment extends CommonFragment {
         }
         setupObserversAndListeners();
         setupLayoutManager();
-
     }
 
     private void setupLayoutManager() {

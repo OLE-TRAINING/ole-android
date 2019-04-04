@@ -11,11 +11,13 @@ public class FilmDataSourceFactory extends DataSource.Factory {
 
     private MutableLiveData<PageKeyedDataSource<Integer, FilmResponse>> itemLiveDataSource = new MutableLiveData<>();
     private int pageSize;
-    private String genreID;
+    private String ID;
+    private String FILTER;
 
-    public FilmDataSourceFactory(Integer pageSize,String genreID) {
+    public FilmDataSourceFactory(Integer pageSize, String ID, String filter) {
         this.pageSize = pageSize;
-        this.genreID = genreID;
+        this.ID = ID;
+        this.FILTER = filter;
     }
 
     public FilmDataSourceFactory() {
@@ -23,7 +25,7 @@ public class FilmDataSourceFactory extends DataSource.Factory {
 
     @Override
     public DataSource create() {
-        FilmDataSource filmDataSource = new FilmDataSource(pageSize,genreID);
+        FilmDataSource filmDataSource = new FilmDataSource(pageSize, ID,FILTER);
         itemLiveDataSource.postValue(filmDataSource);
         return filmDataSource;
     }

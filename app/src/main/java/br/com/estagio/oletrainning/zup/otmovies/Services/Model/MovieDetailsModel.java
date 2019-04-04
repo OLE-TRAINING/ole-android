@@ -22,6 +22,9 @@ public class MovieDetailsModel {
     private List<String> writers = new ArrayList<>();
     private List<String> countries = new ArrayList<>();
 
+    public MovieDetailsModel() {
+    }
+
     public MovieDetailsModel(int id, String posterId, String bannerId, float voteAverage, String title, int year, List<String> genreNames,
                              String runtime, String overview, List<String> directors, List<String> writers, List<String> countries) {
         this.id = id;

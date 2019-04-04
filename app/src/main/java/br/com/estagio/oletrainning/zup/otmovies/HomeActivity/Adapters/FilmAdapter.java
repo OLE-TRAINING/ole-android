@@ -67,7 +67,7 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
                             +"/image/w342?gw-app-key=593c3280aedd01364c73000d3ac06d76")
                     .into(holder.imageView);
             film.getGenreNames();
-            holder.keywords.setText(holder.keywordPhraseBuilder(film.getGenreNames()));
+            holder.keywords.setText(holder.sentenceBuilder(film.getGenreNames()));
             holder.movieDescription.setText(film.getOverview());
             holder.runtime.setText(film.getRuntime());
             holder.year.setText(String.valueOf(film.getYear()));
@@ -131,27 +131,26 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(onItemClickListener != null){
+                    if (onItemClickListener != null) {
                         PagedList<FilmResponse> currentList = getCurrentList();
                         int positon = getAdapterPosition();
-                        if(positon != RecyclerView.NO_POSITION){
-                            onItemClickListener.onItemClick(positon,currentList);
+                        if (positon != RecyclerView.NO_POSITION) {
+                            onItemClickListener.onItemClick(positon, currentList);
                         }
                     }
                 }
             });
         }
 
-        private String keywordPhraseBuilder(@NonNull List<String> filmGenreNamesList) {
+        private String sentenceBuilder(@NonNull List<String> listString) {
             StringBuilder keywordList = new StringBuilder();
-            for (int i = 0; i < filmGenreNamesList.size(); i++) {
-                keywordList.append(filmGenreNamesList.get(i));
-                if(i<filmGenreNamesList.size()-1){
+            for (int i = 0; i < listString.size(); i++) {
+                keywordList.append(listString.get(i));
+                if (i < listString.size() - 1) {
                     keywordList.append(", ");
                 }
-
             }
-            Log.d("KEYWORDS",keywordList.toString());
+            Log.d("KEYWORDS", keywordList.toString());
             return keywordList.toString();
         }
     }
