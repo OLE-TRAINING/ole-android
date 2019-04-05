@@ -21,7 +21,6 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonGenr
 public class MovieListFragmentViewModel extends CommonViewModel {
 
     private FilmRepository filmRepository = new FilmRepository();
-    private HomeActivityViewModel homeActivityViewModel = new HomeActivityViewModel();
 
     private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
     private String FILTER_GENRES = "genres";
@@ -94,10 +93,8 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     };
 
     private void setupObserversForever(){
-        homeActivityViewModel.getDoubleClickIconNavigationHome().observeForever(doubleClickIconBottonNavigationObserver);
         filmRepository.getViewModelTellerIsSessionExpiredPagination().observeForever(isSessionExpiredPaginationObserver);
         filmRepository.getThereIsPaginationError().observeForever(thereIsPaginationErrorObserve);
-        filmRepository.getIsLoadingPaginationService().observeForever(isLoadingPaginationObserver);
         receiverAPageSizeAndGenreIDService.observeForever(receiverAPageSizeAndGenreIDServiceObserver);
     }
 
@@ -147,15 +144,12 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         super.removeObserver();
         if (filmsResults != null && filmRepository.getThereIsPaginationError() != null
                 &&  receiverAPageSizeAndGenreIDService != null
-        && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null
-        && filmRepository.getIsLoadingPaginationService() != null
-        && homeActivityViewModel.getDoubleClickIconNavigationHome() != null)  {
+        && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null)  {
             filmsResults.removeObserver(filmsResultsObserver);
             filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverAPageSizeAndGenreIDService.removeObserver(receiverAPageSizeAndGenreIDServiceObserver);
             filmRepository.getViewModelTellerIsSessionExpiredPagination().removeObserver(isSessionExpiredPaginationObserver);
-            filmRepository.getIsLoadingPaginationService().removeObserver(isLoadingPaginationObserver);
-            homeActivityViewModel.getDoubleClickIconNavigationHome().removeObserver(doubleClickIconBottonNavigationObserver);
+
         }
     }
 

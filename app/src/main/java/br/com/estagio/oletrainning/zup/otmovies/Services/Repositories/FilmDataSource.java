@@ -38,13 +38,11 @@ public class FilmDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
 
     @Override
     public void loadAfter(@NonNull final LoadParams<Integer> params, @NonNull final LoadCallback<Integer, FilmResponse> callback) {
-        filmRepository.getIsLoadingPaginationService().postValue(true);
         try {
             requestDelay.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         filmRepository.getFilmsResultsloadAfter(PAGE_SIZE,params,callback,genreID, FILTER);
-        filmRepository.getIsLoadingPaginationService().postValue(false);
     }
 }
