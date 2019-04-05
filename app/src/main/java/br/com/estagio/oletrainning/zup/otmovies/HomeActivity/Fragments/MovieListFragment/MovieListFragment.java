@@ -157,6 +157,5 @@ public class MovieListFragment extends CommonFragment {
         movieListFragmentViewModel.removeObserver();
         SingletonAlertDialogSession.INSTANCE.destroyAlertDialogBuilder();
         SingletonFilmID.setIDEntered(null);
-        SingletonGenreID.setGenreIDEntered(null);
     }
 }

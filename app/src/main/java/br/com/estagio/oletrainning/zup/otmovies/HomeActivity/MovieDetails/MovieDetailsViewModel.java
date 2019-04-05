@@ -82,11 +82,14 @@ public class MovieDetailsViewModel extends CommonViewModel {
                     new FilmDataSourceFactory(pageSize,
                             String.valueOf(SingletonFilmID.INSTANCE.getID()),FILTER_SIMILARITY);
             liveDataSource = itemDataSourceFactory.getItemLiveDataSource();
+            if(pageSize <= 0){
+                pageSize=1;
+            }
             PagedList.Config config =
                     (new PagedList.Config.Builder())
                             .setEnablePlaceholders(false)
-                            .setInitialLoadSizeHint(40)
-                            .setPrefetchDistance(5)
+                            .setPageSize(5)
+                            .setInitialLoadSizeHint(5)
                             .setPageSize(pageSize)
                             .build();
 

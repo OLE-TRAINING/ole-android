@@ -73,6 +73,8 @@ public class MovieDetailsActivity extends CommonActivity {
         }
     }
 
+
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -85,7 +87,7 @@ public class MovieDetailsActivity extends CommonActivity {
     }
 
     private void setupListeners(){
-        movieDetailsViewHolder.textViewToobar.setOnClickListener(backArrowListener);
+        movieDetailsViewHolder.textViewToobar.setOnClickListener(titleToobarOnClickListener);
         movieDetailsViewHolder.backArrow.setOnClickListener(backArrowListener);
     }
 
@@ -100,6 +102,14 @@ public class MovieDetailsActivity extends CommonActivity {
     private View.OnClickListener backArrowListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            onBackPressed();
+            SingletonFilmID.setIDEntered(null);
+        }
+    };
+
+    private View.OnClickListener titleToobarOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
             Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -110,9 +120,6 @@ public class MovieDetailsActivity extends CommonActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
         SingletonFilmID.setIDEntered(null);
     }
 

@@ -107,13 +107,6 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         }
     }
 
-    private Observer<Boolean> doubleClickIconBottonNavigationObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(@Nullable Boolean isDoubleClick) {
-            fragmentTellerIsDoubleClickHome.setValue(true);
-        }
-    };
-
     private Observer<ErrorMessage> thereIsPaginationErrorObserve = new Observer<ErrorMessage>() {
         @Override
         public void onChanged(@Nullable ErrorMessage errorMessage) {

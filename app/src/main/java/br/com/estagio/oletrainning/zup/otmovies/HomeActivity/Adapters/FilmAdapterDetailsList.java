@@ -27,11 +27,11 @@ public class FilmAdapterDetailsList extends PagedListAdapter<FilmResponse, Recyc
     private FilmAdapterDetailsList.OnItemClickListener onItemClickListener;
     private MovieDetailsModel movieDetailsModel;
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(int position, PagedList<FilmResponse> currentList);
     }
 
-    public void setOnItemClickListener(FilmAdapterDetailsList.OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(FilmAdapterDetailsList.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -42,20 +42,29 @@ public class FilmAdapterDetailsList extends PagedListAdapter<FilmResponse, Recyc
     }
 
     @Override
+    public int getItemCount() {
+        if (getCurrentList() == null || getCurrentList().isEmpty()) {
+            return 1;
+        }
+        return super.getItemCount()+1;
+    }
+
+    @Override
     public int getItemViewType(int position) {
         if (isPositionHeader(position))
             return TYPE_HEADER;
         return TYPE_ITEM;
     }
+
     private boolean isPositionHeader(int position) {
         return position == 0;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == TYPE_ITEM) {
+        if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(mCtx).inflate(R.layout.item_film, parent, false);
-            return new ItemViewHolder(view,this.onItemClickListener, getCurrentList());
+            return new ItemViewHolder(view, this.onItemClickListener, getCurrentList());
         } else if (viewType == TYPE_HEADER) {
             View view = LayoutInflater.from(mCtx).inflate(R.layout.item_movie_details, parent, false);
             return new DetailsViewHolder(view);
@@ -65,21 +74,20 @@ public class FilmAdapterDetailsList extends PagedListAdapter<FilmResponse, Recyc
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        FilmResponse film = getItem(position);
         if (viewHolder instanceof ItemViewHolder) {
-            if(film != null){
-                ((ItemViewHolder) viewHolder).setFilmeResponseInformations(film);
-            }
-        } else if (viewHolder instanceof DetailsViewHolder){
-            if(movieDetailsModel != null){
+                if(position>1){
+                    FilmResponse film = getItem(position-1);
+                    ((ItemViewHolder) viewHolder).setFilmeResponseInformations(film);
+                }
+        } else if (viewHolder instanceof DetailsViewHolder) {
+            if (movieDetailsModel != null) {
                 ((DetailsViewHolder) viewHolder).setMovieDetailsInformations(this.movieDetailsModel);
             }
         } else {
-            TastyToast.makeText(mCtx,"Não foi possível carregar os detalhes deste filme.", TastyToast.LENGTH_LONG, TastyToast.ERROR)
-                    .setGravity(Gravity.CENTER,0,700);
+            TastyToast.makeText(mCtx, "Não foi possível carregar os detalhes deste filme.", TastyToast.LENGTH_LONG, TastyToast.ERROR)
+                    .setGravity(Gravity.CENTER, 0, 700);
         }
     }
-
 
 
     private static DiffUtil.ItemCallback<FilmResponse> DIFF_CALLBACK =
