@@ -28,11 +28,10 @@ public class DetailsViewHolder extends RecyclerView.ViewHolder{
     TextView textViewWriter;
     TextView textViewOverview;
     RecyclerView recyclerViewDetails;
-    ProgressBar progressBarFragment;
+    ProgressBar progressBar;
     ImageView imageViewBanner;
     ImageView imageViewPoster;
     FrameLayout frameLayout;
-    ProgressBar progressBarRecycler;
 
     public DetailsViewHolder(View view) {
         super(view);
@@ -47,10 +46,9 @@ public class DetailsViewHolder extends RecyclerView.ViewHolder{
         textViewWriter = view.findViewById(R.id.textView_writer_details);
         textViewOverview = view.findViewById(R.id.textView_overview_details);
         recyclerViewDetails = view.findViewById(R.id.recycler_films);
-        progressBarFragment = view.findViewById(R.id.progress_bar_fragment);
+        progressBar = view.findViewById(R.id.progress_bar);
         imageViewBanner = view.findViewById(R.id.imageView_banner_details);
         imageViewPoster = view.findViewById(R.id.imageView_poster_details);
-        progressBarRecycler = view.findViewById(R.id.progress_bar_recycler);
     }
 
     private String sentenceBuilder(@NonNull List<String> listString) {

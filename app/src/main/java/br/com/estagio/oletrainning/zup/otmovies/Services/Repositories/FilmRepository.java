@@ -29,12 +29,6 @@ public class FilmRepository extends CommonRepository{
 
     private MutableLiveData<ErrorMessage> thereIsPaginationError;
     private MutableLiveData<Boolean> viewModelTellerIsSessionExpiredPagination;
-    private MutableLiveData<Boolean> isLoadingPaginationService;
-
-
-    public MutableLiveData<Boolean> getIsLoadingPaginationService() {
-        return isLoadingPaginationService;
-    }
 
     public MutableLiveData<Boolean> getViewModelTellerIsSessionExpiredPagination() {
         return viewModelTellerIsSessionExpiredPagination;
@@ -48,7 +42,6 @@ public class FilmRepository extends CommonRepository{
         filmService = RetrofitServiceBuilder.buildService(FilmService.class);
         thereIsPaginationError = new MutableLiveData<>();
         viewModelTellerIsSessionExpiredPagination = new MutableLiveData<>();
-        isLoadingPaginationService = new MutableLiveData<>();
     }
 
     public LiveData<ResponseModel<FilmGenres>> getGenreList() {

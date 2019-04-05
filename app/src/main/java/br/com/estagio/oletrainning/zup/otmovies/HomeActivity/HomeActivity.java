@@ -1,12 +1,12 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.SpannableString;
@@ -30,9 +30,7 @@ public class HomeActivity extends CommonActivity
 
     private FragmentManager fragmentManager;
     private HomeActivityViewHolder homeActivityViewHolder;
-    private static final String TAG_FRAGMENT_HOME = "fragment_home";
-    private static final String TAG_FRAGMENT_FAVORITE = "fragment_favorite";
-    private static final String TAG_FRAGMENT_SEARCH = "fragment_search";
+
 
     private Fragment home = HomeFragment.newInstance();
     private Fragment favorite = new FavoriteFragment();
@@ -95,10 +93,20 @@ public class HomeActivity extends CommonActivity
     }
 
     private void setupListener() {
+        homeActivityViewHolder.titleToobar.setOnClickListener(backArrowListener);
         homeActivityViewHolder.bottomNavigationView
                 .setOnNavigationItemSelectedListener(this);
         homeActivityViewHolder.logoutButton.setOnClickListener(logoutOnClickListener);
     }
+
+    private View.OnClickListener backArrowListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(homeActivityViewHolder.bottomNavigationView.getSelectedItemId() != R.id.navigation_home){
+                homeActivityViewHolder.bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+            }
+        }
+    };
 
     private View.OnClickListener logoutOnClickListener = new View.OnClickListener() {
         @Override
@@ -126,6 +134,7 @@ public class HomeActivity extends CommonActivity
         switch (item.getItemId()) {
             case R.id.navigation_home:
                 pushFragments(TAG_FRAGMENT_HOME, getHome());
+
                 break;
             case R.id.navigation_favorite:
                 pushFragments(TAG_FRAGMENT_FAVORITE,getFavorite());
@@ -135,47 +144,6 @@ public class HomeActivity extends CommonActivity
                 break;
         }
         return true;
-    }
-
-    private void pushFragments(String tag, Fragment fragment) {
-
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-
-        if (fragmentManager.findFragmentByTag(tag) == null) {
-            ft.add(R.id.content_home_drawer, fragment, tag);
-        }
-
-        Fragment fragmentHome = fragmentManager.findFragmentByTag(TAG_FRAGMENT_HOME);
-        Fragment fragmentFavorite = fragmentManager.findFragmentByTag(TAG_FRAGMENT_FAVORITE);
-        Fragment fragmentSearch = fragmentManager.findFragmentByTag(TAG_FRAGMENT_SEARCH);
-
-        if (fragmentHome != null) {
-            ft.hide(fragmentHome);
-        }
-        if (fragmentFavorite != null) {
-            ft.hide(fragmentFavorite);
-        }
-        if (fragmentSearch != null) {
-            ft.hide(fragmentSearch);
-        }
-
-        if (tag == TAG_FRAGMENT_HOME) {
-            if (fragmentHome != null) {
-                ft.show(fragmentHome);
-            }
-        }
-        if (tag == TAG_FRAGMENT_FAVORITE) {
-            if (fragmentFavorite != null) {
-                ft.show(fragmentFavorite);
-            }
-        }
-
-        if (tag == TAG_FRAGMENT_SEARCH) {
-            if (fragmentSearch != null) {
-                ft.show(fragmentSearch);
-            }
-        }
-        ft.commitAllowingStateLoss();
     }
 
     private void logoutConfirmation() {

@@ -6,12 +6,10 @@ import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,13 +19,10 @@ import android.widget.ProgressBar;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.sdsmdg.tastytoast.TastyToast;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
-import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapter;
-import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment.MovieListFragment;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapterDetailsList;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
@@ -39,8 +34,9 @@ public class MovieDetailsActivity extends CommonActivity {
 
     private MovieDetailsViewHolder movieDetailsViewHolder;
     private MovieDetailsViewModel movieDetailsViewModel;
-    private FilmAdapter adapter;
+    private FilmAdapterDetailsList adapter;
     private LinearLayoutManager linearLayoutManager;
+    private MovieDetailsModel mMovieDetailsModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +59,17 @@ public class MovieDetailsActivity extends CommonActivity {
 
         linearLayoutManager = new LinearLayoutManager(this);
 
-        if (adapter == null) {
-            adapter = new FilmAdapter(this);
-        }
-        setupLayoutManager();
 
+        setupLayoutManager();
 
         if(SingletonFilmID.INSTANCE.getID() != null){
             Integer filmID = SingletonFilmID.INSTANCE.getID();
             movieDetailsViewModel.executeServicegetMovieDetails(filmID);
             movieDetailsViewModel.executeServiceGetFilmResults("1",filmID);
+        } else {
+            Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
@@ -103,14 +100,43 @@ public class MovieDetailsActivity extends CommonActivity {
     private View.OnClickListener backArrowListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            onBackPressed();
+            Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            SingletonFilmID.setIDEntered(null);
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        SingletonFilmID.setIDEntered(null);
+    }
 
     private final Observer<PagedList<FilmResponse>> pagedListObserver = new Observer<PagedList<FilmResponse>>() {
         @Override
         public void onChanged(@Nullable PagedList<FilmResponse> filmResponses) {
-            adapter.submitList(filmResponses);
+            if (adapter == null) {
+                if(mMovieDetailsModel != null){
+                    adapter = new FilmAdapterDetailsList(MovieDetailsActivity.this,mMovieDetailsModel);
+                    adapter.submitList(filmResponses);
+                } else {
+                    if(SingletonFilmID.INSTANCE.getID() != null){
+                        Integer filmID = SingletonFilmID.INSTANCE.getID();
+                        movieDetailsViewModel.executeServicegetMovieDetails(filmID);
+                        movieDetailsViewModel.executeServiceGetFilmResults("1",filmID);
+                    } else {
+                        Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }
+            } else {
+                adapter.submitList(filmResponses);
+            }
         }
     };
 
@@ -126,22 +152,6 @@ public class MovieDetailsActivity extends CommonActivity {
         @Override
         public void onChanged(final FilmsResults filmsResults) {
             movieDetailsViewModel.getItemPagedList().observe(MovieDetailsActivity.this, pagedListObserver);
-            movieDetailsViewHolder.recyclerViewDetails.setAdapter(adapter);
-            adapter.setOnItemClickListener(new FilmAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position, PagedList<FilmResponse> currentList) {
-                    Log.d("position",String.valueOf(position));
-                    if (filmsResults != null) {
-                        movieDetailsViewModel.getIsLoading().setValue(true);
-                        SingletonFilmID.setIDEntered(currentList.get(position).getId());
-                        if(SingletonFilmID.INSTANCE.getID() != null){
-                            startActivity(new Intent(MovieDetailsActivity.this, MovieDetailsActivity.class));
-                        }
-                        movieDetailsViewModel.getIsLoading().setValue(false);
-                    }
-                }
-            });
-            movieDetailsViewModel.getIsLoading().setValue(false);
         }
     };
 
@@ -157,7 +167,23 @@ public class MovieDetailsActivity extends CommonActivity {
     private Observer<MovieDetailsModel> thereIsMovieDetailsObserver = new Observer<MovieDetailsModel>() {
         @Override
         public void onChanged(MovieDetailsModel movieDetailsModel) {
-            setMovieDetailsInformations(movieDetailsModel);
+            mMovieDetailsModel = movieDetailsModel;
+            if (adapter == null) {
+                adapter = new FilmAdapterDetailsList(MovieDetailsActivity.this,mMovieDetailsModel);
+            }
+            movieDetailsViewHolder.recyclerViewDetails.setAdapter(adapter);
+            adapter.setOnItemClickListener(new FilmAdapterDetailsList.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position, PagedList<FilmResponse> currentList) {
+                    movieDetailsViewModel.getIsLoading().setValue(true);
+                        SingletonFilmID.setIDEntered(currentList.get(position).getId());
+                        if(SingletonFilmID.INSTANCE.getID() != null){
+                            Intent intent = new Intent(MovieDetailsActivity.this, MovieDetailsActivity.class);
+                            startActivity(intent);
+                        movieDetailsViewModel.getIsLoading().setValue(false);
+                    }
+                }
+            });
             movieDetailsViewModel.getIsLoading().setValue(false);
         }
     };
@@ -173,37 +199,6 @@ public class MovieDetailsActivity extends CommonActivity {
         }
     };
 
-    private void setMovieDetailsInformations(MovieDetailsModel movieDetailsModel){
-        movieDetailsViewHolder.textViewOverview.setText(movieDetailsModel.getOverview());
-        movieDetailsViewHolder.textViewWriter.setText(sentenceBuilder(movieDetailsModel.getWriters()));
-        movieDetailsViewHolder.textViewDirector.setText(sentenceBuilder(movieDetailsModel.getDirectors()));
-        movieDetailsViewHolder.textViewKeywords.setText(sentenceBuilder(movieDetailsModel.getGenreNames()));
-        movieDetailsViewHolder.textViewPoints.setText(String.valueOf(movieDetailsModel.getVoteAverage()));
-        movieDetailsViewHolder.textViewRuntime.setText(movieDetailsModel.getRuntime());
-        movieDetailsViewHolder.textViewCountries.setText(sentenceBuilder(movieDetailsModel.getCountries()));
-        movieDetailsViewHolder.textViewYear.setText(String.valueOf(movieDetailsModel.getYear()));
-        movieDetailsViewHolder.textViewTitle.setText(movieDetailsModel.getTitle());
-        Picasso.get()
-                .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+movieDetailsModel.getPosterId()
-                        +"/image/w342?gw-app-key=593c3280aedd01364c73000d3ac06d76")
-                .into(movieDetailsViewHolder.imageViewPoster);
-        Picasso.get()
-                .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+movieDetailsModel.getBannerId()
-                        +"/image/w1280?gw-app-key=593c3280aedd01364c73000d3ac06d76")
-                .into(movieDetailsViewHolder.imageViewBanner);
-    }
-
-    private String sentenceBuilder(@NonNull List<String> listString) {
-        StringBuilder keywordList = new StringBuilder();
-        for (int i = 0; i < listString.size(); i++) {
-            keywordList.append(listString.get(i));
-            if(i<listString.size()-1){
-                keywordList.append(", ");
-            }
-        }
-        Log.d("KEYWORDS",keywordList.toString());
-        return keywordList.toString();
-    }
 
     public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
         if (isLoading != null) {

@@ -35,7 +35,8 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
     private CheckBox checkBox;
     private TextView price;
 
-    public ItemViewHolder(View itemView, final FilmDetailsAdapter.OnItemClickListener onItemClickListener, final PagedList<FilmResponse> currentList) {
+    public ItemViewHolder(View itemView, final FilmAdapterDetailsList.OnItemClickListener onItemClickListener,
+                          final PagedList<FilmResponse> currentList) {
         super(itemView);
 
         progressBar = itemView.findViewById(R.id.movie_progress);

@@ -3,6 +3,8 @@ package br.com.estagio.oletrainning.zup.otmovies.Common;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -15,9 +17,14 @@ import android.widget.ProgressBar;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
+import br.com.estagio.oletrainning.zup.otmovies.R;
 
 
 public abstract class CommonActivity extends AppCompatActivity {
+
+    protected static final String TAG_FRAGMENT_HOME = "fragment_home";
+    protected static final String TAG_FRAGMENT_FAVORITE = "fragment_favorite";
+    protected static final String TAG_FRAGMENT_SEARCH = "fragment_search";
 
 
     public void hideKeyword(Window window){
@@ -59,5 +66,46 @@ public abstract class CommonActivity extends AppCompatActivity {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
         }
+    }
+
+    protected void pushFragments(String tag, Fragment fragment) {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        if (getSupportFragmentManager().findFragmentByTag(tag) == null) {
+            ft.add(R.id.content_home_drawer, fragment, tag);
+        }
+
+        Fragment fragmentHome = getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_HOME);
+        Fragment fragmentFavorite = getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_FAVORITE);
+        Fragment fragmentSearch = getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_SEARCH);
+
+        if (fragmentHome != null) {
+            ft.hide(fragmentHome);
+        }
+        if (fragmentFavorite != null) {
+            ft.hide(fragmentFavorite);
+        }
+        if (fragmentSearch != null) {
+            ft.hide(fragmentSearch);
+        }
+
+        if (tag == TAG_FRAGMENT_HOME) {
+            if (fragmentHome != null) {
+                ft.show(fragmentHome);
+            }
+        }
+        if (tag == TAG_FRAGMENT_FAVORITE) {
+            if (fragmentFavorite != null) {
+                ft.show(fragmentFavorite);
+            }
+        }
+
+        if (tag == TAG_FRAGMENT_SEARCH) {
+            if (fragmentSearch != null) {
+                ft.show(fragmentSearch);
+            }
+        }
+        ft.commitAllowingStateLoss();
     }
 }

@@ -24,6 +24,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAlertDialogSession;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonFilmID;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonGenreID;
 
 public class MovieListFragment extends CommonFragment {
 
@@ -64,11 +65,14 @@ public class MovieListFragment extends CommonFragment {
         movieListFragmentViewHolder.recyclerView.setHasFixedSize(true);
     }
 
+
+
     private void setupObserversAndListeners() {
+        movieListFragmentViewModel.getFragmentTellerIsDoubleClickHome().observe(this,fragmentTellerdoubleClickObserver);
         movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
         movieListFragmentViewModel.getFragmentTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
         movieListFragmentViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
-        movieListFragmentViewModel.getFragmentTellerIsLoadingPagination().observe(this, isLoadingPaginationObserver);
+
     }
 
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
@@ -76,6 +80,18 @@ public class MovieListFragment extends CommonFragment {
         public void onChanged(String message) {
             TastyToast.makeText(getActivity(), message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
                     .setGravity(Gravity.CENTER, 0, 700);
+        }
+    };
+
+    private Observer<Boolean> fragmentTellerdoubleClickObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isDoubleClick) {
+            if(isDoubleClick){
+                if(movieListFragmentViewHolder.recyclerView.getLayoutManager() != null){
+                    movieListFragmentViewHolder.recyclerView.getLayoutManager().scrollToPosition(0);
+                }
+
+            }
         }
     };
 
@@ -110,24 +126,14 @@ public class MovieListFragment extends CommonFragment {
                         movieListFragmentViewModel.getIsLoading().setValue(true);
                         SingletonFilmID.setIDEntered(currentList.get(position).getId());
                         if(SingletonFilmID.INSTANCE.getID() != null){
-                            startActivity(new Intent(getActivity(), MovieDetailsActivity.class));
+                            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+                            startActivity(intent);
                         }
                         movieListFragmentViewModel.getIsLoading().setValue(false);
                     }
                 }
             });
             movieListFragmentViewModel.getIsLoading().setValue(false);
-        }
-    };
-
-    private Observer<Boolean> isLoadingPaginationObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean isLoadingPagination) {
-            if (isLoadingPagination) {
-                movieListFragmentViewHolder.linearLayoutPagination.setVisibility(View.VISIBLE);
-            } else {
-                movieListFragmentViewHolder.linearLayoutPagination.setVisibility(View.GONE);
-            }
         }
     };
 
@@ -150,5 +156,7 @@ public class MovieListFragment extends CommonFragment {
         super.onDestroy();
         movieListFragmentViewModel.removeObserver();
         SingletonAlertDialogSession.INSTANCE.destroyAlertDialogBuilder();
+        SingletonFilmID.setIDEntered(null);
+        SingletonGenreID.setGenreIDEntered(null);
     }
 }

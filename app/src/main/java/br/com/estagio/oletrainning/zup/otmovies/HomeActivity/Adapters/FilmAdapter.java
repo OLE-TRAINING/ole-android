@@ -32,13 +32,13 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.ItemViewHolder> {
 
     private Context mCtx;
-    private OnItemClickListener onItemClickListener;
+    private FilmAdapter.OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{
         void onItemClick(int position, PagedList<FilmResponse> currentList);
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(FilmAdapter.OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
     }
 
