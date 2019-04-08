@@ -2,6 +2,7 @@ package br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters;
 
 import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +21,7 @@ import java.util.List;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 
-class ItemViewHolder extends RecyclerView.ViewHolder {
+public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     private TextView textTitleFilm;
     private ProgressBar progressBar;
@@ -34,8 +35,10 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
     private TextView filmNote;
     private CheckBox checkBox;
     private TextView price;
+    private CardView cardViewPoster;
 
     public ItemViewHolder(View itemView, final FilmAdapterDetailsList.OnItemClickListener onItemClickListener,
+                          final FilmAdapterDetailsList.OnCheckBoxClickListener onCheckBoxClickListener,
                           final PagedList<FilmResponse> currentList) {
         super(itemView);
 
@@ -51,14 +54,27 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
         textTitleFilm = itemView.findViewById(R.id.text_title_film);
         checkBox = itemView.findViewById(R.id.checkbox_favorite);
         price = itemView.findViewById(R.id.textView_price);
+        cardViewPoster = itemView.findViewById(R.id.cardview_poster_item);
+        checkBox = itemView.findViewById(R.id.checkbox_favorite);
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onCheckBoxClickListener != null) {
+                    int position = getAdapterPosition();
+                    if(checkBox.isChecked()){
+                        onCheckBoxClickListener.OnCheckBoxClick(position,currentList,true);
+                    } else {
+                        onCheckBoxClickListener.OnCheckBoxClick(position, currentList,false);
+                    }
+                }
+            }
+        });
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    int positon = getAdapterPosition();
-                    if (positon != RecyclerView.NO_POSITION) {
-                        onItemClickListener.onItemClick(positon, currentList);
-                    }
+                    int position = getAdapterPosition();
+                        onItemClickListener.onItemClick(position, currentList);
                 }
             }
         });
@@ -78,15 +94,23 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
     
     public void setFilmeResponseInformations (FilmResponse film){
         this.textTitleFilm.setText(film.getTitle());
-        Picasso.get()
-                .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+film.getPosterId()
-                        +"/image/w342?gw-app-key=593c3280aedd01364c73000d3ac06d76")
-                .into(this.imageView);
+        if(film.getPosterId() == null || film.getPosterId().isEmpty()){
+            this.cardViewPoster.setVisibility(View.INVISIBLE);
+        } else {
+            this.cardViewPoster.setVisibility(View.VISIBLE);
+            Picasso.get()
+                    .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+film.getPosterId()
+                            +"/image/w342?gw-app-key=593c3280aedd01364c73000d3ac06d76")
+                    .into(this.imageView);
+        }
         this.keywords.setText(this.sentenceBuilder(film.getGenreNames()));
         this.movieDescription.setText(film.getOverview());
         this.runtime.setText(film.getRuntime());
         this.year.setText(String.valueOf(film.getYear()));
         this.filmNote.setText(String.valueOf(film.getVoteAverage()));
+        if(film.isFavorit()){
+            this.checkBox.isChecked();
+        }
         Float filmPrice = film.getPrice();
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         String priceText = "R$ "+ String.valueOf(decimalFormat.format(filmPrice));

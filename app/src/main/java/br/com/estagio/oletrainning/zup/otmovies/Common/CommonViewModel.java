@@ -27,7 +27,7 @@ public abstract class CommonViewModel extends ViewModel {
 
     protected MutableLiveData<String> forwardedToken = new MutableLiveData<>();
 
-    private MutableLiveData<String> isMessageSuccessForToast = new MutableLiveData<>();
+    protected MutableLiveData<String> isMessageSuccessForToast = new MutableLiveData<>();
 
     public MutableLiveData<String> getIsMessageSuccessForToast() {
         return isMessageSuccessForToast;

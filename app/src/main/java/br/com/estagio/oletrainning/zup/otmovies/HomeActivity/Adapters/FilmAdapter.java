@@ -5,6 +5,7 @@ import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,6 +34,7 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
 
     private Context mCtx;
     private FilmAdapter.OnItemClickListener onItemClickListener;
+    private FilmAdapter.OnCheckBoxClickListener onCheckBoxClickListener;
 
     public interface OnItemClickListener{
         void onItemClick(int position, PagedList<FilmResponse> currentList);
@@ -40,6 +42,14 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
 
     public void setOnItemClickListener(FilmAdapter.OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnCheckBoxClickListener {
+        void OnCheckBoxClick(int position, PagedList<FilmResponse> currentList, Boolean isChecked);
+    }
+
+    public void setOnCheckBoxClickListener(FilmAdapter.OnCheckBoxClickListener onCheckBoxClickListener) {
+        this.onCheckBoxClickListener = onCheckBoxClickListener;
     }
 
     public FilmAdapter(Context mCtx) {
@@ -51,7 +61,7 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mCtx).inflate(R.layout.item_film, parent, false);
-        return new ItemViewHolder(view,this.onItemClickListener);
+        return new ItemViewHolder(view,this.onItemClickListener,this.onCheckBoxClickListener);
     }
 
     @Override
@@ -62,10 +72,15 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
         if (film != null) {
 
             holder.textTitleFilm.setText(film.getTitle());
-            Picasso.get()
-                    .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+film.getPosterId()
-                            +"/image/w342?gw-app-key=593c3280aedd01364c73000d3ac06d76")
-                    .into(holder.imageView);
+            if(film.getPosterId() == null || film.getPosterId().isEmpty()){
+                holder.cardViewPoster.setVisibility(View.INVISIBLE);
+            } else {
+                holder.cardViewPoster.setVisibility(View.VISIBLE);
+                Picasso.get()
+                        .load("https://ole.dev.gateway.zup.me/client-training/v1/movies/"+film.getPosterId()
+                                +"/image/w342?gw-app-key=593c3280aedd01364c73000d3ac06d76")
+                        .into(holder.imageView);
+            }
             film.getGenreNames();
             holder.keywords.setText(holder.sentenceBuilder(film.getGenreNames()));
             holder.movieDescription.setText(film.getOverview());
@@ -76,6 +91,9 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
             String priceText = "R$ "+ String.valueOf(decimalFormat.format(filmPrice));
             holder.price.setText(priceText);
+            if(film.isFavorit()){
+                holder.checkBox.isChecked();
+            }
 
         } else {
             TastyToast.makeText(mCtx,"Não foi possível carregar este filme.", TastyToast.LENGTH_LONG, TastyToast.ERROR)
@@ -112,8 +130,10 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
         private TextView filmNote;
         private CheckBox checkBox;
         private TextView price;
+        private CardView cardViewPoster;
 
-        public ItemViewHolder(View itemView, final OnItemClickListener onItemClickListener) {
+        public ItemViewHolder(View itemView, final OnItemClickListener onItemClickListener,
+                              final OnCheckBoxClickListener onCheckBoxClickListener) {
             super(itemView);
 
             progressBar = itemView.findViewById(R.id.movie_progress);
@@ -128,6 +148,21 @@ public class FilmAdapter extends PagedListAdapter<FilmResponse, FilmAdapter.Item
             textTitleFilm = itemView.findViewById(R.id.text_title_film);
             checkBox = itemView.findViewById(R.id.checkbox_favorite);
             price = itemView.findViewById(R.id.textView_price);
+            cardViewPoster = itemView.findViewById(R.id.cardview_poster_item);
+            checkBox = itemView.findViewById(R.id.checkbox_favorite);
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onCheckBoxClickListener != null) {
+                        int position = getAdapterPosition();
+                        if(checkBox.isChecked()){
+                            onCheckBoxClickListener.OnCheckBoxClick(position, getCurrentList(),true);
+                        } else {
+                            onCheckBoxClickListener.OnCheckBoxClick(position, getCurrentList(),false);
+                        }
+                    }
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

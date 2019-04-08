@@ -104,4 +104,6 @@ public class MovieDetailsModel {
     public List<String> getCountries() {
         return countries;
     }
+
+
 }

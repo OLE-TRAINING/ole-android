@@ -6,7 +6,6 @@ import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -20,6 +19,9 @@ import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.sdsmdg.tastytoast.TastyToast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmAdapterDetailsList;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.HomeActivity;
@@ -28,6 +30,7 @@ import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAlertDialogSession;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonFilmID;
 
 public class MovieDetailsActivity extends CommonActivity {
@@ -37,6 +40,7 @@ public class MovieDetailsActivity extends CommonActivity {
     private FilmAdapterDetailsList adapter;
     private LinearLayoutManager linearLayoutManager;
     private MovieDetailsModel mMovieDetailsModel;
+    private List<FilmResponse> listfilmResponses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,6 @@ public class MovieDetailsActivity extends CommonActivity {
 
         linearLayoutManager = new LinearLayoutManager(this);
 
-
         setupLayoutManager();
 
         if(SingletonFilmID.INSTANCE.getID() != null){
@@ -72,7 +75,6 @@ public class MovieDetailsActivity extends CommonActivity {
             startActivity(intent);
         }
     }
-
 
 
     @Override
@@ -92,6 +94,7 @@ public class MovieDetailsActivity extends CommonActivity {
     }
 
     private void setupObservers(){
+        movieDetailsViewModel.getIsMessageSuccessForToast().observe(this,isSuccessMessageForToastObserver);
         movieDetailsViewModel.getIsLoading().observe(this,progressBarObserver);
         movieDetailsViewModel.getThereIsMovieDetails().observe(this,thereIsMovieDetailsObserver);
         movieDetailsViewModel.getActivityTellerIsSessionExpired().observe(this,sessionObserver);
@@ -117,6 +120,14 @@ public class MovieDetailsActivity extends CommonActivity {
         }
     };
 
+    private Observer<String> isSuccessMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            TastyToast.makeText(MovieDetailsActivity.this, message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER, 0, 700);
+        }
+    };
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -125,11 +136,11 @@ public class MovieDetailsActivity extends CommonActivity {
 
     private final Observer<PagedList<FilmResponse>> pagedListObserver = new Observer<PagedList<FilmResponse>>() {
         @Override
-        public void onChanged(@Nullable PagedList<FilmResponse> filmResponses) {
+        public void onChanged(PagedList<FilmResponse> filmResponses) {
+            listfilmResponses = filmResponses.snapshot();
             if (adapter == null) {
                 if(mMovieDetailsModel != null){
                     adapter = new FilmAdapterDetailsList(MovieDetailsActivity.this,mMovieDetailsModel);
-                    adapter.submitList(filmResponses);
                 } else {
                     if(SingletonFilmID.INSTANCE.getID() != null){
                         Integer filmID = SingletonFilmID.INSTANCE.getID();
@@ -159,6 +170,8 @@ public class MovieDetailsActivity extends CommonActivity {
         @Override
         public void onChanged(final FilmsResults filmsResults) {
             movieDetailsViewModel.getItemPagedList().observe(MovieDetailsActivity.this, pagedListObserver);
+
+
         }
     };
 
@@ -179,11 +192,24 @@ public class MovieDetailsActivity extends CommonActivity {
                 adapter = new FilmAdapterDetailsList(MovieDetailsActivity.this,mMovieDetailsModel);
             }
             movieDetailsViewHolder.recyclerViewDetails.setAdapter(adapter);
+            adapter.setOnCheckBoxClickListener(new FilmAdapterDetailsList.OnCheckBoxClickListener() {
+                @Override
+                public void OnCheckBoxClick(int position, PagedList<FilmResponse> currentList, Boolean isChecked) {
+                    SingletonFilmID.setIDEntered(currentList.get(position).getId());
+                    if(isChecked){
+                        movieDetailsViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                                String.valueOf(SingletonFilmID.INSTANCE.getID()));
+                    } else {
+                        movieDetailsViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                                String.valueOf(SingletonFilmID.INSTANCE.getID()));
+                    }
+                }
+            });
             adapter.setOnItemClickListener(new FilmAdapterDetailsList.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position, PagedList<FilmResponse> currentList) {
                     movieDetailsViewModel.getIsLoading().setValue(true);
-                        SingletonFilmID.setIDEntered(currentList.get(position).getId());
+                        SingletonFilmID.setIDEntered(currentList.get(position-1).getId());
                         if(SingletonFilmID.INSTANCE.getID() != null){
                             Intent intent = new Intent(MovieDetailsActivity.this, MovieDetailsActivity.class);
                             startActivity(intent);
@@ -205,7 +231,6 @@ public class MovieDetailsActivity extends CommonActivity {
             }
         }
     };
-
 
     public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
         if (isLoading != null) {

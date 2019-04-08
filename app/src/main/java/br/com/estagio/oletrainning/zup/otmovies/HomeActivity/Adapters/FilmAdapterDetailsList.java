@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,22 +14,29 @@ import android.view.ViewGroup;
 
 import com.sdsmdg.tastytoast.TastyToast;
 
-import java.util.List;
-
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 
 public class FilmAdapterDetailsList extends PagedListAdapter<FilmResponse, RecyclerView.ViewHolder> {
 
-    private static final int TYPE_ITEM = 1;
-    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 0;
+    private static final int TYPE_HEADER = -1;
     private Context mCtx;
     private FilmAdapterDetailsList.OnItemClickListener onItemClickListener;
     private MovieDetailsModel movieDetailsModel;
+    private FilmAdapterDetailsList.OnCheckBoxClickListener onCheckBoxClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position, PagedList<FilmResponse> currentList);
+    }
+
+    public interface OnCheckBoxClickListener {
+        void OnCheckBoxClick(int position, PagedList<FilmResponse> currentList,Boolean isChecked);
+    }
+
+    public void setOnCheckBoxClickListener(FilmAdapterDetailsList.OnCheckBoxClickListener onCheckBoxClickListener) {
+        this.onCheckBoxClickListener = onCheckBoxClickListener;
     }
 
     public void setOnItemClickListener(FilmAdapterDetailsList.OnItemClickListener onItemClickListener) {
@@ -41,13 +49,6 @@ public class FilmAdapterDetailsList extends PagedListAdapter<FilmResponse, Recyc
         this.movieDetailsModel = movieDetailsModel;
     }
 
-    @Override
-    public int getItemCount() {
-        if (getCurrentList() == null || getCurrentList().isEmpty()) {
-            return 1;
-        }
-        return super.getItemCount()+1;
-    }
 
     @Override
     public int getItemViewType(int position) {
@@ -64,10 +65,10 @@ public class FilmAdapterDetailsList extends PagedListAdapter<FilmResponse, Recyc
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(mCtx).inflate(R.layout.item_film, parent, false);
-            return new ItemViewHolder(view, this.onItemClickListener, getCurrentList());
+            return new ItemViewHolder(view, this.onItemClickListener, this.onCheckBoxClickListener,getCurrentList());
         } else if (viewType == TYPE_HEADER) {
             View view = LayoutInflater.from(mCtx).inflate(R.layout.item_movie_details, parent, false);
-            return new DetailsViewHolder(view);
+            return new DetailsViewHolder(view,this.onCheckBoxClickListener,getCurrentList());
         }
         return null;
     }
@@ -75,10 +76,11 @@ public class FilmAdapterDetailsList extends PagedListAdapter<FilmResponse, Recyc
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof ItemViewHolder) {
-                if(position>1){
-                    FilmResponse film = getItem(position-1);
-                    ((ItemViewHolder) viewHolder).setFilmeResponseInformations(film);
-                }
+            Log.d("position",String.valueOf(position));
+            Log.d("item count",String.valueOf(getItemCount()));
+            Log.d("current list",String.valueOf(getCurrentList().size()));
+            FilmResponse film = getItem(position-1);
+            ((ItemViewHolder) viewHolder).setFilmeResponseInformations(film);
         } else if (viewHolder instanceof DetailsViewHolder) {
             if (movieDetailsModel != null) {
                 ((DetailsViewHolder) viewHolder).setMovieDetailsInformations(this.movieDetailsModel);

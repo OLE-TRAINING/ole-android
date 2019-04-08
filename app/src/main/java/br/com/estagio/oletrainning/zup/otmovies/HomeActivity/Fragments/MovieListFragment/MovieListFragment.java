@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -23,8 +22,8 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAlertDialogSession;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonFilmID;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonGenreID;
 
 public class MovieListFragment extends CommonFragment {
 
@@ -65,15 +64,22 @@ public class MovieListFragment extends CommonFragment {
         movieListFragmentViewHolder.recyclerView.setHasFixedSize(true);
     }
 
-
-
     private void setupObserversAndListeners() {
+        movieListFragmentViewModel.getIsMessageSuccessForToast().observe(this,isSuccessMessageForToastObserver);
         movieListFragmentViewModel.getFragmentTellerIsDoubleClickHome().observe(this,fragmentTellerdoubleClickObserver);
         movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
         movieListFragmentViewModel.getFragmentTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
         movieListFragmentViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
 
     }
+
+    private Observer<String> isSuccessMessageForToastObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String message) {
+            TastyToast.makeText(getActivity(), message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+                    .setGravity(Gravity.CENTER, 0, 700);
+        }
+    };
 
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
@@ -118,6 +124,19 @@ public class MovieListFragment extends CommonFragment {
         public void onChanged(final FilmsResults filmsResults) {
             movieListFragmentViewModel.getItemPagedList().observe(MovieListFragment.this, pagedListObserver);
             movieListFragmentViewHolder.recyclerView.setAdapter(adapter);
+            adapter.setOnCheckBoxClickListener(new FilmAdapter.OnCheckBoxClickListener() {
+                @Override
+                public void OnCheckBoxClick(int position, PagedList<FilmResponse> currentList, Boolean isChecked) {
+                    SingletonFilmID.setIDEntered(currentList.get(position).getId());
+                    if(isChecked){
+                        movieListFragmentViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                                String.valueOf(SingletonFilmID.INSTANCE.getID()));
+                    } else {
+                        movieListFragmentViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                                String.valueOf(SingletonFilmID.INSTANCE.getID()));
+                    }
+                }
+            });
             adapter.setOnItemClickListener(new FilmAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position, PagedList<FilmResponse> currentList) {

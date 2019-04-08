@@ -32,4 +32,8 @@ public class FilmsResults {
     public Integer getTotal_pages() {
         return totalPages;
     }
+
+
+
+
 }

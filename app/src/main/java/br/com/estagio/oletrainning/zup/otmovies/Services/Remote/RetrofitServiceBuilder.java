@@ -5,7 +5,6 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.Film;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonAccessToken;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
