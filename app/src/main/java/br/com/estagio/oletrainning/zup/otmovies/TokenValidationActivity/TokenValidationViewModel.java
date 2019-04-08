@@ -56,7 +56,7 @@ public class TokenValidationViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> tokenValidationObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            if (responseModel != null) {
+            if (responseModel != null ) {
                 if (responseModel.getCode() == SUCCESS_CODE) {
                     getIsValidatedToken().setValue(SUCCESS_MESSAGE_VALIDATE_TOKEN);
                 } else {

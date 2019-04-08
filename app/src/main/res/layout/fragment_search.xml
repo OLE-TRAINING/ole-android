@@ -3,14 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTextRed"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_search"
     tools:context=".HomeActivity.Fragments.Search.SearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.SearchView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:defaultQueryHint="Pesquisar filmes">
+
+
+    </android.support.v7.widget.SearchView>
 
 </FrameLayout>

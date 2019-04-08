@@ -62,7 +62,7 @@ public class PreLoginViewModel extends CommonViewModel {
     private Observer<ResponseModel<UserData>> getUserResponseObserver = new Observer<ResponseModel<UserData>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<UserData> responseModel) {
-            if (responseModel != null) {
+            if (responseModel != null && responseModel.getResponse() != null) {
                 if (responseModel.getResponse().getRegistrationStatus() != null) {
                     if (responseModel.getResponse().getRegistrationStatus().equals(REGISTERED)) {
                         getRegistrationStatus().setValue(REGISTERED);

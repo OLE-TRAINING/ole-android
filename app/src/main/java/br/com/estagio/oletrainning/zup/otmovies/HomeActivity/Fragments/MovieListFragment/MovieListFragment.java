@@ -66,7 +66,6 @@ public class MovieListFragment extends CommonFragment {
 
     private void setupObserversAndListeners() {
         movieListFragmentViewModel.getIsMessageSuccessForToast().observe(this,isSuccessMessageForToastObserver);
-        movieListFragmentViewModel.getFragmentTellerIsDoubleClickHome().observe(this,fragmentTellerdoubleClickObserver);
         movieListFragmentViewModel.getIsLoading().observe(this, progressBarObserver);
         movieListFragmentViewModel.getFragmentTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
         movieListFragmentViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
@@ -86,18 +85,6 @@ public class MovieListFragment extends CommonFragment {
         public void onChanged(String message) {
             TastyToast.makeText(getActivity(), message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
                     .setGravity(Gravity.CENTER, 0, 700);
-        }
-    };
-
-    private Observer<Boolean> fragmentTellerdoubleClickObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean isDoubleClick) {
-            if(isDoubleClick){
-                if(movieListFragmentViewHolder.recyclerView.getLayoutManager() != null){
-                    movieListFragmentViewHolder.recyclerView.getLayoutManager().scrollToPosition(0);
-                }
-
-            }
         }
     };
 

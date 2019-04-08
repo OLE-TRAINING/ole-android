@@ -13,7 +13,7 @@ public class MovieListFragmentViewHolder {
     ProgressBar progressBar;
     FrameLayout frameLayout;
     RecyclerView recyclerView;
-    LinearLayout linearLayoutPagination;
+
 
     public MovieListFragmentViewHolder(View view) {
         progressBar = view.findViewById(R.id.progress_bar);
