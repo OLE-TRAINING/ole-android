@@ -114,9 +114,9 @@ public class FilmRepository extends CommonRepository{
         return data;
     }
 
-    public LiveData<ResponseModel<FilmsResults>> getFilmsResults(String page, String genreID, String filter) {
+    public LiveData<ResponseModel<FilmsResults>> getFilmsResults(String page, String filterID, String filter) {
         final MutableLiveData<ResponseModel<FilmsResults>> data = new MutableLiveData<>();
-        filmService.getMovieGenre(filter,genreID,"20",page)
+        filmService.getMovieGenre(filter,filterID,"20",page)
                 .enqueue(new Callback<FilmsResults>() {
                     @Override
                     public void onResponse(Call<FilmsResults> call, Response<FilmsResults> response) {

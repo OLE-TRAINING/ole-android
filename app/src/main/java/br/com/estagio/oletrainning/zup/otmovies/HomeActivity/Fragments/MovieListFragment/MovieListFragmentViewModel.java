@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import br.com.estagio.oletrainning.zup.otmovies.Common.CommonViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Adapters.FilmDataSourceFactory;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ErrorMessage;
-import br.com.estagio.oletrainning.zup.otmovies.Services.Model.GenreAndPageSize;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Model.FilterIDAndPageSize;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FavoriteListRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FilmRepository;
@@ -38,7 +38,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     private LiveData<PagedList<FilmResponse>> itemPagedList;
     private LiveData<PageKeyedDataSource<Integer, FilmResponse>> liveDataSource;
     private LiveData<ResponseModel<FilmsResults>> filmsResults;
-    private MutableLiveData<GenreAndPageSize> receiverAPageSizeAndGenreIDService = new MutableLiveData<>();
+    private MutableLiveData<FilterIDAndPageSize> receiverAPageSizeAndGenreIDService = new MutableLiveData<>();
     private MutableLiveData<FilmsResults> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
     private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
     private MutableLiveData<Boolean> fragmentTellerIsLoadingPagination = new MutableLiveData<>();
@@ -103,19 +103,19 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         }
     };
 
-    private Observer<GenreAndPageSize> receiverAPageSizeAndGenreIDServiceObserver = new Observer<GenreAndPageSize>() {
+    private Observer<FilterIDAndPageSize> receiverAPageSizeAndGenreIDServiceObserver = new Observer<FilterIDAndPageSize>() {
         @Override
-        public void onChanged(GenreAndPageSize genreAndPageSize) {
+        public void onChanged(FilterIDAndPageSize filterIDAndPageSize) {
             FilmDataSourceFactory itemDataSourceFactory =
-                    new FilmDataSourceFactory(genreAndPageSize.getPageSize(),
-                            genreAndPageSize.getGenreID(),FILTER_GENRES);
+                    new FilmDataSourceFactory(filterIDAndPageSize.getPageSize(),
+                            filterIDAndPageSize.getFilterID(),FILTER_GENRES);
             liveDataSource = itemDataSourceFactory.getItemLiveDataSource();
             PagedList.Config config =
                     (new PagedList.Config.Builder())
                             .setEnablePlaceholders(false)
                             .setInitialLoadSizeHint(20)
                             .setPrefetchDistance(5)
-                            .setPageSize(genreAndPageSize.getPageSize())
+                            .setPageSize(filterIDAndPageSize.getPageSize())
                             .build();
 
             itemPagedList = (new LivePagedListBuilder(itemDataSourceFactory, config)).build();
@@ -130,9 +130,9 @@ public class MovieListFragmentViewModel extends CommonViewModel {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == SUCCESS_CODE) {
-                    GenreAndPageSize genreAndPageSize = new GenreAndPageSize(responseModel.getResponse().getTotal_pages(),
+                    FilterIDAndPageSize filterIDAndPageSize = new FilterIDAndPageSize(responseModel.getResponse().getTotal_pages(),
                             SingletonGenreID.INSTANCE.getGenreID());
-                    receiverAPageSizeAndGenreIDService.setValue(genreAndPageSize);
+                    receiverAPageSizeAndGenreIDService.setValue(filterIDAndPageSize);
                     fragmentTellerThereIsFilmResults.setValue(responseModel.getResponse());
                 }
             } else {

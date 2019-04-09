@@ -1,19 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_search"
+    android:orientation="vertical"
     tools:context=".HomeActivity.Fragments.Search.SearchFragment">
 
-    <android.support.v7.widget.SearchView
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        app:defaultQueryHint="Pesquisar filmes">
+        app:cardElevation="3dp"
+        app:cardCornerRadius="0dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_height="wrap_content">
 
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:closeIcon="@drawable/ic_close"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/border_input"
+            android:inputType="text"
+            app:defaultQueryHint="Pesquisar filmes"/>
 
-    </android.support.v7.widget.SearchView>
+    </android.support.v7.widget.CardView>
 
-</FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:fontFamily="@font/dosis_bold"
+            android:visibility="gone"
+            android:text="Nenhum filme foi encontrado\npara sua pesquisa"/>
+
+        <include
+            layout="@layout/fragment_movie_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
