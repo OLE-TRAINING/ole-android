@@ -16,21 +16,21 @@ import retrofit2.Response;
 public class FavoriteListRepository extends CommonRepository {
 
     private FilmService filmService;
-    private MutableLiveData<ErrorMessage> thereIsPaginationError;
-    private MutableLiveData<Boolean> viewModelTellerIsSessionExpiredPagination;
+    private MutableLiveData<ErrorMessage> thereIsError;
+    private MutableLiveData<Boolean> viewModelTellerIsSessionExpired;
 
     public FavoriteListRepository(){
         filmService = RetrofitServiceBuilder.buildService(FilmService.class);
-        thereIsPaginationError = new MutableLiveData<>();
-        viewModelTellerIsSessionExpiredPagination = new MutableLiveData<>();
+        thereIsError = new MutableLiveData<>();
+        viewModelTellerIsSessionExpired = new MutableLiveData<>();
     }
 
-    public MutableLiveData<Boolean> getViewModelTellerIsSessionExpiredPagination() {
-        return viewModelTellerIsSessionExpiredPagination;
+    public MutableLiveData<Boolean> getViewModelTellerIsSessionExpired() {
+        return viewModelTellerIsSessionExpired;
     }
 
-    public MutableLiveData<ErrorMessage> getThereIsPaginationError() {
-        return thereIsPaginationError;
+    public MutableLiveData<ErrorMessage> getThereIsError() {
+        return thereIsError;
     }
 
     public LiveData<ResponseModel<FilmsResults>> getFavoriteList(String email) {
@@ -45,7 +45,7 @@ public class FavoriteListRepository extends CommonRepository {
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            viewModelTellerIsSessionExpiredPagination.postValue(true);
+                            viewModelTellerIsSessionExpired.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -79,7 +79,7 @@ public class FavoriteListRepository extends CommonRepository {
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            viewModelTellerIsSessionExpiredPagination.postValue(true);
+                            viewModelTellerIsSessionExpired.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));
@@ -112,7 +112,7 @@ public class FavoriteListRepository extends CommonRepository {
                             responseModel.setCode(SUCCESS_CODE);
                             responseModel.setResponse(response.body());
                         } else if (response.code() == SESSION_EXPIRED_CODE){
-                            viewModelTellerIsSessionExpiredPagination.postValue(true);
+                            viewModelTellerIsSessionExpired.postValue(true);
                         } else {
                             if(response.errorBody() != null){
                                 responseModel.setErrorMessage(serializeErrorBody(response.errorBody()));

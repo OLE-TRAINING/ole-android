@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Model.UserData;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.FavoriteListRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Repositories.ValidationRepository;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
 
@@ -17,7 +18,16 @@ public abstract class CommonViewModel extends ViewModel {
     protected int SUCCESS_CODE = 200;
     protected int SESSION_EXPIRED_CODE = 401;
     protected String SUCCESS_RESEND_TOKEN = "Código reenviado com sucesso!";
-    protected String SERVICE_OR_CONNECTION_ERROR_RESEND_TOKEN = "Falha ao reenviar o código. Verifique a conexão e tente novamente.";
+    private String SERVICE_OR_CONNECTION_ERROR_RESEND_TOKEN = "Falha ao reenviar o código. Verifique a conexão e tente novamente.";
+    private String SUCCESS_MESSAGE_ADD = "Filme adicionado aos favoritos com sucesso";
+    private String SUCCESS_MESSAGE_DELETE = "Filme removido dos favoritos com sucesso";
+    private String SERVICE_OR_CONNECTION_ERROR_ADD = "Falha ao adicionar aos favoritos. Verifique a conexão e tente novamente.";
+    private String SERVICE_OR_CONNECTION_ERROR_DELETE = "Falha ao remover dos favoritos. Verifique a conexão e tente novamente.";
+    protected FavoriteListRepository favoriteListRepository = new FavoriteListRepository();
+
+    private LiveData<ResponseModel<Void>> addFavoriteFilm;
+
+    private LiveData<ResponseModel<Void>> removeFavoriteFilm;
 
     protected MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
@@ -28,6 +38,14 @@ public abstract class CommonViewModel extends ViewModel {
     protected MutableLiveData<String> forwardedToken = new MutableLiveData<>();
 
     protected MutableLiveData<String> isMessageSuccessForToast = new MutableLiveData<>();
+
+    public LiveData<ResponseModel<Void>> getAddFavoriteFilm() {
+        return addFavoriteFilm;
+    }
+
+    public LiveData<ResponseModel<Void>> getRemoveFavoriteFilm() {
+        return removeFavoriteFilm;
+    }
 
     public MutableLiveData<String> getIsMessageSuccessForToast() {
         return isMessageSuccessForToast;
@@ -77,9 +95,49 @@ public abstract class CommonViewModel extends ViewModel {
         executeServiceTokenResend(email);
     }
 
+    public void executeAddFavoriteFilm(String email, String movieID) {
+        addFavoriteFilm = favoriteListRepository.addFavotiteFilm(email,movieID);
+        addFavoriteFilm.observeForever(addFavoriteFilmObserver);
+    }
+
+    private Observer<ResponseModel<Void>> addFavoriteFilmObserver = new Observer<ResponseModel<Void>>() {
+        @Override
+        public void onChanged(@Nullable ResponseModel<Void> responseModel) {
+            if (responseModel != null) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
+                    isMessageSuccessForToast.setValue(SUCCESS_MESSAGE_ADD);
+                }
+            } else {
+                isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR_ADD);
+            }
+        }
+    };
+
+    public void executeRemoveFavoriteFilm(String email, String movieID) {
+        removeFavoriteFilm = favoriteListRepository.removeFavotiteFilm(email,movieID);
+        removeFavoriteFilm.observeForever(removeFavoriteFilmObserver);
+    }
+
+    private Observer<ResponseModel<Void>> removeFavoriteFilmObserver = new Observer<ResponseModel<Void>>() {
+        @Override
+        public void onChanged(@Nullable ResponseModel<Void> responseModel) {
+            if (responseModel != null) {
+                if (responseModel.getCode() == SUCCESS_CODE) {
+                    isMessageSuccessForToast.setValue(SUCCESS_MESSAGE_DELETE);
+                }
+            } else {
+                isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR_DELETE);
+            }
+        }
+    };
+
     public void removeObserver() {
-        if (tokenResend != null) {
+        if (tokenResend != null
+        && removeFavoriteFilm != null
+        && addFavoriteFilm != null) {
             tokenResend.removeObserver(tokenResendObserver);
+            removeFavoriteFilm.removeObserver(removeFavoriteFilmObserver);
+            addFavoriteFilm.removeObserver(addFavoriteFilmObserver);
         }
     }
 }

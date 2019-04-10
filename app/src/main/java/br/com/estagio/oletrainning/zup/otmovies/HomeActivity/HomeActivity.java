@@ -1,6 +1,5 @@
 package br.com.estagio.oletrainning.zup.otmovies.HomeActivity;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,10 +17,12 @@ import br.com.estagio.oletrainning.zup.otmovies.Common.CommonActivity;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Favorite.FavoriteFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Home.HomeFragment;
+import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.MovieListFragment.MovieListFragment;
 import br.com.estagio.oletrainning.zup.otmovies.HomeActivity.Fragments.Search.SearchFragment;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonEmail;
+import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonGenreID;
 import br.com.estagio.oletrainning.zup.otmovies.Services.Singleton.SingletonName;
 
 
@@ -33,7 +34,7 @@ public class HomeActivity extends CommonActivity
 
 
     private Fragment home = HomeFragment.newInstance();
-    private Fragment favorite = new FavoriteFragment();
+    private Fragment favorite = new MovieListFragment();
     private Fragment search = new SearchFragment();
 
     public Fragment getHome() {
@@ -137,6 +138,7 @@ public class HomeActivity extends CommonActivity
 
                 break;
             case R.id.navigation_favorite:
+                SingletonGenreID.setGenreIDEntered("-1");
                 pushFragments(TAG_FRAGMENT_FAVORITE,getFavorite());
                 break;
             case R.id.navigation_search:

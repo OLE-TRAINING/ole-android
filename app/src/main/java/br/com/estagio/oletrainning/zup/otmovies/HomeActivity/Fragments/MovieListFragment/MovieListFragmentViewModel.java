@@ -23,37 +23,14 @@ public class MovieListFragmentViewModel extends CommonViewModel {
 
     private FilmRepository filmRepository = new FilmRepository();
     private FavoriteListRepository favoriteListRepository = new FavoriteListRepository();
-    private String SUCCESS_MESSAGE_ADD = "Filme adicionado aos favoritos com sucesso";
-    private String SUCCESS_MESSAGE_DELETE = "Filme removido dos favoritos com sucesso";
-    private String SERVICE_OR_CONNECTION_ERROR_ADD = "Falha ao adicionar aos favoritos. Verifique a conexão e tente novamente.";
-    private String SERVICE_OR_CONNECTION_ERROR_DELETE = "Falha ao remover dos favoritos. Verifique a conexão e tente novamente.";
     private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
     private String FILTER_GENRES = "genres";
-
-    private LiveData<ResponseModel<Void>> addFavoriteFilm;
-
-    private LiveData<ResponseModel<Void>> removeFavoriteFilm;
-
-
     private LiveData<PagedList<FilmResponse>> itemPagedList;
     private LiveData<PageKeyedDataSource<Integer, FilmResponse>> liveDataSource;
     private LiveData<ResponseModel<FilmsResults>> filmsResults;
     private MutableLiveData<FilterIDAndPageSize> receiverAPageSizeAndGenreIDService = new MutableLiveData<>();
     private MutableLiveData<FilmsResults> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
     private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
-    private MutableLiveData<Boolean> fragmentTellerIsLoadingPagination = new MutableLiveData<>();
-
-    public LiveData<ResponseModel<Void>> getAddFavoriteFilm() {
-        return addFavoriteFilm;
-    }
-
-    public LiveData<ResponseModel<Void>> getRemoveFavoriteFilm() {
-        return removeFavoriteFilm;
-    }
-
-    public MutableLiveData<Boolean> getFragmentTellerIsLoadingPagination() {
-        return fragmentTellerIsLoadingPagination;
-    }
 
     public MutableLiveData<Boolean> getFragmentTellerIsSessionExpired() {
         return fragmentTellerIsSessionExpired;
@@ -66,42 +43,6 @@ public class MovieListFragmentViewModel extends CommonViewModel {
     public MutableLiveData<FilmsResults> getFragmentTellerThereIsFilmResults() {
         return fragmentTellerThereIsFilmResults;
     }
-
-    public void executeAddFavoriteFilm(String email, String movieID) {
-        addFavoriteFilm = favoriteListRepository.addFavotiteFilm(email,movieID);
-        addFavoriteFilm.observeForever(addFavoriteFilmObserver);
-    }
-
-    private Observer<ResponseModel<Void>> addFavoriteFilmObserver = new Observer<ResponseModel<Void>>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel<Void> responseModel) {
-            if (responseModel != null) {
-                if (responseModel.getCode() == SUCCESS_CODE) {
-                    isMessageSuccessForToast.setValue(SUCCESS_MESSAGE_ADD);
-                }
-            } else {
-                isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR_ADD);
-            }
-        }
-    };
-
-    public void executeRemoveFavoriteFilm(String email, String movieID) {
-        addFavoriteFilm = favoriteListRepository.removeFavotiteFilm(email,movieID);
-        addFavoriteFilm.observeForever(removeFavoriteFilmObserver);
-    }
-
-    private Observer<ResponseModel<Void>> removeFavoriteFilmObserver = new Observer<ResponseModel<Void>>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel<Void> responseModel) {
-            if (responseModel != null) {
-                if (responseModel.getCode() == SUCCESS_CODE) {
-                    isMessageSuccessForToast.setValue(SUCCESS_MESSAGE_DELETE);
-                }
-            } else {
-                isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR_DELETE);
-            }
-        }
-    };
 
     private Observer<FilterIDAndPageSize> receiverAPageSizeAndGenreIDServiceObserver = new Observer<FilterIDAndPageSize>() {
         @Override
@@ -145,6 +86,7 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         filmRepository.getViewModelTellerIsSessionExpiredPagination().observeForever(isSessionExpiredPaginationObserver);
         filmRepository.getThereIsPaginationError().observeForever(thereIsPaginationErrorObserve);
         receiverAPageSizeAndGenreIDService.observeForever(receiverAPageSizeAndGenreIDServiceObserver);
+        favoriteListRepository.getViewModelTellerIsSessionExpired().observeForever(isSessionExpiredPaginationObserver);
     }
 
     public void executeServiceGetFilmResults(String page) {
@@ -180,14 +122,12 @@ public class MovieListFragmentViewModel extends CommonViewModel {
         if (filmsResults != null && filmRepository.getThereIsPaginationError() != null
                 &&  receiverAPageSizeAndGenreIDService != null
         && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null
-        && addFavoriteFilm != null && removeFavoriteFilm != null)  {
+        && favoriteListRepository.getViewModelTellerIsSessionExpired() != null)  {
             filmsResults.removeObserver(filmsResultsObserver);
             filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverAPageSizeAndGenreIDService.removeObserver(receiverAPageSizeAndGenreIDServiceObserver);
             filmRepository.getViewModelTellerIsSessionExpiredPagination().removeObserver(isSessionExpiredPaginationObserver);
-            addFavoriteFilm.removeObserver(addFavoriteFilmObserver);
-            removeFavoriteFilm.removeObserver(addFavoriteFilmObserver);
+            favoriteListRepository.getViewModelTellerIsSessionExpired().removeObserver(isSessionExpiredPaginationObserver);
         }
     }
-
 }
