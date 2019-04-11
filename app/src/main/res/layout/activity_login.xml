@@ -62,7 +62,7 @@
             android:textColor="@color/colorTextDefault"
             android:textSize="@dimen/textSizeDefault" />
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+        <br.com.estagio.oletrainning.zup.otmovies.utils.ErrorEditText
             android:id="@+id/errorEditText_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             app:setInicialErrorVisibility="false"
             app:setInputType="textPassword">
 
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+        </br.com.estagio.oletrainning.zup.otmovies.utils.ErrorEditText>
 
         <TextView
             android:id="@+id/textView_password"

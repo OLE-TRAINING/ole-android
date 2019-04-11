@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+        <br.com.estagio.oletrainning.zup.otmovies.utils.ErrorEditText
             android:id="@+id/errorEditText_enterEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             app:setInputType="textEmailAddress"
             app:setMessageError="@string/error_email_pre_login">
 
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+        </br.com.estagio.oletrainning.zup.otmovies.utils.ErrorEditText>
 
         <Button
             android:id="@+id/button_nextPreLogin"
