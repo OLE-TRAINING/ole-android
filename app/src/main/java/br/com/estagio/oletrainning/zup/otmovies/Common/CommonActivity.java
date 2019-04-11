@@ -19,7 +19,6 @@ import com.github.ybq.android.spinkit.style.ThreeBounce;
 import br.com.estagio.oletrainning.zup.otmovies.PreLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
-
 public abstract class CommonActivity extends AppCompatActivity {
 
     protected static final String TAG_FRAGMENT_HOME = "fragment_home";
