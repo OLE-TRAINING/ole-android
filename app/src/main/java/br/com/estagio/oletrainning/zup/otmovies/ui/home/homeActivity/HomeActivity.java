@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.favorite.Favorite;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.home.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.home.HomeFragment;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.movieList.MovieList;
@@ -33,7 +34,7 @@ public class HomeActivity extends CommonActivity
 
 
     private Fragment home = HomeFragment.newInstance();
-    private Fragment favorite = new MovieList();
+    private Fragment favorite = new Favorite();
     private Fragment search = new Search();
 
     public Fragment getHome() {

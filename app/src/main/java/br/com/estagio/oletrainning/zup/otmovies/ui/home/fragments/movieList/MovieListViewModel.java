@@ -21,16 +21,16 @@ import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonGenreID;
 
 public class MovieListViewModel extends CommonViewModel {
 
-    private FilmRepository filmRepository = new FilmRepository();
-    private FavoriteListRepository favoriteListRepository = new FavoriteListRepository();
-    private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
-    private String FILTER_GENRES = "genres";
-    private LiveData<PagedList<FilmResponse>> itemPagedList;
-    private LiveData<PageKeyedDataSource<Integer, FilmResponse>> liveDataSource;
-    private LiveData<ResponseModel<FilmsResults>> filmsResults;
-    private MutableLiveData<FilterIDAndPageSize> receiverAPageSizeAndGenreIDService = new MutableLiveData<>();
-    private MutableLiveData<FilmsResults> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
-    private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
+    protected FilmRepository filmRepository = new FilmRepository();
+    protected FavoriteListRepository favoriteListRepository = new FavoriteListRepository();
+    protected String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
+    protected String FILTER_GENRES = "genres";
+    protected LiveData<PagedList<FilmResponse>> itemPagedList;
+    protected LiveData<PageKeyedDataSource<Integer, FilmResponse>> liveDataSource;
+    protected LiveData<ResponseModel<FilmsResults>> filmsResults;
+    protected MutableLiveData<FilterIDAndPageSize> receiverAPageSizeAndGenreIDService = new MutableLiveData<>();
+    protected MutableLiveData<FilmsResults> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
+    protected MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> getFragmentTellerIsSessionExpired() {
         return fragmentTellerIsSessionExpired;
@@ -65,7 +65,7 @@ public class MovieListViewModel extends CommonViewModel {
         }
     };
 
-    private Observer<ResponseModel<FilmsResults>> filmsResultsObserver = new Observer<ResponseModel<FilmsResults>>() {
+    protected Observer<ResponseModel<FilmsResults>> filmsResultsObserver = new Observer<ResponseModel<FilmsResults>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<FilmsResults> responseModel) {
             isLoading.setValue(false);
@@ -82,12 +82,13 @@ public class MovieListViewModel extends CommonViewModel {
         }
     };
 
-    private void setupObserversForever(){
+    protected void setupObserversForever(){
         filmRepository.getViewModelTellerIsSessionExpiredPagination().observeForever(isSessionExpiredPaginationObserver);
         filmRepository.getThereIsPaginationError().observeForever(thereIsPaginationErrorObserve);
         receiverAPageSizeAndGenreIDService.observeForever(receiverAPageSizeAndGenreIDServiceObserver);
         favoriteListRepository.getViewModelTellerIsSessionExpired().observeForever(isSessionExpiredPaginationObserver);
     }
+
 
     public void executeServiceGetFilmResults(String page) {
         isLoading.setValue(true);
@@ -97,7 +98,6 @@ public class MovieListViewModel extends CommonViewModel {
             filmsResults.observeForever(filmsResultsObserver);
         }
     }
-
     private Observer<ErrorMessage> thereIsPaginationErrorObserve = new Observer<ErrorMessage>() {
         @Override
         public void onChanged(@Nullable ErrorMessage errorMessage) {
@@ -121,8 +121,8 @@ public class MovieListViewModel extends CommonViewModel {
         super.removeObserver();
         if (filmsResults != null && filmRepository.getThereIsPaginationError() != null
                 &&  receiverAPageSizeAndGenreIDService != null
-        && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null
-        && favoriteListRepository.getViewModelTellerIsSessionExpired() != null)  {
+                && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null
+                && favoriteListRepository.getViewModelTellerIsSessionExpired() != null)  {
             filmsResults.removeObserver(filmsResultsObserver);
             filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverAPageSizeAndGenreIDService.removeObserver(receiverAPageSizeAndGenreIDServiceObserver);
