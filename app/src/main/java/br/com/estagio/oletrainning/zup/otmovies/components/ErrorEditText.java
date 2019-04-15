@@ -1,4 +1,4 @@
-package br.com.estagio.oletrainning.zup.otmovies.utils;
+package br.com.estagio.oletrainning.zup.otmovies.components;
 
 import android.content.Context;
 import android.content.res.TypedArray;

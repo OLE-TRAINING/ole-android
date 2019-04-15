@@ -6,7 +6,7 @@ import android.arch.lifecycle.Observer;
 
 import android.support.annotation.Nullable;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.usefulClasses.Email;
 import br.com.estagio.oletrainning.zup.otmovies.model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.UserData;
@@ -14,7 +14,7 @@ import br.com.estagio.oletrainning.zup.otmovies.server.repositories.UserReposito
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonName;
 
-public class PreLoginViewModel extends CommonViewModel {
+public class PreLoginViewModel extends BaseViewModel {
 
     private Email email;
     private String REGISTERED = "REGISTERED";

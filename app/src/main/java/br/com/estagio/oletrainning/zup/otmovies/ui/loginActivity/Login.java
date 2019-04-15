@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.sdsmdg.tastytoast.TastyToast;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.homeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.recoverPasswordActivity.RecoverPassword;
 import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
@@ -20,7 +20,7 @@ import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
 
-public class Login extends CommonActivity {
+public class Login extends BaseActivity {
 
     private LoginViewHolder loginViewHolder;
     private LoginViewModel loginViewModel;

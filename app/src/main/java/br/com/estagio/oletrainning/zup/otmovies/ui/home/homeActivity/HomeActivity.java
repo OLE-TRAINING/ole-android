@@ -13,11 +13,10 @@ import android.text.style.StyleSpan;
 import android.view.MenuItem;
 import android.view.View;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.favorite.Favorite;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.home.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.home.HomeFragment;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.movieList.MovieList;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.search.Search;
 import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -26,7 +25,7 @@ import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonGenreID;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonName;
 
 
-public class HomeActivity extends CommonActivity
+public class HomeActivity extends BaseActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private FragmentManager fragmentManager;

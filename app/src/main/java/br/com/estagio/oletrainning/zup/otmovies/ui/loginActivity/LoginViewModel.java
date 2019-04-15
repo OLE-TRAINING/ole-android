@@ -6,13 +6,13 @@ import android.arch.lifecycle.Observer;
 
 import android.support.annotation.Nullable;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.usefulClasses.Password;
 import br.com.estagio.oletrainning.zup.otmovies.model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
-public class LoginViewModel extends CommonViewModel {
+public class LoginViewModel extends BaseViewModel {
 
     private Password password;
     private String KEY_INVALID_PASSWORD = "error.invalid.password";

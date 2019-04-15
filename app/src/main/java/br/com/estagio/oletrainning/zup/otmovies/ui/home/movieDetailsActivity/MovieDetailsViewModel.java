@@ -8,7 +8,7 @@ import android.arch.paging.PageKeyedDataSource;
 import android.arch.paging.PagedList;
 import android.support.annotation.Nullable;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmDataSourceFactory;
 import br.com.estagio.oletrainning.zup.otmovies.model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.model.MovieDetailsModel;
@@ -19,7 +19,7 @@ import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
 
-public class MovieDetailsViewModel extends CommonViewModel {
+public class MovieDetailsViewModel extends BaseViewModel {
 
     private FilmRepository filmRepository = new FilmRepository();
     private FavoriteListRepository favoriteListRepository = new FavoriteListRepository();

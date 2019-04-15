@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.usefulClasses.Password;
 import br.com.estagio.oletrainning.zup.otmovies.model.usefulClasses.Token;
 import br.com.estagio.oletrainning.zup.otmovies.model.BodyChangePassword;
@@ -14,7 +14,7 @@ import br.com.estagio.oletrainning.zup.otmovies.model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
 
-public class RecoverPasswordViewModel extends CommonViewModel {
+public class RecoverPasswordViewModel extends BaseViewModel {
 
     private Password password;
     private Token token;

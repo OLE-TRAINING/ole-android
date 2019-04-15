@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.sdsmdg.tastytoast.TastyToast;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonFragment;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseFragment;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.movieDetailsActivity.MovieDetails;
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -24,13 +24,16 @@ import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonAlertDialogSession;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
+import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonGenreID;
 
-public class MovieList extends CommonFragment {
+public class MovieList extends BaseFragment {
 
     private MovieListViewModel movieListViewModel;
     private MovieListViewHolder movieListViewHolder;
     private FilmAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
+    private String GENRES_FILTER = "genres";
+    private String FIRST_PAGE = "1";
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,8 +47,9 @@ public class MovieList extends CommonFragment {
         movieListViewModel = ViewModelProviders.of(MovieList.this).get(MovieListViewModel.class);
         movieListViewModel.getFragmentTellerIsSessionExpired().observe(this, sessionObserver);
 
-        movieListViewModel.executeServiceGetFilmResults("1");
-
+        if(SingletonGenreID.INSTANCE.getGenreID() != null){
+            movieListViewModel.executeServiceGetFilmResults(FIRST_PAGE, SingletonGenreID.INSTANCE.getGenreID(),GENRES_FILTER);
+        }
         return view;
     }
 

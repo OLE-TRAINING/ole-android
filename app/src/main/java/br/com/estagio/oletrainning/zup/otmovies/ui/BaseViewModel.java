@@ -12,7 +12,7 @@ import br.com.estagio.oletrainning.zup.otmovies.server.repositories.FavoriteList
 import br.com.estagio.oletrainning.zup.otmovies.server.repositories.ValidationRepository;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
-public abstract class CommonViewModel extends ViewModel {
+public abstract class BaseViewModel extends ViewModel {
 
     protected ValidationRepository validationRepository = new ValidationRepository();
     protected int SUCCESS_CODE = 200;

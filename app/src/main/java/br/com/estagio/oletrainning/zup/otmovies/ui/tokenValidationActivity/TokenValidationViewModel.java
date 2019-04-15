@@ -5,14 +5,14 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.usefulClasses.Token;
 import br.com.estagio.oletrainning.zup.otmovies.model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
-public class TokenValidationViewModel extends CommonViewModel {
+public class TokenValidationViewModel extends BaseViewModel {
 
     private Token token;
     private String SUCCESS_MESSAGE_VALIDATE_TOKEN = "Código confirmado com sucesso!";

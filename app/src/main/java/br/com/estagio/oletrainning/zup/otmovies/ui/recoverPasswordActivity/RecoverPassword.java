@@ -12,14 +12,14 @@ import android.view.View;
 
 import com.sdsmdg.tastytoast.TastyToast;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.Login;
 import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
 
-public class RecoverPassword extends CommonActivity {
+public class RecoverPassword extends BaseActivity {
 
     private RecoverPasswordViewHolder recoverPasswordViewHolder;
     private RecoverPasswordViewModel recoverPasswordViewModel;

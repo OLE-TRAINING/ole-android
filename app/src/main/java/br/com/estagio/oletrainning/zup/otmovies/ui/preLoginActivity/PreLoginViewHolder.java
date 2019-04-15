@@ -5,7 +5,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import br.com.estagio.oletrainning.zup.otmovies.utils.ErrorEditText;
+import br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 class PreLoginViewHolder{

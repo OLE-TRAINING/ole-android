@@ -6,28 +6,33 @@ import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonFragment;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseFragment;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.movieDetailsActivity.MovieDetails;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonAlertDialogSession;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
-import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonTextSearch;
 
-public class Search extends CommonFragment {
+public class Search extends Fragment {
 
     private SearchViewHolder searchViewHolder;
     private SearchViewModel searchViewModel;
@@ -76,7 +81,11 @@ public class Search extends CommonFragment {
         @Override
         public void onChanged(@Nullable Boolean isSearchEmpty) {
             if(isSearchEmpty){
-                searchViewHolder.movieListLayoutOnSearch.setVisibility(View.GONE);
+                searchViewHolder.textViewFilmNotFound.setVisibility(View.VISIBLE);
+                searchViewHolder.recyclerView.setVisibility(View.GONE);
+            } else {
+                searchViewHolder.textViewFilmNotFound.setVisibility(View.GONE);
+                searchViewHolder.recyclerView.setVisibility(View.VISIBLE);
             }
         }
     };
@@ -167,16 +176,36 @@ public class Search extends CommonFragment {
             return false;
         }
 
+
         @Override
         public boolean onQueryTextChange(String newText) {
             if(!newText.isEmpty()){
-                searchViewHolder.movieListLayoutOnSearch.setVisibility(View.VISIBLE);
-                SingletonTextSearch.createTextSearch(newText);
-                searchViewModel.executeServiceGetFilmResultsSearch();
+                searchViewModel.executeServiceGetFilmResultsSearch(newText);
+            }else{
+                adapter.submitList(null);
             }
             return false;
         }
     };
+
+    public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
+        if (isLoading != null && getActivity() != null) {
+            if (isLoading) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                Sprite threeBounce = new ThreeBounce();
+                progressBar.setIndeterminateDrawable(threeBounce);
+                searchViewHolder.textViewFilmNotFound.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.VISIBLE);
+
+            } else {
+                Sprite threeBounce = new ThreeBounce();
+                progressBar.setIndeterminateDrawable(threeBounce);
+                frameLayout.setVisibility(View.INVISIBLE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+        }
+    }
 
     @Override
     public void onDestroy() {

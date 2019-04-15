@@ -15,11 +15,10 @@ import br.com.estagio.oletrainning.zup.otmovies.server.repositories.FavoriteList
 import br.com.estagio.oletrainning.zup.otmovies.server.repositories.FilmRepository;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmDataSourceFactory;
-import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonTextSearch;
 
-public class SearchViewModel extends CommonViewModel {
+public class SearchViewModel extends BaseViewModel {
 
     private final static String FIRST_PAGE = "1";
     private final static String FILTER_NAME = "name";
@@ -33,6 +32,7 @@ public class SearchViewModel extends CommonViewModel {
     private MutableLiveData<FilmsResults> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
     private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
     private MutableLiveData<Boolean> isSearchEmpty = new MutableLiveData<>();
+    private String queryMovies;
 
     public MutableLiveData<Boolean> getIsSearchEmpty() {
         return isSearchEmpty;
@@ -71,11 +71,14 @@ public class SearchViewModel extends CommonViewModel {
         }
     };
 
-    public void executeServiceGetFilmResultsSearch() {
+    public void executeServiceGetFilmResultsSearch(String queryMovies) {
+        this.queryMovies = queryMovies;
         isLoading.setValue(true);
+
         setupObserversForever();
-        if(SingletonTextSearch.INSTANCE.getTextToSearch() != null){
-            filmsResults = filmRepository.getFilmsResults(FIRST_PAGE,SingletonTextSearch.INSTANCE.getTextToSearch(),FILTER_NAME);
+
+        if(queryMovies != null){
+            filmsResults = filmRepository.getFilmsResults(FIRST_PAGE,queryMovies,FILTER_NAME);
             filmsResults.observeForever(filmsResultsObserverSearch);
         }
     }
@@ -86,14 +89,17 @@ public class SearchViewModel extends CommonViewModel {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == SUCCESS_CODE) {
-                    if(responseModel.getResponse().getTotal_results() !=0 && SingletonTextSearch.INSTANCE.getTextToSearch() != null){
-                        FilterIDAndPageSize filterIDAndPageSize = new FilterIDAndPageSize(responseModel.getResponse().getTotal_results(),
-                                SingletonTextSearch.INSTANCE.getTextToSearch());
+                    if(responseModel.getResponse().getTotal_results() !=0 && SearchViewModel.this.queryMovies != null){
+                        FilterIDAndPageSize filterIDAndPageSize = new FilterIDAndPageSize(responseModel.getResponse().getTotal_pages(),
+                                SearchViewModel.this.queryMovies);
                         receiverAPageSizeAndGenreIDService.setValue(filterIDAndPageSize);
                         fragmentTellerThereIsFilmResults.setValue(responseModel.getResponse());
+                        isSearchEmpty.setValue(false);
                     } else {
                         isSearchEmpty.setValue(true);
                     }
+                } else if(responseModel.getCode() == SESSION_EXPIRED_CODE){
+                    fragmentTellerIsSessionExpired.setValue(true);
                 }
             } else {
                 isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR);

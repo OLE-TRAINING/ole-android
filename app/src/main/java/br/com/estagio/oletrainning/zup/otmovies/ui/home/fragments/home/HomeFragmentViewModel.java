@@ -5,13 +5,13 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.ResponseModel;
 import br.com.estagio.oletrainning.zup.otmovies.server.repositories.FilmRepository;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmGenres;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.GenresResponse;
 
-public class HomeFragmentViewModel extends CommonViewModel {
+public class HomeFragmentViewModel extends BaseViewModel {
 
     private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber lista de gêneros. Verifique a conexão e tente novamente.";
 

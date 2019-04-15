@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonFragment;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseFragment;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.movieDetailsActivity.MovieDetails;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonAlertDialogSession;
@@ -28,12 +27,15 @@ import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonGenreID;
 
-public class Favorite extends CommonFragment {
+public class Favorite extends BaseFragment {
 
     private FavoriteViewModel favoriteViewModel;
     private FavoriteViewHolder favoriteViewHolder;
     private FilmAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
+    private String GENRES_FILTER = "genres";
+    private String GENRE_ID = "28";
+    private String FIRST_PAGE = "1";
 
     @Nullable
     @Override
@@ -48,9 +50,7 @@ public class Favorite extends CommonFragment {
 
         favoriteViewModel.getFragmentTellerIsSessionExpired().observe(this, sessionObserver);
 
-        SingletonGenreID.setGenreIDEntered("28");
-
-        favoriteViewModel.executeServiceGetFilmResults("1", SingletonGenreID.INSTANCE.getGenreID(), "genres");
+        favoriteViewModel.executeServiceGetFilmResults(FIRST_PAGE, GENRE_ID, GENRES_FILTER);
 
         return view;
     }

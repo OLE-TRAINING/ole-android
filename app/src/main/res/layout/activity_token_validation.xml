@@ -67,7 +67,7 @@
             android:paddingLeft="@dimen/marginLayout"
             android:paddingRight="@dimen/marginLayout">
 
-            <br.com.estagio.oletrainning.zup.otmovies.utils.ErrorEditText
+            <br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText
                 android:id="@+id/errorEditText_token"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                 app:setInputType="text"
                 app:setMessageError="@string/errorCode">
 
-            </br.com.estagio.oletrainning.zup.otmovies.utils.ErrorEditText>
+            </br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText>
 
             <LinearLayout
                 android:layout_width="wrap_content"

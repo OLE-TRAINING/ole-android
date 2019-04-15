@@ -10,7 +10,7 @@ import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
 
 
-public abstract class CommonFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
         if (isLoading != null && getActivity() != null) {

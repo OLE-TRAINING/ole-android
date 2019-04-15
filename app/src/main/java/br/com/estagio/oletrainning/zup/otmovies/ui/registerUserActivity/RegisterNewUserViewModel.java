@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.usefulClasses.Name;
 import br.com.estagio.oletrainning.zup.otmovies.model.usefulClasses.Password;
 import br.com.estagio.oletrainning.zup.otmovies.model.usefulClasses.Username;
@@ -16,7 +16,7 @@ import br.com.estagio.oletrainning.zup.otmovies.model.UserData;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonName;
 
-public class RegisterNewUserViewModel extends CommonViewModel {
+public class RegisterNewUserViewModel extends BaseViewModel {
 
     private Name name;
     private Password password;

@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.sdsmdg.tastytoast.TastyToast;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.finishYourRegistrationActivity.FinishYourRegistration;
 import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.Login;
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -20,7 +20,7 @@ import br.com.estagio.oletrainning.zup.otmovies.ui.registerUserActivity.Register
 
 
 
-public class PreLogin extends CommonActivity {
+public class PreLogin extends BaseActivity {
 
     private PreLoginViewHolder preLoginViewHolder;
     private PreLoginViewModel preLoginViewModel;

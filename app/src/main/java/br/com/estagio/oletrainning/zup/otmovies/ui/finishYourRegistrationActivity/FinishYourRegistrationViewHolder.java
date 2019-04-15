@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import br.com.estagio.oletrainning.zup.otmovies.utils.ErrorEditText;
+import br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 public class FinishYourRegistrationViewHolder {

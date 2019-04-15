@@ -21,7 +21,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.List;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapterDetailsList;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.homeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -32,7 +32,7 @@ import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonAlertDialo
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
 
-public class MovieDetails extends CommonActivity {
+public class MovieDetails extends BaseActivity {
 
     private MovieDetailsViewHolder movieDetailsViewHolder;
     private MovieDetailsViewModel movieDetailsViewModel;

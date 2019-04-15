@@ -13,13 +13,13 @@ import android.view.ViewGroup;
 
 import com.sdsmdg.tastytoast.TastyToast;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.CommonFragment;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseFragment;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FragmentStateAdapter;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmGenres;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonAlertDialogSession;
 
-public class HomeFragment extends CommonFragment {
+public class HomeFragment extends BaseFragment {
 
     private HomeFragmentViewHolder viewHolder;
     private HomeFragmentViewModel viewModelHome;
