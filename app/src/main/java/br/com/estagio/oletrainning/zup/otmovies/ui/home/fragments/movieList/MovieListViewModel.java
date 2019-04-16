@@ -71,10 +71,10 @@ public class MovieListViewModel extends BaseViewModel {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == SUCCESS_CODE) {
-                    FilterIDAndPageSize filterIDAndPageSize = new FilterIDAndPageSize(responseModel.getResponse().getTotal_pages(),
-                            MovieListViewModel.this.genreID);
-                    receiverAPageSizeAndGenreIDService.setValue(filterIDAndPageSize);
-                    fragmentTellerThereIsFilmResults.setValue(responseModel.getResponse());
+                        FilterIDAndPageSize filterIDAndPageSize = new FilterIDAndPageSize(responseModel.getResponse().getTotal_pages(),
+                                MovieListViewModel.this.genreID);
+                        receiverAPageSizeAndGenreIDService.setValue(filterIDAndPageSize);
+                        fragmentTellerThereIsFilmResults.setValue(responseModel.getResponse());
                 } else if (responseModel.getCode() == SESSION_EXPIRED_CODE) {
                     fragmentTellerIsSessionExpired.setValue(true);
                 }
@@ -94,8 +94,9 @@ public class MovieListViewModel extends BaseViewModel {
 
     public void executeServiceGetFilmResults(String page, String genreID, String filter) {
         isLoading.setValue(true);
+        this.genreID = genreID;
         setupObserversForever();
-        filmsResults = filmRepository.getFilmsResults(page, genreID, filter);
+        filmsResults = filmRepository.getFilmsResults(page, this.genreID, filter);
         filmsResults.observeForever(filmsResultsObserver);
     }
 

@@ -8,36 +8,30 @@ import android.arch.paging.PageKeyedDataSource;
 import android.arch.paging.PagedList;
 import android.support.annotation.Nullable;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmDataSourceFactory;
 import br.com.estagio.oletrainning.zup.otmovies.model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.model.ResponseModel;
-import br.com.estagio.oletrainning.zup.otmovies.server.repositories.FavoriteListRepository;
 import br.com.estagio.oletrainning.zup.otmovies.server.repositories.FilmRepository;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmDataSourceFactory;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
 
 public class MovieDetailsViewModel extends BaseViewModel {
 
     private FilmRepository filmRepository = new FilmRepository();
-    private FavoriteListRepository favoriteListRepository = new FavoriteListRepository();
 
     private LiveData<ResponseModel<MovieDetailsModel>> getMovieDetails;
 
-    private LiveData<ResponseModel<Void>> addFavoriteFilm;
-
-    private LiveData<ResponseModel<Void>> removeFavoriteFilm;
-
     private MutableLiveData<MovieDetailsModel> thereIsMovieDetails = new MutableLiveData<>();
 
-    private String SUCCESS_MESSAGE_ADD = "Filme adicionado aos favoritos com sucesso";
-    private String SUCCESS_MESSAGE_DELETE = "Filme removido dos favoritos com sucesso";
-    private String SERVICE_OR_CONNECTION_ERROR_ADD = "Falha ao adicionar aos favoritos. Verifique a conexão e tente novamente.";
-    private String SERVICE_OR_CONNECTION_ERROR_DELETE = "Falha ao remover dos favoritos. Verifique a conexão e tente novamente.";
+
     private String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber detalhes do filme. Verifique a conexão e tente novamente.";
     private String FILTER_SIMILARITY = "similarity";
+    private Integer MINIMUM_PAGE_SIZE = 1;
+    private Integer INITIAL_LOAD_SIZE_HINT = 5;
+    private Integer PREFETCH_DISTANCE_VALUE = 5;
 
     private MutableLiveData<Boolean> activityTellerIsSessionExpired = new MutableLiveData<>();
 
@@ -46,13 +40,10 @@ public class MovieDetailsViewModel extends BaseViewModel {
     private MutableLiveData<Integer> receiverPageSizeService = new MutableLiveData<>();
     private MutableLiveData<FilmsResults> activityTellerThereIsFilmResults = new MutableLiveData<>();
     private LiveData<ResponseModel<FilmsResults>> filmsResults;
+    private MutableLiveData<Boolean> similarMoviesListEmpty = new MutableLiveData<>();
 
-    public LiveData<ResponseModel<Void>> getAddFavoriteFilm() {
-        return addFavoriteFilm;
-    }
-
-    public LiveData<ResponseModel<Void>> getRemoveFavoriteFilm() {
-        return removeFavoriteFilm;
+    public MutableLiveData<Boolean> getSimilarMoviesListEmpty() {
+        return similarMoviesListEmpty;
     }
 
     public LiveData<PagedList<FilmResponse>> getItemPagedList() {
@@ -71,47 +62,11 @@ public class MovieDetailsViewModel extends BaseViewModel {
         return thereIsMovieDetails;
     }
 
-    public void executeServicegetMovieDetails(int id) {
+    public void executeServiceGetMovieDetails(int id) {
         isLoading.setValue(true);
         getMovieDetails = filmRepository.getMovieDetails(id);
         getMovieDetails.observeForever(getMovieDetailsObserver);
     }
-
-    public void executeAddFavoriteFilm(String email, String movieID) {
-        addFavoriteFilm = favoriteListRepository.addFavotiteFilm(email,movieID);
-        addFavoriteFilm.observeForever(addFavoriteFilmObserver);
-    }
-
-    private Observer<ResponseModel<Void>> addFavoriteFilmObserver = new Observer<ResponseModel<Void>>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel<Void> responseModel) {
-            if (responseModel != null) {
-                if (responseModel.getCode() == SUCCESS_CODE) {
-                    isMessageSuccessForToast.setValue(SUCCESS_MESSAGE_ADD);
-                }
-            } else {
-                isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR_ADD);
-            }
-        }
-    };
-
-    public void executeRemoveFavoriteFilm(String email, String movieID) {
-        addFavoriteFilm = favoriteListRepository.removeFavotiteFilm(email,movieID);
-        addFavoriteFilm.observeForever(removeFavoriteFilmObserver);
-    }
-
-    private Observer<ResponseModel<Void>> removeFavoriteFilmObserver = new Observer<ResponseModel<Void>>() {
-        @Override
-        public void onChanged(@Nullable ResponseModel<Void> responseModel) {
-            if (responseModel != null) {
-                if (responseModel.getCode() == SUCCESS_CODE) {
-                    isMessageSuccessForToast.setValue(SUCCESS_MESSAGE_DELETE);
-                }
-            } else {
-                isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR_DELETE);
-            }
-        }
-    };
 
     private Observer<ResponseModel<MovieDetailsModel>> getMovieDetailsObserver = new Observer<ResponseModel<MovieDetailsModel>>() {
         @Override
@@ -137,13 +92,13 @@ public class MovieDetailsViewModel extends BaseViewModel {
                             String.valueOf(SingletonFilmID.INSTANCE.getID()),FILTER_SIMILARITY);
             liveDataSource = itemDataSourceFactory.getItemLiveDataSource();
             if(pageSize <= 0){
-                pageSize=1;
+                pageSize=MINIMUM_PAGE_SIZE;
             }
             PagedList.Config config =
                     (new PagedList.Config.Builder())
                             .setEnablePlaceholders(false)
-                            .setInitialLoadSizeHint(5)
-                            .setPrefetchDistance(5)
+                            .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
+                            .setPrefetchDistance(PREFETCH_DISTANCE_VALUE)
                             .setPageSize(pageSize)
                             .build();
             itemPagedList = (new LivePagedListBuilder(itemDataSourceFactory, config)).build();
@@ -158,6 +113,11 @@ public class MovieDetailsViewModel extends BaseViewModel {
                 if (responseModel.getCode() == SUCCESS_CODE) {
                     receiverPageSizeService.setValue(responseModel.getResponse().getTotal_results());
                     activityTellerThereIsFilmResults.setValue(responseModel.getResponse());
+                    if(responseModel.getResponse().getTotal_results() == 0){
+                        similarMoviesListEmpty.setValue(true);
+                    }else {
+                        similarMoviesListEmpty.setValue(false);
+                    }
                 }
             } else {
                 isErrorMessageForToast.setValue(SERVICE_OR_CONNECTION_ERROR);
@@ -203,14 +163,11 @@ public class MovieDetailsViewModel extends BaseViewModel {
         super.removeObserver();
         if (filmsResults != null && filmRepository.getThereIsPaginationError() != null
                 &&  receiverPageSizeService != null
-                && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null
-        && addFavoriteFilm != null && removeFavoriteFilm != null)  {
+                && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null)  {
             filmsResults.removeObserver(filmsResultsObserver);
             filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverPageSizeService.removeObserver(receiverPageSizeServiceObserver);
             filmRepository.getViewModelTellerIsSessionExpiredPagination().removeObserver(isSessionExpiredPaginationObserver);
-            addFavoriteFilm.removeObserver(addFavoriteFilmObserver);
-            removeFavoriteFilm.removeObserver(addFavoriteFilmObserver);
         }
     }
 }

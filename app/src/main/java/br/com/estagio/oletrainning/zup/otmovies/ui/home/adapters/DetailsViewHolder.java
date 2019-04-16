@@ -87,7 +87,7 @@ public class DetailsViewHolder extends RecyclerView.ViewHolder{
         return keywordList.toString();
     }
 
-    public void setMovieDetailsInformations(MovieDetailsModel movieDetailsModel){
+    public void setMovieDetailsInformation(MovieDetailsModel movieDetailsModel){
         this.textViewOverview.setText(movieDetailsModel.getOverview());
         this.textViewWriter.setText(sentenceBuilder(movieDetailsModel.getWriters()));
         this.textViewDirector.setText(sentenceBuilder(movieDetailsModel.getDirectors()));

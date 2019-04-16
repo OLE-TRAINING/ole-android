@@ -1,4 +1,4 @@
-package br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.home;
+package br.com.estagio.oletrainning.zup.otmovies.components;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
+import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLoginActivity;
 
 public class DialogConfirmLogout extends DialogFragment {
 
@@ -22,7 +22,7 @@ public class DialogConfirmLogout extends DialogFragment {
                 .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(getActivity(), PreLogin.class);
+                        Intent intent = new Intent(getActivity(), PreLoginActivity.class);
                         startActivity(intent);
                     }
                 }).setNegativeButton("Não", new DialogInterface.OnClickListener() {

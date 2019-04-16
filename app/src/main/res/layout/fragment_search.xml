@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_search"
     android:orientation="vertical"
-    tools:context=".ui.home.fragments.search.Search">
+    tools:context=".ui.home.fragments.search.SearchFragment">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"

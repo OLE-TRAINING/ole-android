@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.Login;
+import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.LoginActivity;
 
 public enum SingletonAlertDialogSession {
 
@@ -23,10 +23,10 @@ public enum SingletonAlertDialogSession {
         alertDialogBuilder.setMessage("Sua sessão expirou, favor fazer login novamente!")
                 .setTitle("Aviso:")
                 .setCancelable(false)
-                .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                .setPositiveButton("LOGIN", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(activity, Login.class);
+                        Intent intent = new Intent(activity, LoginActivity.class);
                         activity.startActivity(intent);
                     }
                 });

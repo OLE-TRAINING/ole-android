@@ -83,7 +83,7 @@ public class FilmAdapterDetailsList extends PagedListAdapter<FilmResponse, Recyc
             ((ItemViewHolder) viewHolder).setFilmeResponseInformations(film);
         } else if (viewHolder instanceof DetailsViewHolder) {
             if (movieDetailsModel != null) {
-                ((DetailsViewHolder) viewHolder).setMovieDetailsInformations(this.movieDetailsModel);
+                ((DetailsViewHolder) viewHolder).setMovieDetailsInformation(this.movieDetailsModel);
             }
         } else {
             TastyToast.makeText(mCtx, "Não foi possível carregar os detalhes deste filme.", TastyToast.LENGTH_LONG, TastyToast.ERROR)

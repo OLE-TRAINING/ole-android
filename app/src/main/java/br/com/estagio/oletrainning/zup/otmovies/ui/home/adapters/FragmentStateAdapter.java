@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.movieList.MovieList;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.movieList.MovieListFragment;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmGenres;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonGenreID;
 
@@ -23,7 +23,7 @@ public class FragmentStateAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         SingletonGenreID.setGenreIDEntered(findGenreID(position));
-        return MovieList.newInstance();
+        return MovieListFragment.newInstance();
     }
 
     @Override

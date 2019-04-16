@@ -1,11 +1,10 @@
-package br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.favorite;
+package br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.movieList;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -16,42 +15,41 @@ import android.view.ViewGroup;
 
 import com.sdsmdg.tastytoast.TastyToast;
 
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseFragment;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapter;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.movieDetailsActivity.MovieDetailsActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
-import br.com.estagio.oletrainning.zup.otmovies.ui.BaseFragment;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapter;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.movieDetailsActivity.MovieDetails;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonAlertDialogSession;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonGenreID;
 
-public class Favorite extends BaseFragment {
+public class MovieListFragment extends BaseFragment {
 
-    private FavoriteViewModel favoriteViewModel;
-    private FavoriteViewHolder favoriteViewHolder;
+    private MovieListViewModel movieListViewModel;
+    private MovieListViewHolder movieListViewHolder;
     private FilmAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
     private String GENRES_FILTER = "genres";
-    private String GENRE_ID = "28";
     private String FIRST_PAGE = "1";
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_favorite, container,false);
-        this.favoriteViewHolder = new FavoriteViewHolder(view);
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        this.movieListViewHolder = new MovieListViewHolder(view);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
-        favoriteViewModel = ViewModelProviders.of(Favorite.this).get(FavoriteViewModel.class);
+        movieListViewModel = ViewModelProviders.of(MovieListFragment.this).get(MovieListViewModel.class);
+        movieListViewModel.getFragmentTellerIsSessionExpired().observe(this, sessionObserver);
 
-        favoriteViewModel.getFragmentTellerIsSessionExpired().observe(this, sessionObserver);
-
-        favoriteViewModel.executeServiceGetFilmResults(FIRST_PAGE, GENRE_ID, GENRES_FILTER);
-
+        if(SingletonGenreID.INSTANCE.getGenreID() != null){
+            movieListViewModel.executeServiceGetFilmResults(FIRST_PAGE, SingletonGenreID.INSTANCE.getGenreID(),GENRES_FILTER);
+        }
         return view;
     }
 
@@ -66,15 +64,16 @@ public class Favorite extends BaseFragment {
     }
 
     private void setupLayoutManager() {
-        favoriteViewHolder.recyclerView.setLayoutManager(linearLayoutManager);
-        favoriteViewHolder.recyclerView.setHasFixedSize(true);
+        movieListViewHolder.recyclerView.setLayoutManager(linearLayoutManager);
+        movieListViewHolder.recyclerView.setHasFixedSize(true);
     }
 
     private void setupObserversAndListeners() {
-        favoriteViewModel.getIsMessageSuccessForToast().observe(this,isSuccessMessageForToastObserver);
-        favoriteViewModel.getIsLoading().observe(this, progressBarObserver);
-        favoriteViewModel.getFragmentTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
-        favoriteViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
+        movieListViewModel.getIsMessageSuccessForToast().observe(this,isSuccessMessageForToastObserver);
+        movieListViewModel.getIsLoading().observe(this, progressBarObserver);
+        movieListViewModel.getFragmentTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
+        movieListViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
+
     }
 
     private Observer<String> isSuccessMessageForToastObserver = new Observer<String>() {
@@ -114,17 +113,17 @@ public class Favorite extends BaseFragment {
     private Observer<FilmsResults> homeTellerThereIsFilmResultsObserver = new Observer<FilmsResults>() {
         @Override
         public void onChanged(final FilmsResults filmsResults) {
-            favoriteViewModel.getItemPagedList().observe(Favorite.this, pagedListObserver);
-            favoriteViewHolder.recyclerView.setAdapter(adapter);
+            movieListViewModel.getItemPagedList().observe(MovieListFragment.this, pagedListObserver);
+            movieListViewHolder.recyclerView.setAdapter(adapter);
             adapter.setOnCheckBoxClickListener(new FilmAdapter.OnCheckBoxClickListener() {
                 @Override
                 public void OnCheckBoxClick(int position, PagedList<FilmResponse> currentList, Boolean isChecked) {
                     SingletonFilmID.setIDEntered(currentList.get(position).getId());
                     if(isChecked){
-                        favoriteViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                        movieListViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
                                 String.valueOf(SingletonFilmID.INSTANCE.getID()));
                     } else {
-                        favoriteViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                        movieListViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
                                 String.valueOf(SingletonFilmID.INSTANCE.getID()));
                     }
                 }
@@ -134,17 +133,17 @@ public class Favorite extends BaseFragment {
                 public void onItemClick(int position, PagedList<FilmResponse> currentList) {
                     Log.d("position",String.valueOf(position));
                     if (filmsResults != null) {
-                        favoriteViewModel.getIsLoading().setValue(true);
+                        movieListViewModel.getIsLoading().setValue(true);
                         SingletonFilmID.setIDEntered(currentList.get(position).getId());
                         if(SingletonFilmID.INSTANCE.getID() != null){
-                            Intent intent = new Intent(getActivity(), MovieDetails.class);
+                            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
                             startActivity(intent);
                         }
-                        favoriteViewModel.getIsLoading().setValue(false);
+                        movieListViewModel.getIsLoading().setValue(false);
                     }
                 }
             });
-            favoriteViewModel.getIsLoading().setValue(false);
+            movieListViewModel.getIsLoading().setValue(false);
         }
     };
 
@@ -152,20 +151,21 @@ public class Favorite extends BaseFragment {
         @Override
         public void onChanged(Boolean isLoading) {
             loadingExecutor(isLoading,
-                    favoriteViewHolder.progressBar,
-                    favoriteViewHolder.frameLayout);
+                    movieListViewHolder.progressBar,
+                    movieListViewHolder.frameLayout);
         }
     };
+
+    public static MovieListFragment newInstance() {
+        return new MovieListFragment();
+    }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        favoriteViewModel.removeObserver();
+        movieListViewModel.removeObserver();
         SingletonAlertDialogSession.INSTANCE.destroyAlertDialogBuilder();
         SingletonFilmID.setIDEntered(null);
-    }
-
-    public static Favorite newInstance() {
-        return new Favorite();
     }
 }

@@ -39,11 +39,11 @@ public abstract class BaseViewModel extends ViewModel {
 
     protected MutableLiveData<String> isMessageSuccessForToast = new MutableLiveData<>();
 
-    public LiveData<ResponseModel<Void>> getAddFavoriteFilm() {
+    protected LiveData<ResponseModel<Void>> getAddFavoriteFilm() {
         return addFavoriteFilm;
     }
 
-    public LiveData<ResponseModel<Void>> getRemoveFavoriteFilm() {
+    protected LiveData<ResponseModel<Void>> getRemoveFavoriteFilm() {
         return removeFavoriteFilm;
     }
 

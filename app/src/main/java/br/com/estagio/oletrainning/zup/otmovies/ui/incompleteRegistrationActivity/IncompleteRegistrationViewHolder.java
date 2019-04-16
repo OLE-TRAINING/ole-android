@@ -1,4 +1,4 @@
-package br.com.estagio.oletrainning.zup.otmovies.ui.finishYourRegistrationActivity;
+package br.com.estagio.oletrainning.zup.otmovies.ui.incompleteRegistrationActivity;
 
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
-public class FinishYourRegistrationViewHolder {
+public class IncompleteRegistrationViewHolder {
 
     ImageView imageView;
     TextView textViewEmail;
@@ -20,7 +20,7 @@ public class FinishYourRegistrationViewHolder {
     ProgressBar progressBar;
     FrameLayout frameLayout;
 
-    FinishYourRegistrationViewHolder(View view){
+    IncompleteRegistrationViewHolder(View view){
         imageView = view.findViewById(R.id.imageView_backArrow);
         textViewEmail = view.findViewById(R.id.textView_emailEntered);
         errorEditText = view.findViewById(R.id.errorEditText_token);

@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
-import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
+import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -42,7 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(PreLogin.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(PreLoginActivity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 

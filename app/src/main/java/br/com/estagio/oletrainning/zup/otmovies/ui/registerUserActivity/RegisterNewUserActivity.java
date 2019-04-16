@@ -12,13 +12,13 @@ import android.view.View;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
-import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
+import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
-import br.com.estagio.oletrainning.zup.otmovies.ui.tokenValidationActivity.TokenValidation;
+import br.com.estagio.oletrainning.zup.otmovies.ui.tokenValidationActivity.TokenValidationActivity;
 
-public class RegisterNewUser extends BaseActivity {
+public class RegisterNewUserActivity extends BaseActivity {
 
     private RegisterNewUserViewHolder registerNewUserViewHolder;
     private RegisterNewUserViewModel registerNewUserViewModel;
@@ -35,7 +35,7 @@ public class RegisterNewUser extends BaseActivity {
         registerNewUserViewModel = ViewModelProviders.of(this).get(RegisterNewUserViewModel.class);
 
         if(SingletonEmail.INSTANCE.getEmail() == null){
-            Intent intent = new Intent(this, PreLogin.class);
+            Intent intent = new Intent(this, PreLoginActivity.class);
             startActivity(intent);
         }
 
@@ -79,7 +79,7 @@ public class RegisterNewUser extends BaseActivity {
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.imageView_backArrow) {
-                Intent intent = new Intent(RegisterNewUser.this, PreLogin.class);
+                Intent intent = new Intent(RegisterNewUserActivity.this, PreLoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
@@ -89,7 +89,7 @@ public class RegisterNewUser extends BaseActivity {
     private View.OnClickListener buttonNextRegisterOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            hideKeyboardFrom(RegisterNewUser.this,
+            hideKeyboardFrom(RegisterNewUserActivity.this,
                     registerNewUserViewHolder.errorEditTextName);
             String name = registerNewUserViewHolder.errorEditTextName.getText().toString().trim();
             String username = registerNewUserViewHolder.errorEditTextUserName.getText().toString().trim();
@@ -148,7 +148,7 @@ public class RegisterNewUser extends BaseActivity {
         public void onChanged(String message) {
             TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
                     .setGravity(Gravity.CENTER,0,500);
-            Intent intent = new Intent(RegisterNewUser.this, TokenValidation.class);
+            Intent intent = new Intent(RegisterNewUserActivity.this, TokenValidationActivity.class);
             startActivity(intent);
         }
     };
@@ -244,7 +244,7 @@ public class RegisterNewUser extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), PreLogin.class);
+        Intent intent = new Intent(getApplicationContext(), PreLoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

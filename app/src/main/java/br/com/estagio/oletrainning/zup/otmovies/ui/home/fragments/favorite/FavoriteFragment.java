@@ -1,25 +1,19 @@
-package br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.search;
+package br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.favorite;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
 
-import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -27,34 +21,40 @@ import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseFragment;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapter;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.movieDetailsActivity.MovieDetails;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.movieDetailsActivity.MovieDetailsActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonAlertDialogSession;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
 
-public class Search extends Fragment {
+public class FavoriteFragment extends BaseFragment {
 
-    private SearchViewHolder searchViewHolder;
-    private SearchViewModel searchViewModel;
+    private FavoriteViewModel favoriteViewModel;
+    private FavoriteViewHolder favoriteViewHolder;
     private FilmAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
+    private String GENRES_FILTER = "genres";
+    private String GENRE_ID = "28";
+    private String FIRST_PAGE = "1";
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
-        this.searchViewHolder = new SearchViewHolder(view);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_favorite, container,false);
+        this.favoriteViewHolder = new FavoriteViewHolder(view);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
-        searchViewModel = ViewModelProviders.of(Search.this).get(SearchViewModel.class);
-        searchViewModel.getFragmentTellerIsSessionExpired().observe(this, sessionObserver);
+        favoriteViewModel = ViewModelProviders.of(FavoriteFragment.this).get(FavoriteViewModel.class);
 
-        searchViewHolder.searchView.setOnQueryTextListener(searchViewListener);
+        favoriteViewModel.getFragmentTellerIsSessionExpired().observe(this, sessionObserver);
+
+        favoriteViewModel.executeServiceGetFilmResults(FIRST_PAGE, GENRE_ID, GENRES_FILTER);
 
         return view;
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         if (adapter == null) {
@@ -65,30 +65,16 @@ public class Search extends Fragment {
     }
 
     private void setupLayoutManager() {
-        searchViewHolder.recyclerView.setLayoutManager(linearLayoutManager);
-        searchViewHolder.recyclerView.setHasFixedSize(true);
+        favoriteViewHolder.recyclerView.setLayoutManager(linearLayoutManager);
+        favoriteViewHolder.recyclerView.setHasFixedSize(true);
     }
 
     private void setupObserversAndListeners() {
-        searchViewModel.getIsMessageSuccessForToast().observe(this,isSuccessMessageForToastObserver);
-        searchViewModel.getIsLoading().observe(this, progressBarObserver);
-        searchViewModel.getFragmentTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
-        searchViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
-        searchViewModel.getIsSearchEmpty().observe(this,isSearchEmptyObserver);
+        favoriteViewModel.getIsMessageSuccessForToast().observe(this,isSuccessMessageForToastObserver);
+        favoriteViewModel.getIsLoading().observe(this, progressBarObserver);
+        favoriteViewModel.getFragmentTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
+        favoriteViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
     }
-
-    private Observer<Boolean> isSearchEmptyObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(@Nullable Boolean isSearchEmpty) {
-            if(isSearchEmpty){
-                searchViewHolder.textViewFilmNotFound.setVisibility(View.VISIBLE);
-                searchViewHolder.recyclerView.setVisibility(View.GONE);
-            } else {
-                searchViewHolder.textViewFilmNotFound.setVisibility(View.GONE);
-                searchViewHolder.recyclerView.setVisibility(View.VISIBLE);
-            }
-        }
-    };
 
     private Observer<String> isSuccessMessageForToastObserver = new Observer<String>() {
         @Override
@@ -127,17 +113,17 @@ public class Search extends Fragment {
     private Observer<FilmsResults> homeTellerThereIsFilmResultsObserver = new Observer<FilmsResults>() {
         @Override
         public void onChanged(final FilmsResults filmsResults) {
-            searchViewModel.getItemPagedList().observe(Search.this, pagedListObserver);
-            searchViewHolder.recyclerView.setAdapter(adapter);
+            favoriteViewModel.getItemPagedList().observe(FavoriteFragment.this, pagedListObserver);
+            favoriteViewHolder.recyclerView.setAdapter(adapter);
             adapter.setOnCheckBoxClickListener(new FilmAdapter.OnCheckBoxClickListener() {
                 @Override
                 public void OnCheckBoxClick(int position, PagedList<FilmResponse> currentList, Boolean isChecked) {
                     SingletonFilmID.setIDEntered(currentList.get(position).getId());
                     if(isChecked){
-                        searchViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                        favoriteViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
                                 String.valueOf(SingletonFilmID.INSTANCE.getID()));
                     } else {
-                        searchViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                        favoriteViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
                                 String.valueOf(SingletonFilmID.INSTANCE.getID()));
                     }
                 }
@@ -147,17 +133,17 @@ public class Search extends Fragment {
                 public void onItemClick(int position, PagedList<FilmResponse> currentList) {
                     Log.d("position",String.valueOf(position));
                     if (filmsResults != null) {
-                        searchViewModel.getIsLoading().setValue(true);
+                        favoriteViewModel.getIsLoading().setValue(true);
                         SingletonFilmID.setIDEntered(currentList.get(position).getId());
                         if(SingletonFilmID.INSTANCE.getID() != null){
-                            Intent intent = new Intent(getActivity(), MovieDetails.class);
+                            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
                             startActivity(intent);
                         }
-                        searchViewModel.getIsLoading().setValue(false);
+                        favoriteViewModel.getIsLoading().setValue(false);
                     }
                 }
             });
-            searchViewModel.getIsLoading().setValue(false);
+            favoriteViewModel.getIsLoading().setValue(false);
         }
     };
 
@@ -165,58 +151,20 @@ public class Search extends Fragment {
         @Override
         public void onChanged(Boolean isLoading) {
             loadingExecutor(isLoading,
-                    searchViewHolder.progressBar,
-                    searchViewHolder.frameLayout);
+                    favoriteViewHolder.progressBar,
+                    favoriteViewHolder.frameLayout);
         }
     };
-
-    private SearchView.OnQueryTextListener searchViewListener = new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            return false;
-        }
-
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            if(!newText.isEmpty()){
-                searchViewModel.executeServiceGetFilmResultsSearch(newText);
-            }else{
-                adapter.submitList(null);
-            }
-            return false;
-        }
-    };
-
-    public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
-        if (isLoading != null && getActivity() != null) {
-            if (isLoading) {
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                Sprite threeBounce = new ThreeBounce();
-                progressBar.setIndeterminateDrawable(threeBounce);
-                searchViewHolder.textViewFilmNotFound.setVisibility(View.GONE);
-                frameLayout.setVisibility(View.VISIBLE);
-
-            } else {
-                Sprite threeBounce = new ThreeBounce();
-                progressBar.setIndeterminateDrawable(threeBounce);
-                frameLayout.setVisibility(View.INVISIBLE);
-                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            }
-        }
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        searchViewModel.removeObserver();
+        favoriteViewModel.removeObserver();
         SingletonAlertDialogSession.INSTANCE.destroyAlertDialogBuilder();
         SingletonFilmID.setIDEntered(null);
     }
 
-    public static Search newInstance() {
-        Search myFragment = new Search();
-        return myFragment;
+    public static FavoriteFragment newInstance() {
+        return new FavoriteFragment();
     }
 }

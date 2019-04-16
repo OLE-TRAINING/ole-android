@@ -11,25 +11,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ui.home.movieDetailsActivity.MovieDetails"
+        <activity android:name=".ui.home.movieDetailsActivity.MovieDetailsActivity"
             android:configChanges="orientation|screenSize"></activity>
         <activity android:name=".ui.BaseActivity" />
         <activity
             android:name=".ui.home.homeActivity.HomeActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_home" />
-        <activity android:name=".ui.preLoginActivity.PreLogin">
+        <activity android:name=".ui.preLoginActivity.PreLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.registerUserActivity.RegisterNewUser" />
-        <activity android:name=".ui.tokenValidationActivity.TokenValidation" />
-        <activity android:name=".ui.finishYourRegistrationActivity.FinishYourRegistration" />
-        <activity android:name=".ui.loginActivity.Login" />
-        <activity android:name=".ui.recoverPasswordActivity.RecoverPassword" />
+        <activity android:name=".ui.registerUserActivity.RegisterNewUserActivity" />
+        <activity android:name=".ui.tokenValidationActivity.TokenValidationActivity" />
+        <activity android:name=".ui.incompleteRegistrationActivity.IncompleteRegistrationActivity" />
+        <activity android:name=".ui.loginActivity.LoginActivity" />
+        <activity android:name=".ui.recoverPasswordActivity.RecoverPasswordActivity" />
     </application>
 
 </manifest>

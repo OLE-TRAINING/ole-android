@@ -14,11 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.favorite.Favorite;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.home.DialogConfirmLogout;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.favorite.FavoriteFragment;
+import br.com.estagio.oletrainning.zup.otmovies.components.DialogConfirmLogout;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.home.HomeFragment;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.search.Search;
-import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.search.SearchFragment;
+import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonGenreID;
@@ -33,8 +33,8 @@ public class HomeActivity extends BaseActivity
 
 
     private Fragment home = HomeFragment.newInstance();
-    private Fragment favorite = new Favorite();
-    private Fragment search = new Search();
+    private Fragment favorite = new FavoriteFragment();
+    private Fragment search = new SearchFragment();
 
     public Fragment getHome() {
         return home;
@@ -63,7 +63,7 @@ public class HomeActivity extends BaseActivity
         setSupportActionBar(homeActivityViewHolder.toolbar);
 
         if(SingletonEmail.INSTANCE.getEmail() == null || SingletonName.INSTANCE.getUsername() == null){
-            Intent intent = new Intent(this, PreLogin.class);
+            Intent intent = new Intent(this, PreLoginActivity.class);
             startActivity(intent);
         }
 

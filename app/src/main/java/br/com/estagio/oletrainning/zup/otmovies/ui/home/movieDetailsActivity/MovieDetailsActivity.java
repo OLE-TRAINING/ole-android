@@ -12,6 +12,7 @@ import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
@@ -21,18 +22,18 @@ import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.List;
 
-import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapterDetailsList;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.homeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.model.MovieDetailsModel;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
+import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FilmAdapterDetailsList;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.homeActivity.HomeActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonAlertDialogSession;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonFilmID;
 
-public class MovieDetails extends BaseActivity {
+public class MovieDetailsActivity extends BaseActivity {
 
     private MovieDetailsViewHolder movieDetailsViewHolder;
     private MovieDetailsViewModel movieDetailsViewModel;
@@ -66,10 +67,10 @@ public class MovieDetails extends BaseActivity {
 
         if(SingletonFilmID.INSTANCE.getID() != null){
             Integer filmID = SingletonFilmID.INSTANCE.getID();
-            movieDetailsViewModel.executeServicegetMovieDetails(filmID);
+            movieDetailsViewModel.executeServiceGetMovieDetails(filmID);
             movieDetailsViewModel.executeServiceGetFilmResults("1",filmID);
         } else {
-            Intent intent = new Intent(MovieDetails.this, HomeActivity.class);
+            Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
@@ -88,9 +89,23 @@ public class MovieDetails extends BaseActivity {
     }
 
     private void setupListeners(){
-        movieDetailsViewHolder.textViewToobar.setOnClickListener(titleToobarOnClickListener);
+        movieDetailsViewHolder.textViewToobar.setOnClickListener(titleToolbarOnClickListener);
         movieDetailsViewHolder.backArrow.setOnClickListener(backArrowListener);
+        movieDetailsViewHolder.checkBox.setOnCheckedChangeListener(onCheckedChangeDetailsListener);
     }
+
+    private CompoundButton.OnCheckedChangeListener onCheckedChangeDetailsListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(isChecked){
+                movieDetailsViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                        String.valueOf(SingletonFilmID.INSTANCE.getID()));
+            } else {
+                movieDetailsViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                        String.valueOf(SingletonFilmID.INSTANCE.getID()));
+            }
+        }
+    };
 
     private void setupObservers(){
         movieDetailsViewModel.getIsMessageSuccessForToast().observe(this,isSuccessMessageForToastObserver);
@@ -109,10 +124,10 @@ public class MovieDetails extends BaseActivity {
         }
     };
 
-    private View.OnClickListener titleToobarOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener titleToolbarOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(MovieDetails.this, HomeActivity.class);
+            Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             SingletonFilmID.setIDEntered(null);
@@ -122,7 +137,7 @@ public class MovieDetails extends BaseActivity {
     private Observer<String> isSuccessMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            TastyToast.makeText(MovieDetails.this, message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
+            TastyToast.makeText(MovieDetailsActivity.this, message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
                     .setGravity(Gravity.CENTER, 0, 700);
         }
     };
@@ -139,14 +154,14 @@ public class MovieDetails extends BaseActivity {
             listfilmResponses = filmResponses.snapshot();
             if (adapter == null) {
                 if(mMovieDetailsModel != null){
-                    adapter = new FilmAdapterDetailsList(MovieDetails.this,mMovieDetailsModel);
+                    adapter = new FilmAdapterDetailsList(MovieDetailsActivity.this,mMovieDetailsModel);
                 } else {
                     if(SingletonFilmID.INSTANCE.getID() != null){
                         Integer filmID = SingletonFilmID.INSTANCE.getID();
-                        movieDetailsViewModel.executeServicegetMovieDetails(filmID);
+                        movieDetailsViewModel.executeServiceGetMovieDetails(filmID);
                         movieDetailsViewModel.executeServiceGetFilmResults("1",filmID);
                     } else {
-                        Intent intent = new Intent(MovieDetails.this, HomeActivity.class);
+                        Intent intent = new Intent(MovieDetailsActivity.this, HomeActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }
@@ -160,7 +175,7 @@ public class MovieDetails extends BaseActivity {
     private Observer<String> isErrorMessageForToastObserver = new Observer<String>() {
         @Override
         public void onChanged(String message) {
-            TastyToast.makeText(MovieDetails.this, message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
+            TastyToast.makeText(MovieDetailsActivity.this, message, TastyToast.LENGTH_LONG, TastyToast.ERROR)
                     .setGravity(Gravity.CENTER, 0, 700);
         }
     };
@@ -168,7 +183,7 @@ public class MovieDetails extends BaseActivity {
     private Observer<FilmsResults> homeTellerThereIsFilmResultsObserver = new Observer<FilmsResults>() {
         @Override
         public void onChanged(final FilmsResults filmsResults) {
-            movieDetailsViewModel.getItemPagedList().observe(MovieDetails.this, pagedListObserver);
+            movieDetailsViewModel.getItemPagedList().observe(MovieDetailsActivity.this, pagedListObserver);
 
 
         }
@@ -187,8 +202,19 @@ public class MovieDetails extends BaseActivity {
         @Override
         public void onChanged(MovieDetailsModel movieDetailsModel) {
             mMovieDetailsModel = movieDetailsModel;
+            movieDetailsViewModel.getSimilarMoviesListEmpty().observe(MovieDetailsActivity.this, new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean isSimilarMoviesListEmpty) {
+                    if(isSimilarMoviesListEmpty && mMovieDetailsModel != null){
+                        movieDetailsViewHolder.setMovieDetailsInformation(mMovieDetailsModel);
+                        movieDetailsViewHolder.layoutItemDetails.setVisibility(View.VISIBLE);
+                    } else {
+                        movieDetailsViewHolder.layoutItemDetails.setVisibility(View.GONE);
+                    }
+                }
+            });
             if (adapter == null) {
-                adapter = new FilmAdapterDetailsList(MovieDetails.this,mMovieDetailsModel);
+                adapter = new FilmAdapterDetailsList(MovieDetailsActivity.this,mMovieDetailsModel);
             }
             movieDetailsViewHolder.recyclerViewDetails.setAdapter(adapter);
             adapter.setOnCheckBoxClickListener(new FilmAdapterDetailsList.OnCheckBoxClickListener() {
@@ -210,7 +236,7 @@ public class MovieDetails extends BaseActivity {
                     movieDetailsViewModel.getIsLoading().setValue(true);
                         SingletonFilmID.setIDEntered(currentList.get(position-1).getId());
                         if(SingletonFilmID.INSTANCE.getID() != null){
-                            Intent intent = new Intent(MovieDetails.this, MovieDetails.class);
+                            Intent intent = new Intent(MovieDetailsActivity.this, MovieDetailsActivity.class);
                             startActivity(intent);
                         movieDetailsViewModel.getIsLoading().setValue(false);
                     }
@@ -224,7 +250,7 @@ public class MovieDetails extends BaseActivity {
         @Override
         public void onChanged(Boolean isSessionExpired) {
             if(SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder() == null){
-                SingletonAlertDialogSession.createAlertDialogBuilder(MovieDetails.this);
+                SingletonAlertDialogSession.createAlertDialogBuilder(MovieDetailsActivity.this);
                 SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder().create().setCanceledOnTouchOutside(false);
                 SingletonAlertDialogSession.INSTANCE.getAlertDialogBuilder().show();
             }

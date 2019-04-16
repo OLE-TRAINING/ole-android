@@ -1,4 +1,4 @@
-package br.com.estagio.oletrainning.zup.otmovies.ui.finishYourRegistrationActivity;
+package br.com.estagio.oletrainning.zup.otmovies.ui.incompleteRegistrationActivity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -13,33 +13,33 @@ import android.view.View;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
-import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.Login;
-import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
+import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.LoginActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
 
-public class FinishYourRegistration extends BaseActivity {
+public class IncompleteRegistrationActivity extends BaseActivity {
 
-    private FinishYourRegistrationViewHolder finishYourRegistrationViewHolder;
-    private FinishYourRegistrationViewModel finishYourRegistrationViewModel;
+    private IncompleteRegistrationViewHolder incompleteRegistrationViewHolder;
+    private IncompleteRegistrationViewModel incompleteRegistrationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         View view = this.getLayoutInflater().inflate(R.layout.activity_finish_your_registration, null);
-        this.finishYourRegistrationViewHolder = new FinishYourRegistrationViewHolder(view);
+        this.incompleteRegistrationViewHolder = new IncompleteRegistrationViewHolder(view);
         setContentView(view);
 
-        finishYourRegistrationViewModel = ViewModelProviders.of(this).get(FinishYourRegistrationViewModel.class);
+        incompleteRegistrationViewModel = ViewModelProviders.of(this).get(IncompleteRegistrationViewModel.class);
 
         if(SingletonEmail.INSTANCE.getEmail() == null){
-            Intent intent = new Intent(this, PreLogin.class);
+            Intent intent = new Intent(this, PreLoginActivity.class);
             startActivity(intent);
         }
 
-        finishYourRegistrationViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
+        incompleteRegistrationViewHolder.textViewEmail.setText(SingletonEmail.INSTANCE.getEmail());
 
         setupObservers();
 
@@ -54,26 +54,26 @@ public class FinishYourRegistration extends BaseActivity {
     }
 
     private void setupListeners() {
-        finishYourRegistrationViewHolder.button.setOnClickListener(buttonOnClickListener);
-        finishYourRegistrationViewHolder.imageView.setOnClickListener(backArrowOnClickListener);
-        finishYourRegistrationViewHolder.errorEditText.getEditText().addTextChangedListener(errorEditTextTextWatcher);
-        finishYourRegistrationViewHolder.textViewReSend.setOnClickListener(textViewOnClickListener);
+        incompleteRegistrationViewHolder.button.setOnClickListener(buttonOnClickListener);
+        incompleteRegistrationViewHolder.imageView.setOnClickListener(backArrowOnClickListener);
+        incompleteRegistrationViewHolder.errorEditText.getEditText().addTextChangedListener(errorEditTextTextWatcher);
+        incompleteRegistrationViewHolder.textViewReSend.setOnClickListener(textViewOnClickListener);
     }
 
     private void setupObservers() {
-        finishYourRegistrationViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
-        finishYourRegistrationViewModel.getIsLoading().observe(this, progressBarObserver);
-        finishYourRegistrationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
-        finishYourRegistrationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
-        finishYourRegistrationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
-        finishYourRegistrationViewModel.getIsMessageSuccessForToast().observe(this,isMessageSuccessForToastObserver);
+        incompleteRegistrationViewModel.getTokenContainsErrorStatus().observe(this, tokenErrorStatusObserver);
+        incompleteRegistrationViewModel.getIsLoading().observe(this, progressBarObserver);
+        incompleteRegistrationViewModel.getIsErrorMessageForToast().observe(this,isErrorMessageForToastObserver);
+        incompleteRegistrationViewModel.getIsValidatedToken().observe(this,isValidatedTokenObserver);
+        incompleteRegistrationViewModel.getMessageErrorChanged().observe(this,messageErrorChangedObserver);
+        incompleteRegistrationViewModel.getIsMessageSuccessForToast().observe(this,isMessageSuccessForToastObserver);
     }
 
     private Observer<String> messageErrorChangedObserver = new Observer<String>() {
         @Override
         public void onChanged(@Nullable String message) {
-            finishYourRegistrationViewHolder.errorEditText.setMessageError(message);
-            finishYourRegistrationViewHolder.errorEditText.setErrorVisibility(true);
+            incompleteRegistrationViewHolder.errorEditText.setMessageError(message);
+            incompleteRegistrationViewHolder.errorEditText.setErrorVisibility(true);
         }
     };
 
@@ -82,7 +82,7 @@ public class FinishYourRegistration extends BaseActivity {
         public void onChanged(String message) {
             TastyToast.makeText(getApplicationContext(),message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
                     .setGravity(Gravity.CENTER,0,500);
-            Intent intent = new Intent(FinishYourRegistration.this, Login.class);
+            Intent intent = new Intent(IncompleteRegistrationActivity.this, LoginActivity.class);
             startActivity(intent);
         }
     };
@@ -107,7 +107,7 @@ public class FinishYourRegistration extends BaseActivity {
         @Override
         public void onChanged(@Nullable Boolean containsErrorStatus) {
             if (containsErrorStatus != null) {
-                finishYourRegistrationViewHolder.errorEditText.setErrorVisibility(containsErrorStatus);
+                incompleteRegistrationViewHolder.errorEditText.setErrorVisibility(containsErrorStatus);
             }
         }
 
@@ -117,26 +117,26 @@ public class FinishYourRegistration extends BaseActivity {
         @Override
         public void onChanged(Boolean isLoading) {
             loadingExecutor(isLoading,
-                    finishYourRegistrationViewHolder.progressBar,
-                    finishYourRegistrationViewHolder.frameLayout,
-                    finishYourRegistrationViewHolder.button);
+                    incompleteRegistrationViewHolder.progressBar,
+                    incompleteRegistrationViewHolder.frameLayout,
+                    incompleteRegistrationViewHolder.button);
         }
     };
 
     View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            hideKeyboardFrom(FinishYourRegistration.this,
-                    finishYourRegistrationViewHolder.errorEditText);
-            String code = finishYourRegistrationViewHolder.errorEditText.getEditText().getText().toString().trim();
-            finishYourRegistrationViewModel.tokenEntered(code);
+            hideKeyboardFrom(IncompleteRegistrationActivity.this,
+                    incompleteRegistrationViewHolder.errorEditText);
+            String code = incompleteRegistrationViewHolder.errorEditText.getEditText().getText().toString().trim();
+            incompleteRegistrationViewModel.tokenEntered(code);
         }
     };
 
     View.OnClickListener textViewOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            finishYourRegistrationViewModel.tokenForwardingRequested();
+            incompleteRegistrationViewModel.tokenForwardingRequested();
         }
     };
 
@@ -145,7 +145,7 @@ public class FinishYourRegistration extends BaseActivity {
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.imageView_backArrow) {
-                Intent intent = new Intent(FinishYourRegistration.this, PreLogin.class);
+                Intent intent = new Intent(IncompleteRegistrationActivity.this, PreLoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
@@ -160,7 +160,7 @@ public class FinishYourRegistration extends BaseActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            finishYourRegistrationViewModel.tokenTextChanged();
+            incompleteRegistrationViewModel.tokenTextChanged();
         }
 
         @Override
@@ -172,7 +172,7 @@ public class FinishYourRegistration extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), PreLogin.class);
+        Intent intent = new Intent(getApplicationContext(), PreLoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -180,6 +180,6 @@ public class FinishYourRegistration extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        finishYourRegistrationViewModel.removeObserver();
+        incompleteRegistrationViewModel.removeObserver();
     }
 }

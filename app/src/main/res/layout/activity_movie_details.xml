@@ -30,6 +30,17 @@ android:orientation="vertical">
 
 </android.support.v7.widget.Toolbar>
 
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <include
+        android:id="@+id/layout_item_details"
+        layout="@layout/item_movie_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+</ScrollView>
+
 <include
     layout="@layout/fragment_movie_list"
     android:layout_width="match_parent"

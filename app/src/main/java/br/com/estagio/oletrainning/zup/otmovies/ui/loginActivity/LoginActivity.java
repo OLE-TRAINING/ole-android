@@ -14,13 +14,13 @@ import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.homeActivity.HomeActivity;
-import br.com.estagio.oletrainning.zup.otmovies.ui.recoverPasswordActivity.RecoverPassword;
-import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
+import br.com.estagio.oletrainning.zup.otmovies.ui.recoverPasswordActivity.RecoverPasswordActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
 
-public class Login extends BaseActivity {
+public class LoginActivity extends BaseActivity {
 
     private LoginViewHolder loginViewHolder;
     private LoginViewModel loginViewModel;
@@ -34,7 +34,7 @@ public class Login extends BaseActivity {
         setContentView(view);
 
         if(SingletonEmail.INSTANCE.getEmail() == null){
-            Intent intent = new Intent(Login.this, PreLogin.class);
+            Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
             startActivity(intent);
         }
 
@@ -86,7 +86,7 @@ public class Login extends BaseActivity {
         public void onChanged(@Nullable String message) {
             TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.INFO)
                     .setGravity(Gravity.CENTER,0,500);
-            Intent intent = new Intent(Login.this, RecoverPassword.class);
+            Intent intent = new Intent(LoginActivity.this, RecoverPasswordActivity.class);
             startActivity(intent);
         }
     };
@@ -113,7 +113,7 @@ public class Login extends BaseActivity {
             loginViewModel.setPasswordContainsErrorStatus(false);
             TastyToast.makeText(getApplicationContext(), message, TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
                     .setGravity(Gravity.CENTER,0,600);
-            Intent intent = new Intent(Login.this, HomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
         }
     };
@@ -151,7 +151,7 @@ public class Login extends BaseActivity {
     private View.OnClickListener buttonSignInOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            hideKeyboardFrom(Login.this,
+            hideKeyboardFrom(LoginActivity.this,
                     loginViewHolder.errorEditTextPassword);
             String password = loginViewHolder.errorEditTextPassword.getText().toString().trim();
             loginViewModel.passwordEntered(password);
@@ -164,7 +164,7 @@ public class Login extends BaseActivity {
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.imageView_backArrow) {
-                Intent intent = new Intent(Login.this, PreLogin.class);
+                Intent intent = new Intent(LoginActivity.this, PreLoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
@@ -198,7 +198,7 @@ public class Login extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), PreLogin.class);
+        Intent intent = new Intent(getApplicationContext(), PreLoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

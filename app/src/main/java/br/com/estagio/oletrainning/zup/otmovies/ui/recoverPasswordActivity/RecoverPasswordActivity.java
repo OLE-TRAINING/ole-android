@@ -13,13 +13,13 @@ import android.view.View;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
-import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.Login;
-import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLogin;
+import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.LoginActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.preLoginActivity.PreLoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
 
-public class RecoverPassword extends BaseActivity {
+public class RecoverPasswordActivity extends BaseActivity {
 
     private RecoverPasswordViewHolder recoverPasswordViewHolder;
     private RecoverPasswordViewModel recoverPasswordViewModel;
@@ -35,7 +35,7 @@ public class RecoverPassword extends BaseActivity {
         recoverPasswordViewModel = ViewModelProviders.of(this).get(RecoverPasswordViewModel.class);
 
         if(SingletonEmail.INSTANCE.getEmail() == null){
-            Intent intent = new Intent(this, PreLogin.class);
+            Intent intent = new Intent(this, PreLoginActivity.class);
             startActivity(intent);
         }
 
@@ -80,7 +80,7 @@ public class RecoverPassword extends BaseActivity {
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.imageView_backArrow) {
-                Intent intent = new Intent(RecoverPassword.this, PreLogin.class);
+                Intent intent = new Intent(RecoverPasswordActivity.this, PreLoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
@@ -98,7 +98,7 @@ public class RecoverPassword extends BaseActivity {
     View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            hideKeyboardFrom(RecoverPassword.this,
+            hideKeyboardFrom(RecoverPasswordActivity.this,
                     recoverPasswordViewHolder.errorEditTextToken);
             String code = recoverPasswordViewHolder.errorEditTextToken.getText().toString().trim();
             String password = recoverPasswordViewHolder.errorEditTextPassword.getText().toString().trim();
@@ -120,7 +120,7 @@ public class RecoverPassword extends BaseActivity {
         public void onChanged(@Nullable String s) {
             TastyToast.makeText(getApplicationContext(),getString(R.string.success_message_change_pass), TastyToast.LENGTH_LONG, TastyToast.SUCCESS)
                     .setGravity(Gravity.CENTER,0,600);
-            Intent intent = new Intent(RecoverPassword.this, Login.class);
+            Intent intent = new Intent(RecoverPasswordActivity.this, LoginActivity.class);
             startActivity(intent);
         }
     };
@@ -258,7 +258,7 @@ public class RecoverPassword extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), PreLogin.class);
+        Intent intent = new Intent(getApplicationContext(), PreLoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

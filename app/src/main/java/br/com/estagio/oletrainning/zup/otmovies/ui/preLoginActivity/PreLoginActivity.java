@@ -13,14 +13,14 @@ import android.view.View;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseActivity;
-import br.com.estagio.oletrainning.zup.otmovies.ui.finishYourRegistrationActivity.FinishYourRegistration;
-import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.Login;
+import br.com.estagio.oletrainning.zup.otmovies.ui.incompleteRegistrationActivity.IncompleteRegistrationActivity;
+import br.com.estagio.oletrainning.zup.otmovies.ui.loginActivity.LoginActivity;
 import br.com.estagio.oletrainning.zup.otmovies.R;
-import br.com.estagio.oletrainning.zup.otmovies.ui.registerUserActivity.RegisterNewUser;
+import br.com.estagio.oletrainning.zup.otmovies.ui.registerUserActivity.RegisterNewUserActivity;
 
 
 
-public class PreLogin extends BaseActivity {
+public class PreLoginActivity extends BaseActivity {
 
     private PreLoginViewHolder preLoginViewHolder;
     private PreLoginViewModel preLoginViewModel;
@@ -66,7 +66,7 @@ public class PreLogin extends BaseActivity {
     private View.OnClickListener buttonNextPreLoginOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            hideKeyboardFrom(PreLogin.this,
+            hideKeyboardFrom(PreLoginActivity.this,
                     preLoginViewHolder.errorEditTextEmail);
             email = preLoginViewHolder.errorEditTextEmail.getEditText().getText().toString().trim();
             preLoginViewModel.emailEntered(email);
@@ -77,13 +77,13 @@ public class PreLogin extends BaseActivity {
         @Override
         public void onChanged(String status) {
             if (status.equals(getString(R.string.registered))) {
-                Intent intent = new Intent(PreLogin.this, Login.class);
+                Intent intent = new Intent(PreLoginActivity.this, LoginActivity.class);
                 startActivity(intent);
             } else if (status.equals(getString(R.string.pending))) {
-                Intent intent = new Intent(PreLogin.this, FinishYourRegistration.class);
+                Intent intent = new Intent(PreLoginActivity.this, IncompleteRegistrationActivity.class);
                 startActivity(intent);
             } else if (status.equals(getString(R.string.inexistent))) {
-                Intent intent = new Intent(PreLogin.this, RegisterNewUser.class);
+                Intent intent = new Intent(PreLoginActivity.this, RegisterNewUserActivity.class);
                 startActivity(intent);
             }
         }
