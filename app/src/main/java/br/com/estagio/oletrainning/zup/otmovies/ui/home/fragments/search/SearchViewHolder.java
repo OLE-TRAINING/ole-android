@@ -1,5 +1,6 @@
 package br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.search;
 
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ public class SearchViewHolder {
     RecyclerView recyclerView;
     SearchView searchView;
     TextView textViewFilmNotFound;
+    BottomNavigationView bottomNavigationView;
 
 
     public SearchViewHolder(View view) {
@@ -25,5 +27,6 @@ public class SearchViewHolder {
         recyclerView = view.findViewById(R.id.recycler_films);
         searchView = view.findViewById(R.id.search_view);
         textViewFilmNotFound = view.findViewById(R.id.textViewFilmNotFound);
+        bottomNavigationView = view.findViewById(R.id.bottom_navigation);
     }
 }

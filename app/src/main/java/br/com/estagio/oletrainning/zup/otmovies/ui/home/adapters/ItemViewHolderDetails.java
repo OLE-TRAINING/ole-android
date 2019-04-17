@@ -21,7 +21,7 @@ import java.util.List;
 import br.com.estagio.oletrainning.zup.otmovies.R;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 
-public class ItemViewHolder extends RecyclerView.ViewHolder {
+public class ItemViewHolderDetails extends RecyclerView.ViewHolder {
 
     private TextView textTitleFilm;
     private ProgressBar progressBar;
@@ -37,9 +37,9 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     private TextView price;
     private CardView cardViewPoster;
 
-    public ItemViewHolder(View itemView, final FilmAdapter.OnItemClickListener onItemClickListener,
-                          final FilmAdapter.OnCheckBoxClickListener onCheckBoxClickListener,
-                          final PagedList<FilmResponse> currentList) {
+    public ItemViewHolderDetails(View itemView, final FilmAdapterDetailsList.OnItemClickListener onItemClickListener,
+                                 final FilmAdapterDetailsList.OnCheckBoxClickListener onCheckBoxClickListener,
+                                 final PagedList<FilmResponse> currentList) {
         super(itemView);
 
         progressBar = itemView.findViewById(R.id.movie_progress);
