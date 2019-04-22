@@ -88,4 +88,16 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="favorites">Favoritos</string>
+    <string name="hintSearch">Pesquisar filmes</string>
+    <string name="errorMessageFilmNotFound">Nenhum filme foi encontrado\npara sua pesquisa</string>
+    <string name="movieTitleItem">Movie Title</string>
+    <string name="textToolsKeywordsItem">Drama, Documentário</string>
+    <string name="point">•</string>
+    <string name="textRuntimeItem">2h 15min</string>
+    <string name="textYearItem">2017</string>
+    <string name="textDescriptionItem">Nowadays, user engagement is considered one of the most important metrics for the success of your app. owadays, user engagement is considered one of the most important metrics for the success of your app</string>
+    <string name="textPriceItem">R$ 16,90</string>
+    <string name="textFilmNote">6.9</string>
+    <string name="moviePosterDescription">movie poster</string>
 </resources>

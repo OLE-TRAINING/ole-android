@@ -83,12 +83,6 @@
                 android:layout_marginStart="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="Logout"/>
-
-
         </LinearLayout>
     </LinearLayout>
-
-
-
-
 </FrameLayout>
