@@ -26,7 +26,7 @@
                 android:textSize="@dimen/textSizeToolbar"
                 android:gravity="center"
                 android:layout_marginEnd="@dimen/marginEndPositionLogo"
-                android:layout_marginStart="@dimen/marginStartPositionLogo"
+                android:layout_marginStart="@dimen/marginOrPaddingTwenty"
                 android:textColor="@color/colorTextWhite"/>
 
         </android.support.v7.widget.Toolbar>

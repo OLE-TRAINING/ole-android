@@ -34,7 +34,7 @@
                 android:layout_marginTop="@dimen/activity_margin_quarter"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:maxLines="@dimen/maxLineTitle"
+                android:maxLines="2"
                 tools:text="@string/movieTitleItem" />
 
             <CheckBox
@@ -59,7 +59,7 @@
             android:layout_marginTop="@dimen/marginStandard"
             android:alpha="@dimen/alphaEffect"
             android:gravity="start"
-            android:maxLines="@dimen/maxLineKeywords"
+            android:maxLines="3"
             tools:text="@string/textToolsKeywordsItem" />
 
         <LinearLayout
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginStandard"
                 android:fontFamily="@font/robotoregular"
-                android:maxLines="@dimen/singleLine"
+                android:maxLines="1"
                 android:textColor="@color/colorBlack"
                 tools:text="@string/textRuntimeItem" />
 
@@ -96,7 +96,7 @@
                 android:layout_marginStart="@dimen/marginStandard"
                 android:alpha="@dimen/alphaEffect"
                 android:fontFamily="@font/robotobold"
-                android:maxLines="@dimen/singleLine"
+                android:maxLines="1"
                 tools:text="@string/textYearItem" />
 
         </LinearLayout>
@@ -118,7 +118,7 @@
             android:layout_marginTop="@dimen/activity_margin_half"
             android:ellipsize="end"
             android:fontFamily="@font/robotoregular"
-            android:maxLines="@dimen/maxLineDescription"
+            android:maxLines="5"
             tools:text="@string/textDescriptionItem" />
 
         <TextView
@@ -130,7 +130,7 @@
             android:layout_marginTop="@dimen/marginStandard"
             android:fontFamily="@font/robotobold"
             android:gravity="end|bottom"
-            android:maxLines="@dimen/singleLine"
+            android:maxLines="1"
             android:textColor="@color/colorPrimary"
             tools:text="@string/textPriceItem" />
     </LinearLayout>
