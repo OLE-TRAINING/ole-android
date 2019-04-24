@@ -107,5 +107,6 @@
     <string name="user_photo_border">borda foto usuário</string>
     <string name="logout">Logout</string>
     <string name="icon_logout">ícone saída</string>
-    <string name="favoriteListEmpty">Parece que você ainda não adicionou\nnenhum filme na sua lista de favoritos.\n\nDeslize para baixo para atualizar a lista!</string>
+    <string name="favoriteListEmpty">Sua lista de filmes favoritos está vazia.\n\nDeslize para baixo para atualizar a lista!</string>
+    <string name="iconSwipeDescription">ícone swipe down</string>
 </resources>

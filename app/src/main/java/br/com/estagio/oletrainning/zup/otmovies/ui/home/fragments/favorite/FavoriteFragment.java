@@ -106,7 +106,7 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
                         favoriteViewHolder.swipeRefreshLayout.setRefreshing(false);
                     }
                 }
-            }, 5000);
+            }, 3000);
             favoriteViewModel.executeServiceGetFilmResults(SingletonEmail.INSTANCE.getEmail());
         }
     }
