@@ -15,7 +15,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.R;
@@ -76,7 +81,21 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
         favoriteViewModel.getFragmentTellerThereIsFilmResults().observe(this, homeTellerThereIsFilmResultsObserver);
         favoriteViewModel.getIsErrorMessageForToast().observe(this, isErrorMessageForToastObserver);
         favoriteViewHolder.swipeRefreshLayout.setOnRefreshListener(this);
+        favoriteViewModel.getIsFavoriteListEmpty().observe(this,isFavoriteListEmptyObserver);
     }
+
+    private Observer<Boolean> isFavoriteListEmptyObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isFavoriteListEmpty) {
+            if(isFavoriteListEmpty){
+                favoriteViewHolder.textViewFavoriteListNotFound.setVisibility(View.VISIBLE);
+                favoriteViewHolder.recyclerView.setVisibility(View.GONE);
+            } else {
+                favoriteViewHolder.textViewFavoriteListNotFound.setVisibility(View.GONE);
+                favoriteViewHolder.recyclerView.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
     @Override
     public void onRefresh() {
@@ -149,7 +168,6 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
                 @Override
                 public void onItemClick(int position, PagedList<FilmResponse> currentList) {
                     Log.d("position",String.valueOf(position));
-                    if (filmsResults != null) {
                         favoriteViewModel.getIsLoading().setValue(true);
                         SingletonFilmID.setIDEntered(currentList.get(position).getId());
                         if(SingletonFilmID.INSTANCE.getID() != null){
@@ -157,7 +175,6 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
                             startActivity(intent);
                         }
                         favoriteViewModel.getIsLoading().setValue(false);
-                    }
                 }
             });
             favoriteViewModel.getIsLoading().setValue(false);
@@ -173,15 +190,30 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
         }
     };
 
+    public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
+        if (isLoading != null && getActivity() != null) {
+            if (isLoading) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                Sprite threeBounce = new ThreeBounce();
+                progressBar.setIndeterminateDrawable(threeBounce);
+                favoriteViewHolder.textViewFavoriteListNotFound.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.VISIBLE);
+
+            } else {
+                Sprite threeBounce = new ThreeBounce();
+                progressBar.setIndeterminateDrawable(threeBounce);
+                frameLayout.setVisibility(View.INVISIBLE);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         favoriteViewModel.removeObserver();
         SingletonAlertDialogSession.INSTANCE.destroyAlertDialogBuilder();
         SingletonFilmID.setIDEntered(null);
-    }
-
-    public static FavoriteFragment newInstance() {
-        return new FavoriteFragment();
     }
 }

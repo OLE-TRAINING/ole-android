@@ -15,6 +15,7 @@ import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FavoriteDataSourceFactory;
+import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.search.SearchViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
 public class FavoriteViewModel extends BaseViewModel {
@@ -30,6 +31,11 @@ public class FavoriteViewModel extends BaseViewModel {
     private MutableLiveData<Integer> receiverAPageSize = new MutableLiveData<>();
     private MutableLiveData<FilmsResults> fragmentTellerThereIsFilmResults = new MutableLiveData<>();
     private MutableLiveData<Boolean> fragmentTellerIsSessionExpired = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isFavoriteListEmpty = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getIsFavoriteListEmpty() {
+        return isFavoriteListEmpty;
+    }
 
     public MutableLiveData<Boolean> getFragmentTellerIsSessionExpired() {
         return fragmentTellerIsSessionExpired;
@@ -69,8 +75,13 @@ public class FavoriteViewModel extends BaseViewModel {
             isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == SUCCESS_CODE) {
+                    if(responseModel.getResponse().getTotal_results() !=0) {
                     receiverAPageSize.setValue(responseModel.getResponse().getTotal_pages());
                     fragmentTellerThereIsFilmResults.setValue(responseModel.getResponse());
+                    isFavoriteListEmpty.setValue(false);
+                    } else {
+                        isFavoriteListEmpty.setValue(true);
+                    }
                 } else if (responseModel.getCode() == SESSION_EXPIRED_CODE) {
                     fragmentTellerIsSessionExpired.setValue(true);
                 }
@@ -121,13 +132,17 @@ public class FavoriteViewModel extends BaseViewModel {
                 && receiverAPageSize != null
                 && favoriteListRepository.getViewModelTellerIsSessionExpiredPagination() != null
                 && favoriteListRepository.getViewModelTellerIsSessionExpired() != null
-        && favoriteListRepository.getThereIsError() !=null) {
+        && favoriteListRepository.getThereIsError() !=null
+                && getAddFavoriteFilm() != null
+                && getRemoveFavoriteFilm() != null) {
             filmsResults.removeObserver(filmsResultsObserver);
             favoriteListRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverAPageSize.removeObserver(receiverAPageSizeServiceObserver);
             favoriteListRepository.getViewModelTellerIsSessionExpiredPagination().removeObserver(isSessionExpiredPaginationObserver);
             favoriteListRepository.getViewModelTellerIsSessionExpired().removeObserver(isSessionExpiredPaginationObserver);
             favoriteListRepository.getThereIsError().removeObserver(thereIsPaginationErrorObserve);
+            getAddFavoriteFilm().removeObserver(addFavoriteFilmObserver);
+            getRemoveFavoriteFilm().removeObserver(removeFavoriteFilmObserver);
         }
     }
 

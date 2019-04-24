@@ -160,11 +160,15 @@ public class MovieDetailsViewModel extends BaseViewModel {
         super.removeObserver();
         if (filmsResults != null && filmRepository.getThereIsPaginationError() != null
                 &&  receiverPageSizeService != null
-                && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null)  {
+                && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null
+                && getAddFavoriteFilm() != null
+                && getRemoveFavoriteFilm() != null)  {
             filmsResults.removeObserver(filmsResultsObserver);
             filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverPageSizeService.removeObserver(receiverPageSizeServiceObserver);
             filmRepository.getViewModelTellerIsSessionExpiredPagination().removeObserver(isSessionExpiredPaginationObserver);
+            getAddFavoriteFilm().removeObserver(addFavoriteFilmObserver);
+            getRemoveFavoriteFilm().removeObserver(removeFavoriteFilmObserver);
         }
     }
 }

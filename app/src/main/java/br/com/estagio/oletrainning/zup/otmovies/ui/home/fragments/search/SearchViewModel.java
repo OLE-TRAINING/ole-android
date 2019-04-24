@@ -142,12 +142,16 @@ public class SearchViewModel extends BaseViewModel {
         if (filmsResults != null && filmRepository.getThereIsPaginationError() != null
                 &&  receiverAPageSizeAndGenreIDService != null
                 && filmRepository.getViewModelTellerIsSessionExpiredPagination() != null
-                && favoriteListRepository.getViewModelTellerIsSessionExpired() != null)  {
+                && favoriteListRepository.getViewModelTellerIsSessionExpired() != null
+                && getAddFavoriteFilm() != null
+                && getRemoveFavoriteFilm() != null)  {
             filmsResults.removeObserver(filmsResultsObserverSearch);
             filmRepository.getThereIsPaginationError().removeObserver(thereIsPaginationErrorObserve);
             receiverAPageSizeAndGenreIDService.removeObserver(receiverAPageSizeAndGenreIDServiceObserver);
             filmRepository.getViewModelTellerIsSessionExpiredPagination().removeObserver(isSessionExpiredPaginationObserver);
             favoriteListRepository.getViewModelTellerIsSessionExpired().removeObserver(isSessionExpiredPaginationObserver);
+            getAddFavoriteFilm().removeObserver(addFavoriteFilmObserver);
+            getRemoveFavoriteFilm().removeObserver(removeFavoriteFilmObserver);
         }
     }
 }

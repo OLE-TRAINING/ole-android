@@ -43,6 +43,6 @@ public class FilmDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        filmRepository.getFilmsResultsloadAfter(PAGE_SIZE,params,callback,genreID, FILTER);
+        filmRepository.getFilmsResultsLoadAfter(PAGE_SIZE,params,callback,genreID, FILTER);
     }
 }

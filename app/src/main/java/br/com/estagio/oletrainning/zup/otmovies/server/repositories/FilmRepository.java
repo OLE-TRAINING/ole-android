@@ -18,7 +18,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FilmRepository extends CommonRepository{
+public class FilmRepository extends BaseRepository {
 
     private FilmService filmService;
     private int SUCCESS_CODE = 200;
@@ -217,7 +217,7 @@ public class FilmRepository extends CommonRepository{
                 });
     }
 
-    public void getFilmsResultsloadAfter (
+    public void getFilmsResultsLoadAfter(
             final Integer PAGE_SIZE, final PageKeyedDataSource.LoadParams<Integer> params,
             final PageKeyedDataSource.LoadCallback<Integer, FilmResponse> callback, String genreID, String filter) {
         filmService.getMovieGenre(filter,genreID,"20",String.valueOf(params.key))

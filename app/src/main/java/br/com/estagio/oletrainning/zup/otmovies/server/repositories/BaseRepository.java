@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import br.com.estagio.oletrainning.zup.otmovies.model.ErrorMessage;
 import okhttp3.ResponseBody;
 
-public abstract class CommonRepository {
+public abstract class BaseRepository {
 
     protected int SUCCESS_CODE = 200;
     protected String UNEXPECTED_ERROR_KEY = "erro.inesperado";

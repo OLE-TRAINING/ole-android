@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -201,7 +202,7 @@ public class MovieDetailsActivity extends BaseActivity {
 
     private Observer<MovieDetailsModel> thereIsMovieDetailsObserver = new Observer<MovieDetailsModel>() {
         @Override
-        public void onChanged(MovieDetailsModel movieDetailsModel) {
+        public void onChanged(final MovieDetailsModel movieDetailsModel) {
             mMovieDetailsModel = movieDetailsModel;
             movieDetailsViewModel.getSimilarMoviesListEmpty().observe(MovieDetailsActivity.this, new Observer<Boolean>() {
                 @Override
@@ -221,24 +222,37 @@ public class MovieDetailsActivity extends BaseActivity {
             adapter.setOnCheckBoxClickListener(new FilmAdapterDetailsList.OnCheckBoxClickListener() {
                 @Override
                 public void OnCheckBoxClick(int position, PagedList<FilmResponse> currentList, Boolean isChecked) {
-                    SingletonFilmID.setIDEntered(currentList.get(position).getId());
+                    Log.d("positionOnCheck",String.valueOf(position));
                     if(isChecked){
-                        movieDetailsViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
-                                String.valueOf(SingletonFilmID.INSTANCE.getID()));
+                        if(position == 0){
+                            movieDetailsViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                                    String.valueOf(movieDetailsModel.getId()));
+                        } else {
+                            movieDetailsViewModel.executeAddFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                                    String.valueOf(currentList.get(position-1).getId()));
+                        }
                     } else {
-                        movieDetailsViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
-                                String.valueOf(SingletonFilmID.INSTANCE.getID()));
+                        if(position == 0){
+                            movieDetailsViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                                    String.valueOf(movieDetailsModel.getId()));
+                        } else {
+                            movieDetailsViewModel.executeRemoveFavoriteFilm(SingletonEmail.INSTANCE.getEmail(),
+                                    String.valueOf(currentList.get(position-1).getId()));
+                        }
+
                     }
                 }
             });
             adapter.setOnItemClickListener(new FilmAdapterDetailsList.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position, PagedList<FilmResponse> currentList) {
-                    movieDetailsViewModel.getIsLoading().setValue(true);
+                    if (movieDetailsModel != null) {
+                        movieDetailsViewModel.getIsLoading().setValue(true);
                         SingletonFilmID.setIDEntered(currentList.get(position-1).getId());
                         if(SingletonFilmID.INSTANCE.getID() != null){
                             Intent intent = new Intent(MovieDetailsActivity.this, MovieDetailsActivity.class);
                             startActivity(intent);
+                        }
                         movieDetailsViewModel.getIsLoading().setValue(false);
                     }
                 }

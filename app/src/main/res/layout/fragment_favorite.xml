@@ -42,5 +42,15 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/cardview_favorites" />
 
+        <TextView
+            android:id="@+id/textViewFavoriteListNotFound"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="@dimen/textSizeHeader"
+            android:fontFamily="@font/dosis_bold"
+            android:visibility="gone"
+            android:text="@string/favoriteListEmpty"/>
+
     </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
