@@ -3,7 +3,6 @@ package br.com.estagio.oletrainning.zup.otmovies.server.repositories;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PageKeyedDataSource;
-import android.util.Log;
 
 import br.com.estagio.oletrainning.zup.otmovies.model.ErrorMessage;
 import br.com.estagio.oletrainning.zup.otmovies.model.ResponseModel;

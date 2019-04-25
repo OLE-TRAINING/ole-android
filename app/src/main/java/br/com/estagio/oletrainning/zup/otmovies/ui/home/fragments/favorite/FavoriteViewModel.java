@@ -15,14 +15,13 @@ import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmsResults;
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.ui.home.adapters.FavoriteDataSourceFactory;
-import br.com.estagio.oletrainning.zup.otmovies.ui.home.fragments.search.SearchViewModel;
 import br.com.estagio.oletrainning.zup.otmovies.ui.singleton.SingletonEmail;
 
 public class FavoriteViewModel extends BaseViewModel {
 
-    private final static Integer INITIAL_LOAD_SIZE_HINT = 20;
-    private final static Integer PREFETCH_DISTANCE_VALUE = 20;
-    private final static Integer PAGE_SIZE = 20;
+    private final static Integer INITIAL_LOAD_SIZE_HINT = 10;
+    private final static Integer PREFETCH_DISTANCE_VALUE = 10;
+    private final static Integer PAGE_SIZE = 5;
     private FavoriteListRepository favoriteListRepository = new FavoriteListRepository();
     private final static String SERVICE_OR_CONNECTION_ERROR = "Falha ao receber filmes. Verifique a conexão e tente novamente.";
     private LiveData<PagedList<FilmResponse>> itemPagedList;
@@ -72,7 +71,6 @@ public class FavoriteViewModel extends BaseViewModel {
     private Observer<ResponseModel<FilmsResults>> filmsResultsObserver = new Observer<ResponseModel<FilmsResults>>() {
         @Override
         public void onChanged(@Nullable ResponseModel<FilmsResults> responseModel) {
-            isLoading.setValue(false);
             if (responseModel != null) {
                 if (responseModel.getCode() == SUCCESS_CODE) {
                     if(responseModel.getResponse().getTotal_results() !=0) {

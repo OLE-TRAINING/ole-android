@@ -56,8 +56,13 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
         if(SingletonEmail.INSTANCE.getEmail() != null){
             favoriteViewModel.executeServiceGetFilmResults(SingletonEmail.INSTANCE.getEmail());
         }
-
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        favoriteViewModel.getIsLoading().setValue(false);
     }
 
     @Override
@@ -88,6 +93,7 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
         @Override
         public void onChanged(Boolean isFavoriteListEmpty) {
             if(isFavoriteListEmpty){
+                favoriteViewModel.getIsLoading().setValue(false);
                 favoriteViewHolder.textViewFavoriteListNotFound.setVisibility(View.VISIBLE);
                 favoriteViewHolder.recyclerView.setVisibility(View.GONE);
             } else {
@@ -142,6 +148,7 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
         @Override
         public void onChanged(@Nullable PagedList<FilmResponse> filmResponses) {
             adapter.submitList(filmResponses);
+            favoriteViewModel.getIsLoading().setValue(false);
         }
     };
 
@@ -174,10 +181,8 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
                             Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
                             startActivity(intent);
                         }
-                        favoriteViewModel.getIsLoading().setValue(false);
                 }
             });
-            favoriteViewModel.getIsLoading().setValue(false);
         }
     };
 
@@ -193,8 +198,6 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
     public void loadingExecutor(Boolean isLoading, ProgressBar progressBar, FrameLayout frameLayout) {
         if (isLoading != null && getActivity() != null) {
             if (isLoading) {
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 Sprite threeBounce = new ThreeBounce();
                 progressBar.setIndeterminateDrawable(threeBounce);
                 favoriteViewHolder.textViewFavoriteListNotFound.setVisibility(View.GONE);
@@ -204,7 +207,6 @@ public class FavoriteFragment extends BaseFragment implements SwipeRefreshLayout
                 Sprite threeBounce = new ThreeBounce();
                 progressBar.setIndeterminateDrawable(threeBounce);
                 frameLayout.setVisibility(View.INVISIBLE);
-                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
         }
     }

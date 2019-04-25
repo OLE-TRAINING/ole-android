@@ -12,7 +12,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import br.com.estagio.oletrainning.zup.otmovies.ui.BaseFragment;
@@ -52,6 +57,12 @@ public class MovieListFragment extends BaseFragment {
             movieListViewModel.executeServiceGetFilmResults(FIRST_PAGE, SingletonGenreID.INSTANCE.getGenreID(), GENRES_FILTER);
         }
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        movieListViewModel.getIsLoading().setValue(false);
     }
 
     @Override
@@ -108,6 +119,7 @@ public class MovieListFragment extends BaseFragment {
         @Override
         public void onChanged(@Nullable PagedList<FilmResponse> filmResponses) {
             adapter.submitList(filmResponses);
+            movieListViewModel.getIsLoading().setValue(false);
         }
     };
 
@@ -139,10 +151,8 @@ public class MovieListFragment extends BaseFragment {
                         Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
                         startActivity(intent);
                     }
-                    movieListViewModel.getIsLoading().setValue(false);
                 }
             });
-            movieListViewModel.getIsLoading().setValue(false);
         }
     };
 

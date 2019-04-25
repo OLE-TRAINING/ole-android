@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import br.com.estagio.oletrainning.zup.otmovies.server.response.FilmResponse;
 
 
-public class FilmDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
+public class SearchDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
 
     private int PAGE_SIZE;
     private String FILTER;
@@ -15,7 +15,7 @@ public class FilmDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
     private FilmRepository filmRepository = new FilmRepository();
     private Thread requestDelay = new Thread();
 
-    public FilmDataSource(int pageSize, String genreID, String filter) {
+    public SearchDataSource(int pageSize, String genreID, String filter) {
         this.PAGE_SIZE = pageSize;
         this.genreID = genreID;
         this.FILTER = filter;
@@ -23,13 +23,7 @@ public class FilmDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, FilmResponse> callback) {
-        try {
-            requestDelay.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        filmRepository.getFilmsResultsLoadInitial(callback, String.valueOf(FIRST_PAGE), genreID, FILTER);
-
+        filmRepository.getFilmsResultsLoadInitial(callback,String.valueOf(FIRST_PAGE),genreID, FILTER);
     }
 
     @Override
@@ -39,7 +33,7 @@ public class FilmDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        filmRepository.getFilmsResultsLoadBefore(params, callback, genreID, FILTER);
+        filmRepository.getFilmsResultsLoadBefore(params,callback,genreID, FILTER);
     }
 
     @Override
@@ -49,6 +43,6 @@ public class FilmDataSource extends PageKeyedDataSource<Integer, FilmResponse> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        filmRepository.getFilmsResultsLoadAfter(PAGE_SIZE, params, callback, genreID, FILTER);
+        filmRepository.getFilmsResultsLoadAfter(PAGE_SIZE,params,callback,genreID, FILTER);
     }
 }

@@ -78,7 +78,6 @@ public class MovieDetailsActivity extends BaseActivity {
         }
     }
 
-
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -123,6 +122,7 @@ public class MovieDetailsActivity extends BaseActivity {
         public void onClick(View v) {
             onBackPressed();
             SingletonFilmID.setIDEntered(null);
+
         }
     };
 
@@ -170,6 +170,7 @@ public class MovieDetailsActivity extends BaseActivity {
                 }
             } else {
                 adapter.submitList(filmResponses);
+                movieDetailsViewModel.getIsLoading().setValue(false);
             }
         }
     };
@@ -253,11 +254,9 @@ public class MovieDetailsActivity extends BaseActivity {
                             Intent intent = new Intent(MovieDetailsActivity.this, MovieDetailsActivity.class);
                             startActivity(intent);
                         }
-                        movieDetailsViewModel.getIsLoading().setValue(false);
                     }
                 }
             });
-            movieDetailsViewModel.getIsLoading().setValue(false);
         }
     };
 
