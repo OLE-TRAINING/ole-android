@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -183,6 +182,8 @@ public class SearchFragment extends BaseFragment {
         @Override
         public boolean onQueryTextChange(String newText) {
             if (!newText.isEmpty()) {
+                SingletonFilmID.setIDEntered(null);
+                adapter.submitList(null);
                 searchViewModel.executeServiceGetFilmResultsSearch(newText);
             } else {
                 adapter.submitList(null);
@@ -203,7 +204,6 @@ public class SearchFragment extends BaseFragment {
                 Sprite threeBounce = new ThreeBounce();
                 progressBar.setIndeterminateDrawable(threeBounce);
                 frameLayout.setVisibility(View.INVISIBLE);
-                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
         }
     }
