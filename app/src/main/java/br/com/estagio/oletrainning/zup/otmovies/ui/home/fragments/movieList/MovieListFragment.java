@@ -50,6 +50,10 @@ public class MovieListFragment extends BaseFragment {
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
+        if (adapter == null) {
+            adapter = new FilmAdapter(getActivity());
+        }
+
         movieListViewModel = ViewModelProviders.of(MovieListFragment.this).get(MovieListViewModel.class);
         movieListViewModel.getFragmentTellerIsSessionExpired().observe(this, sessionObserver);
 
@@ -68,9 +72,6 @@ public class MovieListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (adapter == null) {
-            adapter = new FilmAdapter(getActivity());
-        }
         setupObserversAndListeners();
         setupLayoutManager();
     }
