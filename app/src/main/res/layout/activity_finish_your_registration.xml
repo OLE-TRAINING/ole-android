@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_finish_registration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,12 +18,12 @@
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_marginTop="@dimen/margin_top_arrow"
+            android:layout_marginTop="@dimen/marginLayout"
             android:layout_marginStart="@dimen/marginLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp"
-            android:contentDescription="@string/imageview_backarrow"/>
+            android:contentDescription="@string/imageview_backarrow" />
 
         <TextView
             android:id="@+id/textView_header"
@@ -33,7 +32,6 @@
             android:layout_marginTop="@dimen/margin_top_header"
             android:fontFamily="@font/dosis_bold"
             android:letterSpacing="@dimen/defaultHeaderLetterSpacing"
-
             android:text="@string/headerFirst_informTokenAndNewPassword"
             android:textAlignment="center"
             android:textColor="@color/colorEmailHeadHint"
@@ -62,12 +60,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="@dimen/marginThirty"
+            android:layout_marginBottom="@dimen/marginThirty"
             app:layout_constraintBottom_toTopOf="@+id/button_validate"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered"
             android:paddingLeft="@dimen/marginLayout"
             android:paddingRight="@dimen/marginLayout">
 
-            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+            <br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText
                 android:id="@+id/errorEditText_token"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                 app:setInputType="text"
                 app:setMessageError="@string/errorCode">
 
-            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            </br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/robotoregular"
                     android:text="@string/noReceiveCode"
-                    android:layout_marginEnd="@dimen/marginEnd_textView"
+                    android:layout_marginEnd="@dimen/marginOrPaddingTen"
                     android:layout_marginStart="@dimen/marginStart_textView"
                     android:textColor="@color/colorTextDefault"
                     android:textSize="@dimen/textSizeDefault" />
@@ -105,7 +105,6 @@
 
         </LinearLayout>
 
-
         <Button
             android:id="@+id/button_validate"
             android:layout_width="match_parent"
@@ -115,9 +114,9 @@
             android:text="@string/validate"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
-            android:layout_marginBottom="@dimen/marginDefaultLayout"
-            android:layout_marginLeft="@dimen/marginDefaultLayout"
-            android:layout_marginRight="@dimen/marginDefaultLayout"
+            android:layout_marginBottom="@dimen/marginOrPaddingDefaultLayout"
+            android:layout_marginStart="@dimen/marginLayout"
+            android:layout_marginEnd="@dimen/marginLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

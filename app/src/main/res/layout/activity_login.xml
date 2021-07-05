@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,12 +20,12 @@
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_marginTop="@dimen/margin_top_arrow"
+            android:layout_marginTop="@dimen/marginLayout"
             android:layout_marginStart="@dimen/marginLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout_red_toast"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp"
-            android:contentDescription="@string/imageview_backarrow"/>
+            android:contentDescription="@string/imageview_backarrow" />
 
         <TextView
             android:id="@+id/textView_header"
@@ -42,48 +42,53 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout_red_toast" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/button_sign_in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_header">
+
         <TextView
             android:id="@+id/textView_emailEntered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/bigMargin"
-            android:layout_marginStart="@dimen/bigMargin"
+            android:layout_marginStart="@dimen/marginStartEmail"
             android:fontFamily="@font/robotoregular"
             android:text="@string/userEmailEntered"
             android:textAlignment="center"
             android:textColor="@color/colorTextDefault"
-            android:textSize="@dimen/textSizeDefault"
-            app:layout_constraintBottom_toTopOf="@+id/errorEditText_login"
-            app:layout_constraintStart_toStartOf="@+id/errorEditText_login" />
+            android:textSize="@dimen/textSizeDefault" />
 
-        <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+        <br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText
             android:id="@+id/errorEditText_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginThirty"
-            app:layout_constraintBottom_toTopOf="@+id/button_sign_in"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_header"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:layout_marginBottom="@dimen/activity_margin"
+            android:layout_marginStart="@dimen/marginLayout"
+            android:layout_marginEnd="@dimen/marginLayout"
             app:setHint="@string/password"
             app:setInicialErrorVisibility="false"
             app:setInputType="textPassword">
 
-        </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+        </br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText>
 
         <TextView
             android:id="@+id/textView_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/smallMargin"
-            android:layout_marginTop="@dimen/smallMargin"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/marginThirty"
             android:fontFamily="@font/robotoregular"
             android:text="@string/forgotPassword"
             android:textAlignment="center"
             android:textColor="@color/colorTextDefault"
-            android:textSize="@dimen/textSizeDefault"
-            app:layout_constraintEnd_toEndOf="@+id/errorEditText_login"
-            app:layout_constraintTop_toBottomOf="@+id/errorEditText_login" />
+            android:textSize="@dimen/textSizeDefault" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/button_sign_in"
@@ -91,18 +96,17 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_style"
             android:fontFamily="@font/dosis_bold"
-            android:layout_margin="@dimen/marginLayout"
             android:text="@string/enter"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
-            android:layout_marginBottom="@dimen/marginDefaultLayout"
-            android:layout_marginLeft="@dimen/marginDefaultLayout"
-            android:layout_marginRight="@dimen/marginDefaultLayout"
+            android:layout_marginBottom="@dimen/marginOrPaddingDefaultLayout"
+            android:layout_marginStart="@dimen/marginLayout"
+            android:layout_marginEnd="@dimen/marginLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:id="@+id/linearLayout_red_toast"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toastHeight"

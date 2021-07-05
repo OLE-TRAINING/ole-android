@@ -1,37 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-   android:id="@+id/linearLayout_nav_view_header"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout_navView"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/side_nav_bar"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/linearLayout_nav_view_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/nav_header_height"
+        android:src="@drawable/banner_app"
+        android:scaleType="centerCrop"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:contentDescription="@string/banner_navigation_view"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/user_photo_border"
+        android:layout_marginTop="@dimen/marginTopBackgroundUserPhoto"
+        android:background="@drawable/ic_white_ball"/>
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/marginHundred"
+        android:layout_height="@dimen/marginHundred"
+        android:layout_marginTop="@dimen/marginBigger"
+        android:layout_gravity="center_horizontal"
         android:contentDescription="@string/nav_header_desc"
         app:srcCompat="@drawable/ic_user" />
 
-    <TextView
-        android:id="@+id/textview_nav_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="@string/nav_header_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/marginMax"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textview_nav_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/nav_header_subtitle" />
+        <TextView
+            android:id="@+id/textview_nav_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textSizeHeader"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:text="@string/nav_header_title"
+            android:fontFamily="@font/dosis_bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/textview_nav_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nav_header_subtitle" />
+
+        <LinearLayout
+            android:id="@+id/linear_Layout_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/marginHeaderTopLayout"
+            android:paddingStart="@dimen/marginOrPaddingDefaultLayout"
+            android:paddingEnd="@dimen/marginOrPaddingTwenty"
+            android:paddingTop="@dimen/marginOrPaddingTwenty"
+            android:paddingBottom="@dimen/marginOrPaddingTwenty"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:contentDescription="@string/icon_logout"
+                android:src="@drawable/ic_logout_24dp"/>
+
+            <TextView
+                android:id="@+id/textView_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/textSizeHeader"
+                android:fontFamily="@font/dosis_bold"
+                android:layout_marginStart="@dimen/marginOrPaddingTen"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="@string/logout"/>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

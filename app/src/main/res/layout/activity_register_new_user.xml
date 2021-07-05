@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/Layout_Register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,12 +17,12 @@
             android:id="@+id/imageView_backArrow"
             android:layout_width="@dimen/sizeBackArrow"
             android:layout_height="@dimen/sizeBackArrow"
-            android:layout_marginTop="@dimen/margin_top_arrow"
+            android:layout_marginTop="@dimen/marginLayout"
             android:layout_marginStart="@dimen/marginLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_black_24dp"
-            android:contentDescription="@string/imageview_backarrow"/>
+            android:contentDescription="@string/imageview_backarrow" />
 
         <TextView
             android:id="@+id/textView_headerRegister"
@@ -59,12 +58,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/smallMargin"
+            android:layout_marginTop="@dimen/marginThirty"
+            android:layout_marginBottom="@dimen/marginThirty"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/button_nextRegister"
             app:layout_constraintTop_toBottomOf="@+id/textView_emailEntered">
 
-            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+            <br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText
                 android:id="@+id/errorEditText_enterName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,10 +75,10 @@
                 app:setInputType="textPersonName"
                 app:setMessageError="@string/error_register_name">
 
-            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            </br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText>
 
 
-            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+            <br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText
                 android:id="@+id/errorEditText_enterUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -90,9 +90,9 @@
                 app:setInputType="text"
                 app:setMessageError="@string/error_user_name">
 
-            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            </br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText>
 
-            <br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText
+            <br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText
                 android:id="@+id/errorEditText_enterPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                 app:setInputType="textPassword"
                 app:setMessageError="@string/error_password">
 
-            </br.com.estagio.oletrainning.zup.otmovies.CustomComponents.ComponentErrorEditText>
+            </br.com.estagio.oletrainning.zup.otmovies.components.ErrorEditText>
         </LinearLayout>
 
 
@@ -117,9 +117,9 @@
             android:text="@string/textButton_next"
             android:textColor="@color/colorTextBottonEmailPreLogin"
             android:textSize="@dimen/textSizeDefault"
-            android:layout_marginBottom="@dimen/marginDefaultLayout"
-            android:layout_marginLeft="@dimen/marginDefaultLayout"
-            android:layout_marginRight="@dimen/marginDefaultLayout"
+            android:layout_marginBottom="@dimen/marginOrPaddingDefaultLayout"
+            android:layout_marginStart="@dimen/marginLayout"
+            android:layout_marginEnd="@dimen/marginLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
